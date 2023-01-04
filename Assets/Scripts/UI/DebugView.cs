@@ -5,6 +5,9 @@ using UnityEngine;
 public class DebugView : MonoBehaviour
 {
     public GUIStyle debugBackgroud;
+    public GUIStyle logOutputStyle;
+    int logOutputLines = 10;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,11 +29,13 @@ public class DebugView : MonoBehaviour
             GUI.Label(new Rect(0, 0, 400, 20), "Move Speed (Mouse wheel): "+Main.moveSpeed+ "m/s");
             GUI.Label(new Rect(0, 20, 400, 20), "Move Speed (alt + Mouse wheel): " + Main.mouseSensitivity);
 
-            GUI.Label(new Rect(0, Screen.height - 20 * 11, 400, 20), "Last Logs:");
-            for (int i = 1; i <= Mathf.Min(logs.Count, 10); i++)
+            string logOutput = "Last Logs:\n";
+            for (int i = Mathf.Min(logs.Count, logOutputLines); i > 0 ; i--)
             {
-                GUI.Label(new Rect(0, Screen.height - 20 * i, 400, 20), logs[logs.Count - i]);
+                logOutput += "> " + logs[logs.Count - i] + "\n";
             }
+            GUI.Label(new Rect(0, Screen.height - 20 * 10, 400, 20*logOutputLines), logOutput,logOutputStyle);
+
             GUI.EndGroup();
         }
         else

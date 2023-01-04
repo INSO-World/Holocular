@@ -8,13 +8,15 @@ public class Main : MonoBehaviour
     public GameObject file;
     public static GameObject sFile;
 
-    public static int commitCount = 0;
-
     public static int mouseSensitivity = 5;
 
     public static int moveSpeed = 10;
 
-    public static bool debugMode;
+    public static bool debugMode = true;
+
+    public static Helix helix;
+
+    public static DBCommits commits;
 
 
     // Start is called before the first frame update
