@@ -32,12 +32,28 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importDatabase(string path)
     {
-        if (!importCommits(path))
+        if (!importCommits(path)|| !importBranches(path))
         {
             return false;
         }
 
         return true;
+    }
+
+    public static bool importBranches(string path)
+    {
+        string branchesJSON = System.IO.File.ReadAllText(path + "/branches.json");
+        try
+        {
+            Main.branches = JsonUtility.FromJson<DBBranches>("{\"branches\":" + branchesJSON + "}");
+            RuntimeDebug.Log("Branches Imported Sucessfull");
+            return true;
+        }
+        catch (System.Exception ex)
+        {
+            return false;
+            RuntimeDebug.Log("Error Importing Branches");
+        }
     }
 
     public static bool importCommits(string path)
