@@ -1,0 +1,17 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using UnityEngine;
+
+public class FileStructureFile : MonoBehaviour, IFileStructureElement
+{
+    private string name = "";
+	public bool changed = false;
+
+	public FileStructureFile()
+	{
+	}
+
+    string IFileStructureElement.Name { get { return name; } set { name = value; } }
+}
+

@@ -32,7 +32,10 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importDatabase(string path)
     {
-        if (!importCommits(path)|| !importBranches(path))
+        if (!importBranches(path)
+            || !importCommits(path)
+            || !importCommitsFilesRelation(path)
+            || !importFiles(path))
         {
             return false;
         }
@@ -69,6 +72,38 @@ public class DatabaseLoader : MonoBehaviour
         {
             return false;
             RuntimeDebug.Log("Error Importing Commits");
+        }
+    }
+
+    public static bool importCommitsFilesRelation(string path)
+    {
+        string commitsfilesJSON = System.IO.File.ReadAllText(path + "/commits-files.json");
+        try
+        {
+            Main.commitsFiles = JsonUtility.FromJson<DBCommitsFiles>("{\"commitsFiles\":" + commitsfilesJSON + "}");
+            RuntimeDebug.Log("Commits-Files Realtion Imported Sucessfull");
+            return true;
+        }
+        catch (System.Exception ex)
+        {
+            return false;
+            RuntimeDebug.Log("Error Importing Commits-Files Realtion ");
+        }
+    }
+
+    public static bool importFiles(string path)
+    {
+        string filesJSON = System.IO.File.ReadAllText(path + "/files.json");
+        try
+        {
+            Main.files = JsonUtility.FromJson<DBFiles>("{\"files\":" + filesJSON + "}");
+            RuntimeDebug.Log("Files Imported Sucessfull");
+            return true;
+        }
+        catch (System.Exception ex)
+        {
+            return false;
+            RuntimeDebug.Log("Error Importing Files");
         }
     }
 }

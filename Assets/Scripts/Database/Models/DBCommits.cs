@@ -19,11 +19,11 @@ public class DBCommit
     public string webUrl;
     public string branch;
     public string parents;
-    public CommitStats stats;
+    public DBCommitStats stats;
 }
 
 [System.Serializable]
-public class CommitStats
+public class DBCommitStats
 {
     public int additions;
     public int deletions;

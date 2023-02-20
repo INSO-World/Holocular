@@ -28,6 +28,8 @@ public class DebugView : MonoBehaviour
             List<string> logs = RuntimeDebug.getLogs();
             GUI.Label(new Rect(0, 0, 400, 20), "Move Speed (Mouse wheel): "+Main.moveSpeed+ "m/s");
             GUI.Label(new Rect(0, 20, 400, 20), "Move Speed (alt + Mouse wheel): " + Main.mouseSensitivity);
+            GUI.Label(new Rect(0, 60, 400, 20), "FPS: " + ((int)(1f / Time.unscaledDeltaTime)));
+
 
             string logOutput = "Last Logs:\n";
             for (int i = Mathf.Min(logs.Count, logOutputLines); i > 0 ; i--)

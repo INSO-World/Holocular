@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class DBBranches
+public class DBFiles
 {
-    public DBBranch[] branches;
+    public DBFile[] files;
 
 }
 
 [System.Serializable]
-public class DBBranch
+public class DBFile
 {
     public string _id;
-    public string id;
-    public string branch;
-    public string active;
+    public string webUrl;
+    public string path;
+    public int maxLength;
 }
