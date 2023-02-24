@@ -13,5 +13,7 @@ public class FileStructureFile : MonoBehaviour, IFileStructureElement
 	}
 
     string IFileStructureElement.Name { get { return name; } set { name = value; } }
+    bool IFileStructureElement.Changed { get { return changed; } set { changed = value; } }
+
 }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class HelixCommit : MonoBehaviour
 {
@@ -21,9 +22,9 @@ public class HelixCommit : MonoBehaviour
 
     }
 
-    public void GenerateCommit(Dictionary<String, List<HelixComitFileRelation>> commitsFiles, Dictionary<String, HelixFile> files,Dictionary<String, HelixComitFileRelation> projectFiles)
+    public GameObject GenerateCommit(Dictionary<string, List<HelixComitFileRelation>> commitsFiles, Dictionary<string, HelixFile> files,Dictionary<string, HelixComitFileRelation> projectFiles, Dictionary<string,GameObject> shaCommitsRelation)
     {
-        GameObject commitObject = new GameObject("Commit" + idStore);
+        GameObject commitObject = new GameObject("Commit["+idStore+"]: " + dBCommitStore.sha);
         commitObject.transform.position = new Vector3(helixBranchStore.position.x, helixBranchStore.position.y, idStore * 4);
         Instantiate(Main.sCommit, commitObject.transform);
         if (commitsFiles.ContainsKey(dBCommitStore._id))
@@ -62,19 +63,6 @@ public class HelixCommit : MonoBehaviour
                     files[helixComitFileRelation.dBCommitsFilesStore._from];
 
                 fileStructure.AddFilePathToFileStructure(file.dBFileStore.path, changedFiles.ContainsKey(file.dBFileStore.path));
-                /*file.fileObject = new GameObject("File: " + file.dBFileStore.path);
-                file.fileObject.transform.parent = commitObject.transform;
-                file.fileObject.transform.localPosition = new Vector3(fileCount * 2, file.dBFileStore.path.Split("/").Length, 0);
-                if (!changedFiles.ContainsKey(file.dBFileStore.path))
-                {
-                    //Helix.changesGenerated++;
-                    //Instantiate(Main.sFile, file.fileObject.transform);
-                }
-                else
-                {
-                    Helix.changesGenerated++;
-                    Instantiate(Main.sChangedFile, file.fileObject.transform);
-                }*/
             }
 
             //Add new files to File structure
@@ -89,20 +77,35 @@ public class HelixCommit : MonoBehaviour
                 {
                     fileStructure.AddFilePathToFileStructure(file.dBFileStore.path, true);
                     projectFiles.Add(file.dBFileStore.path, helixComitFileRelation);
-                    /*
-                    GameObject fileObject = new GameObject("File: " + file.dBFileStore.path);
-                    fileObject.transform.parent = commitObject.transform;
-                    fileObject.transform.localPosition = new Vector3(fileCount * 2, file.dBFileStore.path.Split("/").Length, 0);
-                    Helix.changesGenerated++;
-                    Instantiate(Main.sChangedFile, fileObject.transform);
-                    projectFiles.Add(file.dBFileStore.path, helixComitFileRelation);
-                    */
                 }
             }
 
             fileStructure.DrawHelixRing(commitObject.transform);
+
+            if (dBCommitStore.parents != "")
+            {
+                foreach (string parentSha in dBCommitStore.parents.Split(","))
+                {
+                    if (shaCommitsRelation.ContainsKey(parentSha))
+                    {
+                        GameObject connection = new GameObject("ConnectionTo" + parentSha);
+                        connection.transform.parent = commitObject.transform;
+
+                        connection.transform.position = commitObject.transform.position;
+                        connection.AddComponent<LineRenderer>();
+                        LineRenderer lr = connection.GetComponent<LineRenderer>();
+                        lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+                        lr.SetColors(Color.gray, Color.gray);
+                        lr.SetWidth(0.2f, 0.2f);
+                        lr.SetPosition(0, commitObject.transform.position);
+                        lr.SetPosition(1, shaCommitsRelation[parentSha].transform.position);
+                    }
+                }
+            }
+
         }
         RuntimeDebug.Log("Commit created: " + dBCommitStore.sha);
+        return commitObject;
     }
 
 }

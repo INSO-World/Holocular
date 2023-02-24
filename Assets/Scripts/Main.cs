@@ -17,13 +17,15 @@ public class Main : MonoBehaviour
 
     public static int mouseSensitivity = 5;
 
-    public static int moveSpeed = 10;
+    public static int moveSpeed = 100;
 
     public static bool debugMode = true;
 
     public static Helix helix;
 
     public static float helixReferenceRadius = 5f;
+    public static float helixeRadiusSpread = 4f;
+    public static float helixBranchOffset = 100f;
 
     public static DBCommits commits;
     public static DBBranches branches;

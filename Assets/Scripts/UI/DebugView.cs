@@ -27,7 +27,7 @@ public class DebugView : MonoBehaviour
             GUI.BeginGroup(new Rect(Screen.width - 400, 0, 400, Screen.height),debugBackgroud);
             List<string> logs = RuntimeDebug.getLogs();
             GUI.Label(new Rect(0, 0, 400, 20), "Move Speed (Mouse wheel): "+Main.moveSpeed+ "m/s");
-            GUI.Label(new Rect(0, 20, 400, 20), "Move Speed (alt + Mouse wheel): " + Main.mouseSensitivity);
+            GUI.Label(new Rect(0, 20, 400, 20), "Mouse Sensitivity (alt + Mouse wheel): " + Main.mouseSensitivity);
             GUI.Label(new Rect(0, 60, 400, 20), "FPS: " + ((int)(1f / Time.unscaledDeltaTime)));
 
 

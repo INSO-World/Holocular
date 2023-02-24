@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class Helix : MonoBehaviour
 {
-    Dictionary<String,HelixCommit> commits = new Dictionary<string, HelixCommit>(); //Key: sha
+    Dictionary<string,HelixCommit> commits = new Dictionary<string, HelixCommit>(); //Key: sha
 
-    Dictionary<String, HelixBranch> branches = new Dictionary<string, HelixBranch>(); //Key: branch name
+    Dictionary<string, HelixBranch> branches = new Dictionary<string, HelixBranch>(); //Key: branch name
 
-    Dictionary<String, List<HelixComitFileRelation>> commitsFiles = new Dictionary<string, List<HelixComitFileRelation>>(); //Key: to = commit id
+    Dictionary<string, List<HelixComitFileRelation>> commitsFiles = new Dictionary<string, List<HelixComitFileRelation>>(); //Key: to = commit id
 
-    Dictionary<String, HelixFile> files = new Dictionary<string, HelixFile>(); // Key: id
+    Dictionary<string, HelixFile> files = new Dictionary<string, HelixFile>(); // Key: id
 
-    Dictionary<String, HelixComitFileRelation> projectFiles = new Dictionary<string, HelixComitFileRelation>(); //key: path
+    Dictionary<string, HelixComitFileRelation> projectFiles = new Dictionary<string, HelixComitFileRelation>(); //key: path
 
     public static int changesGenerated = 0;
 
@@ -24,10 +24,11 @@ public class Helix : MonoBehaviour
             branches.Add(Main.branches.branches[i].branch, new HelixBranch(Main.branches.branches[i], Main.branches.branches.Length));
         }
 
+        Array.Sort(Main.commits.commits, (a, b) => DateTime.Parse(a.date).CompareTo(DateTime.Parse(b.date)));
+
         for (int i = 0; i < Main.commits.commits.Length; i++)
         {
             commits.Add(Main.commits.commits[i].sha,new HelixCommit(i, Main.commits.commits[i], branches[Main.commits.commits[i].branch]));
-
         }
 
         for (int i = 0; i < Main.commitsFiles.commitsFiles.Length; i++)
@@ -56,14 +57,11 @@ public class Helix : MonoBehaviour
             files.Add(Main.files.files[i]._id, new HelixFile(Main.files.files[i]));
         }
         int cCount = 0;
+        Dictionary<string, GameObject> shaCommitsRelation = new Dictionary<string, GameObject>();
         foreach (HelixCommit commit in commits.Values)
         {
             cCount++;
-            if (cCount > 150)
-            {
-                break;
-            }
-            commit.GenerateCommit(commitsFiles, files, projectFiles);
+            shaCommitsRelation.Add(commit.dBCommitStore.sha, commit.GenerateCommit(commitsFiles, files, projectFiles, shaCommitsRelation));
         }
         RuntimeDebug.Log("Changes generated: " + changesGenerated);
 

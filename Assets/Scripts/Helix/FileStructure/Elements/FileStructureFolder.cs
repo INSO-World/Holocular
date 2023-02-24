@@ -8,6 +8,8 @@ using UnityEngine.Rendering.VirtualTexturing;
 public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 {
     private string name = "";
+    private bool changed = false;
+
     Dictionary<string, IFileStructureElement> folderContent = new Dictionary<string, IFileStructureElement>();
 
     public FileStructureFolder()
@@ -15,6 +17,9 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 	}
 
     string IFileStructureElement.Name { get { return name; } set { name = value; } }
+
+    bool IFileStructureElement.Changed { get { return changed; } set { changed = value; } }
+
 
     public void AddElement(string[] pathParts, bool changedInThisCommit)
     {
@@ -26,12 +31,17 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             if (folderContent.ContainsKey(currentPathPart))
             {
                 (folderContent[currentPathPart] as FileStructureFolder).AddElement(remainingPathParts, changedInThisCommit);
+                if (changedInThisCommit)
+                {
+                    folderContent[currentPathPart].Changed = changedInThisCommit;
+                }
             }
             else
             {
                 IFileStructureElement folder = new FileStructureFolder();
                 folder.Name = currentPathPart;
                 (folder as FileStructureFolder).AddElement(remainingPathParts, changedInThisCommit);
+                folder.Changed = changedInThisCommit;
                 folderContent.Add(currentPathPart, folder);
             }
         }
@@ -39,7 +49,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
         {
             IFileStructureElement file = new FileStructureFile();
             file.Name = currentPathPart;
-            (file as FileStructureFile).changed = changedInThisCommit;
+            file.Changed = changedInThisCommit;
             folderContent.Add(currentPathPart, file);
         }
     }
@@ -54,44 +64,40 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
         int elementsInFolder = folderContent.ToList().Count();
 
         float angleBetweenElements = (2 * Mathf.PI) / elementsInFolder;
-
+        GameObject connection = new GameObject("Connection");
+        connection.transform.parent = parent;
+        connection.transform.position = new Vector3(pos.x, pos.y, pos.z);
+        connection.AddComponent<LineRenderer>();
+        LineRenderer lr = connection.GetComponent<LineRenderer>();
+        lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+        lr.SetColors(ringColor, ringColor);
+        lr.SetWidth(0.1f, 0.1f);
+        lr.positionCount = elementsInFolder;
+        lr.loop = true;
         for (int i = 0; i < elementsInFolder; i++)
         {
             float x = r * Mathf.Cos(i * angleBetweenElements);
             float y = r * Mathf.Sin(i * angleBetweenElements);
 
-            if (elementsInFolder > 1)
-            {
-                float nextX = r * Mathf.Cos((i + 1) * angleBetweenElements);
-                float nextY = r * Mathf.Sin((i + 1) * angleBetweenElements);
+            lr.SetPosition(i, new Vector3(pos.x + x, pos.y + y, pos.z));
 
-                GameObject connection = new GameObject("Connection" + i);
-                connection.transform.parent = parent;
-                connection.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
-                connection.AddComponent<LineRenderer>();
-                LineRenderer lr = connection.GetComponent<LineRenderer>();
-                lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
-                lr.SetColors(ringColor, ringColor);
-                lr.SetWidth(0.1f, 0.1f);
-                lr.SetPosition(0, new Vector3(pos.x + x, pos.y + y, pos.z));
-                lr.SetPosition(1, new Vector3(pos.x + nextX, pos.y + nextY, pos.z));
-
-            }
             IFileStructureElement element = folderContent.Values.ElementAt(i);
 
-            if (element is FileStructureFolder)
+            if (element.Changed)
             {
-                GameObject helixElementObject = new GameObject(name);
-                helixElementObject.transform.parent = folerObject.transform;
-                helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
-                /*Instantiate(Main.sFile, helixElementObject.transform);*/
-                (element as FileStructureFolder).Draw(helixElementObject.transform, r / 2,Color.Lerp(ringColor, ringEndColor, colorShiftFactor),ringEndColor,colorShiftFactor);
-            }
-            else if(element is FileStructureFile)
-            {
-                if((element as FileStructureFile).changed)
+                if (element is FileStructureFolder)
                 {
-                    GameObject helixElementObject = new GameObject(name);
+                    GameObject helixElementObject = new GameObject(element.Name);
+                    helixElementObject.transform.parent = folerObject.transform;
+                    helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
+                    /*Instantiate(Main.sFile, helixElementObject.transform);*/
+                    (element as FileStructureFolder).Draw(helixElementObject.transform, r / 2, Color.Lerp(ringColor, ringEndColor, colorShiftFactor), ringEndColor, colorShiftFactor);
+
+                }
+                else if (element is FileStructureFile)
+                {
+
+                    GameObject helixElementObject = new GameObject(element.Name);
                     helixElementObject.transform.parent = folerObject.transform;
                     helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
                     Instantiate(Main.sChangedFile, helixElementObject.transform);
@@ -99,6 +105,13 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             }
 
         }
+
+        /*float xLast = r * Mathf.Cos(elementsInFolder * angleBetweenElements);
+        float yLast = r * Mathf.Sin(elementsInFolder * angleBetweenElements);
+
+        lr.SetPosition(elementsInFolder, new Vector3(pos.x + xLast, pos.y + yLast, pos.z));*/
+
+
 
         return folerObject.transform;
     }

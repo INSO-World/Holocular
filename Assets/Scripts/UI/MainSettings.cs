@@ -48,6 +48,10 @@ public class MainSettings : MonoBehaviour
         }
 
         GUI.Label(new Rect(10, 50, 200, 20), "Commits: " + (Main.commits==null?"0":Main.commits.commits.Length));
+        GUI.Label(new Rect(10, 70, 200, 20), "Branches: " + (Main.branches == null ? "0" : Main.branches.branches.Length));
+        GUI.Label(new Rect(10, 90, 200, 20), "Files: " + (Main.files == null ? "0" : Main.files.files.Length));
+        GUI.Label(new Rect(10, 110, 200, 20), "Commits-Files: " + (Main.commits == null ? "0" : Main.commitsFiles.commitsFiles.Length));
+
 
         GUI.DragWindow(new Rect(0, 0, Screen.width, Screen.height));
     }
