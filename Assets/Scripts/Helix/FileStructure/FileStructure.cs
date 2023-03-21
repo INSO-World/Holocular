@@ -19,12 +19,12 @@ public class FileStructure :MonoBehaviour
 	{
 		string[] splittedPath = path.Split('/');
 		maxDepht = splittedPath.Length;
-        (root as FileStructureFolder).AddElement(splittedPath, changedInThisCommit);
+        (root as FileStructureFolder).AddElement(path, splittedPath, changedInThisCommit);
     }
 
-	public void DrawHelixRing(Transform commit)
+	public void DrawHelixRing(Transform commit,string branchName, Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary)
 	{
-		Transform rootFolderObject = (root as FileStructureFolder).Draw(commit.transform, maxDepht * Main.helixReferenceRadius * Main.helixeRadiusSpread, new Color(0,1,1,1),new Color(0,1,1,0),0.75f);
+		Transform rootFolderObject = (root as FileStructureFolder).Draw(commit.transform, maxDepht * Main.helixReferenceRadius * Main.helixeRadiusSpread, new Color(0,1,1,1),new Color(0,1,1,0.25f),0.75f, branchName, fileHelixConnectiontreeDictionary);
 		rootFolderObject.parent = commit;
     }
 }

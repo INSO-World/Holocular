@@ -21,7 +21,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
     bool IFileStructureElement.Changed { get { return changed; } set { changed = value; } }
 
 
-    public void AddElement(string[] pathParts, bool changedInThisCommit)
+    public void AddElement(string fullPath, string[] pathParts, bool changedInThisCommit)
     {
         string currentPathPart = pathParts[0];
         if (pathParts.Length > 1)
@@ -30,7 +30,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 
             if (folderContent.ContainsKey(currentPathPart))
             {
-                (folderContent[currentPathPart] as FileStructureFolder).AddElement(remainingPathParts, changedInThisCommit);
+                (folderContent[currentPathPart] as FileStructureFolder).AddElement(fullPath, remainingPathParts, changedInThisCommit);
                 if (changedInThisCommit)
                 {
                     folderContent[currentPathPart].Changed = changedInThisCommit;
@@ -40,7 +40,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             {
                 IFileStructureElement folder = new FileStructureFolder();
                 folder.Name = currentPathPart;
-                (folder as FileStructureFolder).AddElement(remainingPathParts, changedInThisCommit);
+                (folder as FileStructureFolder).AddElement(fullPath, remainingPathParts, changedInThisCommit);
                 folder.Changed = changedInThisCommit;
                 folderContent.Add(currentPathPart, folder);
             }
@@ -50,11 +50,18 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             IFileStructureElement file = new FileStructureFile();
             file.Name = currentPathPart;
             file.Changed = changedInThisCommit;
+            (file as FileStructureFile).fullPath = fullPath;
             folderContent.Add(currentPathPart, file);
         }
     }
 
-    public Transform Draw(Transform parent,float r,Color ringColor,Color ringEndColor,float colorShiftFactor)
+    public Transform Draw(Transform parent,
+        float r,
+        Color ringColor,
+        Color ringEndColor,
+        float colorShiftFactor,
+        string branchName,
+        Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary)
     {
         Vector3 pos = parent.position;
         GameObject folerObject = new GameObject(name);
@@ -72,47 +79,61 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
         lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
         lr.SetColors(ringColor, ringColor);
         lr.SetWidth(0.1f, 0.1f);
-        lr.positionCount = elementsInFolder;
-        lr.loop = true;
-        for (int i = 0; i < elementsInFolder; i++)
+        if(elementsInFolder == 1)
         {
-            float x = r * Mathf.Cos(i * angleBetweenElements);
-            float y = r * Mathf.Sin(i * angleBetweenElements);
-
-            lr.SetPosition(i, new Vector3(pos.x + x, pos.y + y, pos.z));
-
-            IFileStructureElement element = folderContent.Values.ElementAt(i);
-
-            if (element.Changed)
-            {
-                if (element is FileStructureFolder)
-                {
-                    GameObject helixElementObject = new GameObject(element.Name);
-                    helixElementObject.transform.parent = folerObject.transform;
-                    helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
-                    /*Instantiate(Main.sFile, helixElementObject.transform);*/
-                    (element as FileStructureFolder).Draw(helixElementObject.transform, r / 2, Color.Lerp(ringColor, ringEndColor, colorShiftFactor), ringEndColor, colorShiftFactor);
-
-                }
-                else if (element is FileStructureFile)
-                {
-
-                    GameObject helixElementObject = new GameObject(element.Name);
-                    helixElementObject.transform.parent = folerObject.transform;
-                    helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
-                    Instantiate(Main.sChangedFile, helixElementObject.transform);
-                }
-            }
-
+            lr.positionCount = 0;
+            lr.SetPosition(0, new Vector3(pos.x, pos.y, pos.z));
+            lr.SetPosition(1, new Vector3(pos.x + r, pos.y, pos.z));
         }
+        else
+        {
+            lr.positionCount = elementsInFolder;
+            lr.loop = true;
 
-        /*float xLast = r * Mathf.Cos(elementsInFolder * angleBetweenElements);
-        float yLast = r * Mathf.Sin(elementsInFolder * angleBetweenElements);
+            for (int i = 0; i < elementsInFolder; i++)
+            {
+                float x = r * Mathf.Cos(i * angleBetweenElements);
+                float y = r * Mathf.Sin(i * angleBetweenElements);
 
-        lr.SetPosition(elementsInFolder, new Vector3(pos.x + xLast, pos.y + yLast, pos.z));*/
+                lr.SetPosition(i, new Vector3(pos.x + x, pos.y + y, pos.z));
 
+                IFileStructureElement element = folderContent.Values.ElementAt(i);
 
+                if (element.Changed)
+                {
+                    if (element is FileStructureFolder)
+                    {
+                        GameObject helixElementObject = new GameObject(element.Name);
+                        helixElementObject.transform.parent = folerObject.transform;
+                        helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
+                        /*Instantiate(Main.sFile, helixElementObject.transform);*/
+                        (element as FileStructureFolder).Draw(helixElementObject.transform, r / 2, Color.Lerp(ringColor, ringEndColor, colorShiftFactor), ringEndColor, colorShiftFactor, branchName, fileHelixConnectiontreeDictionary);
 
+                    }
+                    else if (element is FileStructureFile)
+                    {
+
+                        GameObject helixElementObject = new GameObject(element.Name + "-Connections");
+                        helixElementObject.transform.parent = folerObject.transform;
+                        helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
+                        string fullFilePath = (element as FileStructureFile).fullPath;
+
+                        Instantiate(Main.sChangedFile, helixElementObject.transform).name = fullFilePath;
+                        if (!fileHelixConnectiontreeDictionary.ContainsKey(fullFilePath))
+                        {
+                            HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath, Color.yellow);
+                            connectionTree.addPoint(branchName, helixElementObject.transform.position, null, null);
+                            fileHelixConnectiontreeDictionary.Add(fullFilePath, connectionTree);
+                        }
+                        else
+                        {
+                            fileHelixConnectiontreeDictionary[fullFilePath].addPoint(branchName, helixElementObject.transform.position, null, null);
+                        }
+                    }
+                }
+
+            }
+        }
         return folerObject.transform;
     }
 }

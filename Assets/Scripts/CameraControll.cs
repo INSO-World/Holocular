@@ -33,6 +33,7 @@ public class CameraControll : MonoBehaviour
                 selectPoint.position = hit.transform.position + -dir * 5;
                 selectPoint.LookAt(hit.transform.position);
                 selected = true;
+                RuntimeDebug.Log(hit.transform.name);
             }
             if (Main.debugMode)
             {

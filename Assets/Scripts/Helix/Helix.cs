@@ -15,13 +15,21 @@ public class Helix : MonoBehaviour
 
     Dictionary<string, HelixComitFileRelation> projectFiles = new Dictionary<string, HelixComitFileRelation>(); //key: path
 
+    HelixConnectionTree commitConnectionTree = new HelixConnectionTree("Commits-Connections",Color.gray);
+
+    Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary = new Dictionary<string, HelixConnectionTree>();
+
     public static int changesGenerated = 0;
 
     public Helix()
     {
+
         for (int i = 0; i < Main.branches.branches.Length; i++)
         {
-            branches.Add(Main.branches.branches[i].branch, new HelixBranch(Main.branches.branches[i], Main.branches.branches.Length));
+            if (!branches.ContainsKey(Main.branches.branches[i].branch))
+            {
+                branches.Add(Main.branches.branches[i].branch, new HelixBranch(Main.branches.branches[i], Main.branches.branches.Length));
+            }
         }
 
         Array.Sort(Main.commits.commits, (a, b) => DateTime.Parse(a.date).CompareTo(DateTime.Parse(b.date)));
@@ -61,7 +69,13 @@ public class Helix : MonoBehaviour
         foreach (HelixCommit commit in commits.Values)
         {
             cCount++;
-            shaCommitsRelation.Add(commit.dBCommitStore.sha, commit.GenerateCommit(commitsFiles, files, projectFiles, shaCommitsRelation));
+            shaCommitsRelation.Add(commit.dBCommitStore.sha, commit.GenerateCommit(commitsFiles, files, projectFiles));
+        }
+
+        foreach (HelixCommit commit in commits.Values)
+        {
+            commit.ConnectCommit(commitConnectionTree, shaCommitsRelation);
+            commit.DrawHelixRing(fileHelixConnectiontreeDictionary);
         }
         RuntimeDebug.Log("Changes generated: " + changesGenerated);
 
