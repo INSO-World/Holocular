@@ -13,15 +13,15 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
     Dictionary<string, IFileStructureElement> folderContent = new Dictionary<string, IFileStructureElement>();
 
     public FileStructureFolder()
-	{
-	}
+    {
+    }
 
     string IFileStructureElement.Name { get { return name; } set { name = value; } }
 
     bool IFileStructureElement.Changed { get { return changed; } set { changed = value; } }
 
 
-    public void AddElement(string fullPath, string[] pathParts, bool changedInThisCommit)
+    public void AddElement(string fullPath, string[] pathParts, bool changedInThisCommit, HelixComitFileRelation helixCommitFileRelation)
     {
         string currentPathPart = pathParts[0];
         if (pathParts.Length > 1)
@@ -30,7 +30,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 
             if (folderContent.ContainsKey(currentPathPart))
             {
-                (folderContent[currentPathPart] as FileStructureFolder).AddElement(fullPath, remainingPathParts, changedInThisCommit);
+                (folderContent[currentPathPart] as FileStructureFolder).AddElement(fullPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
                 if (changedInThisCommit)
                 {
                     folderContent[currentPathPart].Changed = changedInThisCommit;
@@ -40,7 +40,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             {
                 IFileStructureElement folder = new FileStructureFolder();
                 folder.Name = currentPathPart;
-                (folder as FileStructureFolder).AddElement(fullPath, remainingPathParts, changedInThisCommit);
+                (folder as FileStructureFolder).AddElement(fullPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
                 folder.Changed = changedInThisCommit;
                 folderContent.Add(currentPathPart, folder);
             }
@@ -51,6 +51,19 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             file.Name = currentPathPart;
             file.Changed = changedInThisCommit;
             (file as FileStructureFile).fullPath = fullPath;
+            (file as FileStructureFile).helixCommitFileRelation = helixCommitFileRelation;
+
+            if (helixCommitFileRelation.dBCommitsFilesStore.stats.additions >= Helix.maxAdditions)
+            {
+                Helix.maxAdditions = helixCommitFileRelation.dBCommitsFilesStore.stats.additions;
+            }
+
+            if (helixCommitFileRelation.dBCommitsFilesStore.stats.deletions >= Helix.maxDeletions)
+            {
+                Helix.maxDeletions = helixCommitFileRelation.dBCommitsFilesStore.stats.deletions;
+            }
+
+
             folderContent.Add(currentPathPart, file);
         }
     }
@@ -64,9 +77,9 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
         Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary)
     {
         Vector3 pos = parent.position;
-        GameObject folerObject = new GameObject(name);
-        folerObject.transform.position = pos;
-        folerObject.transform.parent = parent;
+        GameObject folderObject = new GameObject(name);
+        folderObject.transform.position = pos;
+        folderObject.transform.parent = parent;
 
         int elementsInFolder = folderContent.ToList().Count();
 
@@ -79,7 +92,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
         lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
         lr.SetColors(ringColor, ringColor);
         lr.SetWidth(0.1f, 0.1f);
-        if(elementsInFolder == 1)
+        if (elementsInFolder == 1)
         {
             lr.positionCount = 0;
             lr.SetPosition(0, new Vector3(pos.x, pos.y, pos.z));
@@ -104,37 +117,39 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
                     if (element is FileStructureFolder)
                     {
                         GameObject helixElementObject = new GameObject(element.Name);
-                        helixElementObject.transform.parent = folerObject.transform;
+                        helixElementObject.transform.parent = folderObject.transform;
                         helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
-                        /*Instantiate(Main.sFile, helixElementObject.transform);*/
                         (element as FileStructureFolder).Draw(helixElementObject.transform, r / 2, Color.Lerp(ringColor, ringEndColor, colorShiftFactor), ringEndColor, colorShiftFactor, branchName, fileHelixConnectiontreeDictionary);
 
                     }
                     else if (element is FileStructureFile)
                     {
 
-                        GameObject helixElementObject = new GameObject(element.Name + "-Connections");
-                        helixElementObject.transform.parent = folerObject.transform;
+                        GameObject helixElementObject = new GameObject(element.Name);
+                        helixElementObject.transform.parent = folderObject.transform;
                         helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
                         string fullFilePath = (element as FileStructureFile).fullPath;
 
                         Instantiate(Main.sChangedFile, helixElementObject.transform).name = fullFilePath;
+
+                        float changeFactor = (float)(Helix.maxAdditions + Helix.maxDeletions) / ((element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions + (element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions);
+
                         if (!fileHelixConnectiontreeDictionary.ContainsKey(fullFilePath))
                         {
-                            HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath, Color.yellow);
-                            connectionTree.addPoint(branchName, helixElementObject.transform.position, null, null);
+                            HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath + "-Connections", Main.sBranchTreeMaterial);
+                            connectionTree.addPoint(branchName, helixElementObject.transform.position, null, null, changeFactor);
                             fileHelixConnectiontreeDictionary.Add(fullFilePath, connectionTree);
                         }
                         else
                         {
-                            fileHelixConnectiontreeDictionary[fullFilePath].addPoint(branchName, helixElementObject.transform.position, null, null);
+                            fileHelixConnectiontreeDictionary[fullFilePath].addPoint(branchName, helixElementObject.transform.position, null, null, changeFactor);
                         }
                     }
                 }
 
             }
         }
-        return folerObject.transform;
+        return folderObject.transform;
     }
 }
 

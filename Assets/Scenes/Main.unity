@@ -186,6 +186,8 @@ MonoBehaviour:
   file: {fileID: 5090062568418006305, guid: fc5048a3e635941f9ac51902b4eac4c0, type: 3}
   changedFile: {fileID: 2072383678666840838, guid: fc0a5a25171284262af6d7ab0c8395b2, type: 3}
   commit: {fileID: 4880512911649112285, guid: 11659f32f5aad463291b24c33595ce92, type: 3}
+  branchTreeMaterial: {fileID: 2100000, guid: 0a69b032a11b04a808034239cd08ffe4, type: 2}
+  commitTreeMaterial: {fileID: 2100000, guid: f5b38880f5c5f44cb958a71315d9ff7b, type: 2}
 --- !u!4 &518972451
 Transform:
   m_ObjectHideFlags: 0

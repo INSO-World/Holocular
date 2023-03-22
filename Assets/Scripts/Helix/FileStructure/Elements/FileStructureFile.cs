@@ -8,7 +8,7 @@ public class FileStructureFile : MonoBehaviour, IFileStructureElement
     private string name = "";
 	public bool changed = false;
     public string fullPath = "";
-
+    public HelixComitFileRelation helixCommitFileRelation;
 
     public FileStructureFile()
 	{

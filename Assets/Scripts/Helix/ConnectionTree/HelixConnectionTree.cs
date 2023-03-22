@@ -2,76 +2,126 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.MemoryProfiler;
+using System;
 
 public class HelixConnectionTree : MonoBehaviour
 {
-	/*
+    /*
 	 * Key: Branchname
 	 * Value: Linerenderer for Branch
 	 */
-	Dictionary<string, LineRenderer> branchLines = new Dictionary<string, LineRenderer>();
+    Dictionary<string, Mesh> branchLines = new Dictionary<string, Mesh>();
 
-	GameObject connectionTree;
-    Color color;
+    GameObject connectionTree;
 
-	public HelixConnectionTree(string name,Color color){
-		connectionTree = new GameObject(name);
-        this.color = color;
-	}
+    Material material;
 
-	public void addPoint(string branchName, Vector3 position, string[] parentShas, Dictionary<string, GameObject> shaObjectDictionary)
-	{
-		if (!branchLines.ContainsKey(branchName))
-		{
-			GameObject connection = new GameObject(branchName);
-			connection.transform.parent = connectionTree.transform;
-            connection.transform.position = position;
-            connection.AddComponent<LineRenderer>();
-            LineRenderer lr = connection.GetComponent<LineRenderer>();
-            lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
-            lr.SetColors(color, color);
-            lr.SetWidth(0.2f, 0.2f);
+    float lineThickness = 0.5f;
 
-			if (parentShas == null)
-			{
-                lr.positionCount = 1;
-                lr.SetPosition(0, position);
-			}
-			else
-			{
-                lr.positionCount = 2;
-                lr.SetPosition(0, shaObjectDictionary[parentShas[0]].transform.position);
-                lr.SetPosition(1, position);
+    public HelixConnectionTree(string name, Material material)
+    {
+        connectionTree = new GameObject(name);
+        this.material = material;
+    }
+
+    public void addPoint(string branchName, Vector3 position, string[] parentShas, Dictionary<string, GameObject> shaObjectDictionary, float uvColorFactor)
+    {
+        if (!branchLines.ContainsKey(branchName))
+        {
+            GameObject connection = new GameObject(branchName);
+            connection.transform.parent = connectionTree.transform;
+            connection.transform.position = new Vector3(0, 0, 0);
+            MeshRenderer mr = connection.AddComponent<MeshRenderer>();
+            MeshFilter mf = connection.AddComponent<MeshFilter>();
+            mr.material = material;
+
+            Mesh instantiatedMesh = Instantiate(InitMesh(position));
+            mf.sharedMesh = instantiatedMesh;
+
+            if (parentShas == null)
+            {
+                AddVertexToMesh(instantiatedMesh, position, uvColorFactor);
             }
-
-            branchLines.Add(branchName, lr);
+            else
+            {
+                AddVertexToMesh(instantiatedMesh, shaObjectDictionary[parentShas[0]].transform.position, uvColorFactor);
+                AddVertexToMesh(instantiatedMesh, position, uvColorFactor);
+            }
+            branchLines.Add(branchName, instantiatedMesh);
         }
-		else
-		{ 
-
-			if (parentShas !=null && parentShas.Length >= 1)
-			{
-				foreach (string parentSha in parentShas)
-				{
+        else
+        {
+            if (parentShas != null && parentShas.Length >= 1)
+            {
+                foreach (string parentSha in parentShas)
+                {
                     GameObject connection = new GameObject(branchName);
                     connection.transform.parent = connectionTree.transform;
-                    connection.transform.position = position;
-                    connection.AddComponent<LineRenderer>();
-                    LineRenderer lr = connection.GetComponent<LineRenderer>();
-                    lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
-                    lr.SetColors(color,color);
-                    lr.SetWidth(0.2f, 0.2f);
-                    lr.SetPosition(0, shaObjectDictionary[parentSha].transform.position);
-                    lr.SetPosition(1, position);
+                    connection.transform.position = new Vector3(0, 0, 0);
+                    MeshRenderer mr = connection.AddComponent<MeshRenderer>();
+                    MeshFilter mf = connection.AddComponent<MeshFilter>();
+                    mr.material = material;
+
+                    Mesh instantiatedMesh = Instantiate(InitMesh(position));
+                    mf.sharedMesh = instantiatedMesh;
+
+                    AddVertexToMesh(instantiatedMesh, shaObjectDictionary[parentSha].transform.position, uvColorFactor);
+                    AddVertexToMesh(instantiatedMesh, position, uvColorFactor);
                 }
             }
-			else
-			{
-                LineRenderer lr = branchLines[branchName];
-                lr.positionCount = lr.positionCount + 1;
-                lr.SetPosition(lr.positionCount - 1, position);
+            else
+            {
+                Mesh branchMesh = branchLines[branchName];
+                AddVertexToMesh(branchMesh, position, uvColorFactor);
             }
         }
+    }
+
+    private Mesh InitMesh(Vector3 position)
+    {
+        Mesh mesh = new Mesh();
+        Vector3[] vertices = new Vector3[1];
+        Vector2[] uv = new Vector2[1];
+        int[] triangles = new int[0];
+
+        vertices[0] = position;
+        uv[0] = new Vector2(0, 0);
+
+        mesh.vertices = vertices;
+        mesh.uv = uv;
+        mesh.triangles = triangles;
+
+        return mesh;
+    }
+
+    private void AddVertexToMesh(Mesh branchMesh, Vector3 position, float uvColorFactor)
+    {
+        int vertexCount = branchMesh.vertexCount;
+        List<Vector3> vertices = new List<Vector3>(branchMesh.vertices);
+        List<Vector2> uv = new List<Vector2>(branchMesh.uv);
+        List<int> triangles = new List<int>(branchMesh.triangles);
+
+        vertices.Add(position - Vector3.up * lineThickness / 2);
+        vertices.Add(position + Vector3.up * lineThickness / 2);
+        uv.Add(new Vector2(uvColorFactor, 0f));
+        uv.Add(new Vector2(uvColorFactor, 0f));
+        triangles.Add(vertexCount - 1);
+        triangles.Add(vertexCount);
+        triangles.Add(vertexCount + 1);
+        triangles.Add(vertexCount - 1);
+        triangles.Add(vertexCount + 1);
+        triangles.Add(vertexCount);
+
+        triangles.Add(vertexCount - 2);
+        triangles.Add(vertexCount - 1);
+        triangles.Add(vertexCount);
+        triangles.Add(vertexCount - 2);
+        triangles.Add(vertexCount);
+        triangles.Add(vertexCount - 1);
+
+        branchMesh.vertices = vertices.ToArray();
+        branchMesh.uv = uv.ToArray();
+        branchMesh.triangles = triangles.ToArray();
     }
 }
 

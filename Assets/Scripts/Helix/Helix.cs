@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Helix : MonoBehaviour
 {
-    Dictionary<string,HelixCommit> commits = new Dictionary<string, HelixCommit>(); //Key: sha
+    Dictionary<string, HelixCommit> commits = new Dictionary<string, HelixCommit>(); //Key: sha
 
     Dictionary<string, HelixBranch> branches = new Dictionary<string, HelixBranch>(); //Key: branch name
 
@@ -15,11 +15,14 @@ public class Helix : MonoBehaviour
 
     Dictionary<string, HelixComitFileRelation> projectFiles = new Dictionary<string, HelixComitFileRelation>(); //key: path
 
-    HelixConnectionTree commitConnectionTree = new HelixConnectionTree("Commits-Connections",Color.gray);
+    HelixConnectionTree commitConnectionTree = new HelixConnectionTree("Commits-Connections", Main.sCommitTreeMaterial);
 
     Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary = new Dictionary<string, HelixConnectionTree>();
 
     public static int changesGenerated = 0;
+
+    public static int maxAdditions = 0;
+    public static int maxDeletions = 0;
 
     public Helix()
     {
@@ -36,7 +39,7 @@ public class Helix : MonoBehaviour
 
         for (int i = 0; i < Main.commits.commits.Length; i++)
         {
-            commits.Add(Main.commits.commits[i].sha,new HelixCommit(i, Main.commits.commits[i], branches[Main.commits.commits[i].branch]));
+            commits.Add(Main.commits.commits[i].sha, new HelixCommit(i, Main.commits.commits[i], branches[Main.commits.commits[i].branch]));
         }
 
         for (int i = 0; i < Main.commitsFiles.commitsFiles.Length; i++)

@@ -14,6 +14,12 @@ public class Main : MonoBehaviour
     public GameObject commit;
     public static GameObject sCommit;
 
+    public Material branchTreeMaterial;
+    public static Material sBranchTreeMaterial;
+
+    public Material commitTreeMaterial;
+    public static Material sCommitTreeMaterial;
+
 
     public static int mouseSensitivity = 5;
 
@@ -39,6 +45,8 @@ public class Main : MonoBehaviour
         sFile = file;
         sChangedFile = changedFile;
         sCommit = commit;
+        sBranchTreeMaterial = branchTreeMaterial;
+        sCommitTreeMaterial = commitTreeMaterial;
     }
 
     // Update is called once per frame
