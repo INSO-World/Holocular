@@ -102,7 +102,7 @@ public class HelixCommit : MonoBehaviour
     public void ConnectCommit(HelixConnectionTree connectionTree,
     Dictionary<string, GameObject> shaCommitsRelation)
     {
-        connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, commitObject.transform.position, dBCommitStore.parents == "" ? null : dBCommitStore.parents.Split(","), shaCommitsRelation, 0.0f);
+        connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, commitObject.transform.position, dBCommitStore.parents == "" ? null : dBCommitStore.parents.Split(","), shaCommitsRelation, 0.0f, 0.5f);
     }
 
     public void DrawHelixRing(Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary)

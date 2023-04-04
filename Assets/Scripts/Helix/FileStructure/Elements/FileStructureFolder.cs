@@ -131,18 +131,20 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
                         string fullFilePath = (element as FileStructureFile).fullPath;
 
                         Instantiate(Main.sChangedFile, helixElementObject.transform).name = fullFilePath;
+                        float additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / Helix.maxAdditions;
+                        float deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / Helix.maxDeletions;
 
-                        float changeFactor = (float)(Helix.maxAdditions + Helix.maxDeletions) / ((element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions + (element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions);
+                        float changeFactor = (float)((element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions + (element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions) / (Helix.maxAdditions + Helix.maxDeletions);
 
                         if (!fileHelixConnectiontreeDictionary.ContainsKey(fullFilePath))
                         {
                             HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath + "-Connections", Main.sBranchTreeMaterial);
-                            connectionTree.addPoint(branchName, helixElementObject.transform.position, null, null, changeFactor);
+                            connectionTree.addDualPoint(branchName, helixElementObject.transform.position, null, null, additionFactor, deletionFactor);
                             fileHelixConnectiontreeDictionary.Add(fullFilePath, connectionTree);
                         }
                         else
                         {
-                            fileHelixConnectiontreeDictionary[fullFilePath].addPoint(branchName, helixElementObject.transform.position, null, null, changeFactor);
+                            fileHelixConnectiontreeDictionary[fullFilePath].addDualPoint(branchName, helixElementObject.transform.position, null, null, additionFactor, deletionFactor);
                         }
                     }
                 }
