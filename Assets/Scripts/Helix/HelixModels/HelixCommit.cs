@@ -7,15 +7,19 @@ using static UnityEditor.PlayerSettings;
 
 public class HelixCommit : MonoBehaviour
 {
+
     public DBCommit dBCommitStore;
 
     public HelixBranch helixBranchStore;
 
     public int idStore;
 
+    Vector3 commitPosition;
+
     GameObject commitObject;
 
     FileStructure fileStructure;
+
 
     public HelixCommit(int id, DBCommit dbCommit, HelixBranch branch)
     {
@@ -23,32 +27,40 @@ public class HelixCommit : MonoBehaviour
         helixBranchStore = branch;
         idStore = id;
         fileStructure = new FileStructure();
+        commitPosition = new Vector3(branch.position.x, branch.position.y, id * 4);
     }
 
-    public GameObject GenerateCommit(Dictionary<string, List<HelixComitFileRelation>> commitsFiles,
+    public void DrawCommit(Dictionary<string, List<HelixCommitFileRelation>> commitsFiles,
         Dictionary<string, HelixFile> files,
-        Dictionary<string, HelixComitFileRelation> projectFiles)
+        Dictionary<string, HelixCommitFileRelation> projectFiles)
     {
-        commitObject = new GameObject("Commit[" + idStore + "]: " + dBCommitStore.sha);
-        commitObject.transform.position = new Vector3(helixBranchStore.position.x, helixBranchStore.position.y, idStore * 4);
-        Instantiate(Main.sCommit, commitObject.transform);
+        Main.actionQueue.Enqueue(() =>
+        {
+            commitObject = new GameObject("Commit[" + idStore + "]: " + dBCommitStore.sha);
+            commitObject.transform.position = commitPosition;
+            Instantiate(Main.sCommit, commitObject.transform);
+            Statistics.commitsDrawn++;
+        });
+
 
         BuildFileStructure(commitsFiles, files, projectFiles);
 
         RuntimeDebug.Log("Commit created: " + dBCommitStore.sha);
-        return commitObject;
     }
 
+    public Vector3 GetCommitPosition()
+    {
+        return commitPosition;
+    }
 
-
-    private void BuildFileStructure(Dictionary<string, List<HelixComitFileRelation>> commitsFiles,
+    private void BuildFileStructure(Dictionary<string, List<HelixCommitFileRelation>> commitsFiles,
         Dictionary<string, HelixFile> files,
-        Dictionary<string, HelixComitFileRelation> projectFiles)
+        Dictionary<string, HelixCommitFileRelation> projectFiles)
     {
         if (commitsFiles.ContainsKey(dBCommitStore._id))
         {
-            List<HelixComitFileRelation> helixComitFileRelations = commitsFiles[dBCommitStore._id];
-            Dictionary<String, HelixComitFileRelation> changedFiles = new Dictionary<string, HelixComitFileRelation>();
+            List<HelixCommitFileRelation> helixComitFileRelations = commitsFiles[dBCommitStore._id];
+            Dictionary<String, HelixCommitFileRelation> changedFiles = new Dictionary<string, HelixCommitFileRelation>();
             helixComitFileRelations.Sort((r1, r2) =>
             {
                 HelixFile file1 = files[r1.dBCommitsFilesStore.from != null ?
@@ -62,7 +74,7 @@ public class HelixCommit : MonoBehaviour
             int fileCount = 0;
 
 
-            foreach (HelixComitFileRelation helixCommitFileRelation in helixComitFileRelations)
+            foreach (HelixCommitFileRelation helixCommitFileRelation in helixComitFileRelations)
             {
                 HelixFile file = files[helixCommitFileRelation.dBCommitsFilesStore.from != null ?
                     helixCommitFileRelation.dBCommitsFilesStore.from :
@@ -71,7 +83,7 @@ public class HelixCommit : MonoBehaviour
             }
 
             //Add all historic files to File structure
-            foreach (HelixComitFileRelation helixCommitFileRelation in projectFiles.Values)
+            foreach (HelixCommitFileRelation helixCommitFileRelation in projectFiles.Values)
             {
                 fileCount++;
 
@@ -83,7 +95,7 @@ public class HelixCommit : MonoBehaviour
             }
 
             //Add new files to File structure
-            foreach (HelixComitFileRelation helixCommitFileRelation in helixComitFileRelations)
+            foreach (HelixCommitFileRelation helixCommitFileRelation in helixComitFileRelations)
             {
                 fileCount++;
                 HelixFile file = helixCommitFileRelation.dBCommitsFilesStore.from != null ?
@@ -100,14 +112,20 @@ public class HelixCommit : MonoBehaviour
     }
 
     public void ConnectCommit(HelixConnectionTree connectionTree,
-    Dictionary<string, GameObject> shaCommitsRelation)
+    Dictionary<string, HelixCommit> shaCommitsRelation)
     {
-        connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, commitObject.transform.position, dBCommitStore.parents == "" ? null : dBCommitStore.parents.Split(","), shaCommitsRelation, 0.0f, 0.5f);
+        Main.actionQueue.Enqueue(() =>
+        {
+            connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, commitObject.transform.position, dBCommitStore.parents == "" ? null : dBCommitStore.parents.Split(","), shaCommitsRelation, 0.0f, 0.5f);
+        });
     }
 
     public void DrawHelixRing(Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary)
     {
-        fileStructure.DrawHelixRing(commitObject.transform, helixBranchStore.dBBranchStore.branch, fileHelixConnectiontreeDictionary);
-    }
+        Main.actionQueue.Enqueue(() =>
+        {
+            fileStructure.DrawHelixRing(commitObject.transform, helixBranchStore.dBBranchStore.branch, fileHelixConnectiontreeDictionary);
 
+        });
+    }
 }

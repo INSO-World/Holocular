@@ -21,7 +21,7 @@ public class HelixConnectionTree : MonoBehaviour
         this.material = material;
     }
 
-    public void addPoint(string branchName, Vector3 position, string[] parentShas, Dictionary<string, GameObject> shaObjectDictionary, float uvColorFactor, float lineThickness)
+    public void addPoint(string branchName, Vector3 position, string[] parentShas, Dictionary<string, HelixCommit> commits, float uvColorFactor, float lineThickness)
     {
         if (!branchLines.ContainsKey(branchName))
         {
@@ -34,7 +34,7 @@ public class HelixConnectionTree : MonoBehaviour
             }
             else
             {
-                AddVertex(instantiatedMesh, branchName, shaObjectDictionary[parentShas[0]].transform.position, uvColorFactor, lineThickness);
+                AddVertex(instantiatedMesh, branchName, commits[parentShas[0]].GetCommitPosition(), uvColorFactor, lineThickness);
                 AddVertex(instantiatedMesh, branchName, position, uvColorFactor, lineThickness);
             }
             branchLines.Add(branchName, instantiatedMesh);
@@ -47,7 +47,7 @@ public class HelixConnectionTree : MonoBehaviour
                 {
                     Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName + '-' + parentSha, position);
 
-                    AddVertex(instantiatedMesh, branchName + '-' + parentSha, shaObjectDictionary[parentSha].transform.position, uvColorFactor, lineThickness);
+                    AddVertex(instantiatedMesh, branchName + '-' + parentSha, commits[parentSha].GetCommitPosition(), uvColorFactor, lineThickness);
                     AddVertex(instantiatedMesh, branchName + '-' + parentSha, position, uvColorFactor, lineThickness);
                 }
             }
@@ -59,7 +59,7 @@ public class HelixConnectionTree : MonoBehaviour
         }
     }
 
-    public void addDualPoint(string branchName, Vector3 position, string[] parentShas, Dictionary<string, GameObject> shaObjectDictionary, float line1Thickness, float line2Thickness)
+    public void addDualPoint(string branchName, Vector3 position, string[] parentShas, Dictionary<string, HelixCommit> commits, float line1Thickness, float line2Thickness)
     {
         if (!branchLines.ContainsKey(branchName))
         {
@@ -72,7 +72,7 @@ public class HelixConnectionTree : MonoBehaviour
             }
             else
             {
-                AddDualVertex(instantiatedMesh, branchName, shaObjectDictionary[parentShas[0]].transform.position, line1Thickness, line2Thickness);
+                AddDualVertex(instantiatedMesh, branchName, commits[parentShas[0]].GetCommitPosition(), line1Thickness, line2Thickness);
                 AddDualVertex(instantiatedMesh, branchName, position, line1Thickness, line2Thickness);
             }
             branchLines.Add(branchName, instantiatedMesh);
@@ -85,7 +85,7 @@ public class HelixConnectionTree : MonoBehaviour
                 {
                     Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName + '-' + parentSha, position);
 
-                    AddDualVertex(instantiatedMesh, branchName + '-' + parentSha, shaObjectDictionary[parentSha].transform.position, line1Thickness, line2Thickness);
+                    AddDualVertex(instantiatedMesh, branchName + '-' + parentSha, commits[parentSha].GetCommitPosition(), line1Thickness, line2Thickness);
                     AddDualVertex(instantiatedMesh, branchName + '-' + parentSha, position, line1Thickness, line2Thickness);
                 }
             }

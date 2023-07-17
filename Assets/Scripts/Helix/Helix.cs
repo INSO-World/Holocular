@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Newtonsoft.Json.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Helix : MonoBehaviour
@@ -9,24 +12,71 @@ public class Helix : MonoBehaviour
 
     Dictionary<string, HelixBranch> branches = new Dictionary<string, HelixBranch>(); //Key: branch name
 
-    Dictionary<string, List<HelixComitFileRelation>> commitsFiles = new Dictionary<string, List<HelixComitFileRelation>>(); //Key: to = commit id
+    Dictionary<string, List<HelixCommitFileRelation>> commitsFiles = new Dictionary<string, List<HelixCommitFileRelation>>(); //Key: to = commit id
 
     Dictionary<string, HelixFile> files = new Dictionary<string, HelixFile>(); // Key: id
 
-    Dictionary<string, HelixComitFileRelation> projectFiles = new Dictionary<string, HelixComitFileRelation>(); //key: path
+    Dictionary<string, HelixCommitFileRelation> projectFiles = new Dictionary<string, HelixCommitFileRelation>(); //key: path
 
     HelixConnectionTree commitConnectionTree = new HelixConnectionTree("Commits-Connections", Main.sCommitTreeMaterial);
 
     Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary = new Dictionary<string, HelixConnectionTree>();
+
+    public bool structureCreated = false;
+    public bool structureDrawn = false;
+
 
     public static int changesGenerated = 0;
 
     public static int maxAdditions = 0;
     public static int maxDeletions = 0;
 
+    Thread createStructureThread;
+    public ThreadState createStructureThreadState;
+    Thread drawStructureThread;
+    public ThreadState drawStructureThreadState;
+
     public Helix()
     {
+        createStructureThread = new Thread(CreateStructure);
+        createStructureThreadState = createStructureThread.ThreadState;
+        drawStructureThread = new Thread(DrawStructure);
+        drawStructureThreadState = drawStructureThread.ThreadState;
+    }
 
+    public void GenerateHelix()
+    {
+
+        structureCreated = false;
+        structureDrawn = false;
+        createStructureThread.Start();
+
+    }
+
+    public void CheckUpdate()
+    {
+        createStructureThreadState = createStructureThread.ThreadState;
+        drawStructureThreadState = createStructureThread.ThreadState;
+
+        if (createStructureThread.ThreadState == ThreadState.Stopped && !structureCreated)
+        {
+            drawStructureThread.Start();
+            structureCreated = true;
+        }
+
+        if (drawStructureThread.ThreadState == ThreadState.Stopped && !structureDrawn)
+        {
+
+            RuntimeDebug.Log("Changes generated: " + changesGenerated);
+
+            RuntimeDebug.Log("Helix created successfull");
+            structureDrawn = true;
+        }
+    }
+
+
+    void CreateStructure()
+    {
         for (int i = 0; i < Main.branches.branches.Length; i++)
         {
             if (!branches.ContainsKey(Main.branches.branches[i].branch))
@@ -48,17 +98,17 @@ public class Helix : MonoBehaviour
             {
                 if (!commitsFiles.ContainsKey(Main.commitsFiles.commitsFiles[i].to))
                 {
-                    commitsFiles.Add(Main.commitsFiles.commitsFiles[i].to, new List<HelixComitFileRelation>());
+                    commitsFiles.Add(Main.commitsFiles.commitsFiles[i].to, new List<HelixCommitFileRelation>());
                 }
-                commitsFiles[Main.commitsFiles.commitsFiles[i].to].Add(new HelixComitFileRelation(Main.commitsFiles.commitsFiles[i]));
+                commitsFiles[Main.commitsFiles.commitsFiles[i].to].Add(new HelixCommitFileRelation(Main.commitsFiles.commitsFiles[i]));
             }
             else
             {
                 if (!commitsFiles.ContainsKey(Main.commitsFiles.commitsFiles[i]._to))
                 {
-                    commitsFiles.Add(Main.commitsFiles.commitsFiles[i]._to, new List<HelixComitFileRelation>());
+                    commitsFiles.Add(Main.commitsFiles.commitsFiles[i]._to, new List<HelixCommitFileRelation>());
                 }
-                commitsFiles[Main.commitsFiles.commitsFiles[i]._to].Add(new HelixComitFileRelation(Main.commitsFiles.commitsFiles[i]));
+                commitsFiles[Main.commitsFiles.commitsFiles[i]._to].Add(new HelixCommitFileRelation(Main.commitsFiles.commitsFiles[i]));
 
             }
         }
@@ -67,21 +117,15 @@ public class Helix : MonoBehaviour
         {
             files.Add(Main.files.files[i]._id, new HelixFile(Main.files.files[i]));
         }
-        int cCount = 0;
-        Dictionary<string, GameObject> shaCommitsRelation = new Dictionary<string, GameObject>();
-        foreach (HelixCommit commit in commits.Values)
-        {
-            cCount++;
-            shaCommitsRelation.Add(commit.dBCommitStore.sha, commit.GenerateCommit(commitsFiles, files, projectFiles));
-        }
+    }
 
+    void DrawStructure()
+    {
         foreach (HelixCommit commit in commits.Values)
         {
-            commit.ConnectCommit(commitConnectionTree, shaCommitsRelation);
+            commit.DrawCommit(commitsFiles, files, projectFiles);
+            commit.ConnectCommit(commitConnectionTree, commits);
             commit.DrawHelixRing(fileHelixConnectiontreeDictionary);
         }
-        RuntimeDebug.Log("Changes generated: " + changesGenerated);
-
-        RuntimeDebug.Log("Helix created successfull");
     }
 }

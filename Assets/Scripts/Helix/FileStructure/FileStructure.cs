@@ -15,7 +15,7 @@ public class FileStructure : MonoBehaviour
         root.Name = "root";
     }
 
-    public void AddFilePathToFileStructure(string path, bool changedInThisCommit, HelixComitFileRelation helixCommitFileRelation)
+    public void AddFilePathToFileStructure(string path, bool changedInThisCommit, HelixCommitFileRelation helixCommitFileRelation)
     {
         string[] splittedPath = path.Split('/');
         maxDepht = splittedPath.Length;

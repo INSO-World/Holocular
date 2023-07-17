@@ -14,13 +14,13 @@ public class MainSettings : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
 
@@ -35,7 +35,7 @@ public class MainSettings : MonoBehaviour
 
     void SettingsWindow(int windowID)
     {
-        GUI.Label(new Rect(0, 0, 200, 20),"Settings", WindowBar);
+        GUI.Label(new Rect(0, 0, 200, 20), "Settings", WindowBar);
         /*if (GUI.Button(new Rect(10, 30, 150, 20), "New"))
         {
             Commit commit = new Commit(new Vector3(0, 0, Main.commitCount*2));
@@ -47,7 +47,7 @@ public class MainSettings : MonoBehaviour
             OpenFolder();
         }
 
-        GUI.Label(new Rect(10, 50, 200, 20), "Commits: " + (Main.commits==null?"0":Main.commits.commits.Length));
+        GUI.Label(new Rect(10, 50, 200, 20), "Commits: " + Statistics.commitsDrawn + "/" + (Main.commits == null ? "0" : Main.commits.commits.Length));
         GUI.Label(new Rect(10, 70, 200, 20), "Branches: " + (Main.branches == null ? "0" : Main.branches.branches.Length));
         GUI.Label(new Rect(10, 90, 200, 20), "Files: " + (Main.files == null ? "0" : Main.files.files.Length));
         GUI.Label(new Rect(10, 110, 200, 20), "Commits-Files: " + (Main.commits == null ? "0" : Main.commitsFiles.commitsFiles.Length));
@@ -58,22 +58,23 @@ public class MainSettings : MonoBehaviour
 
     private void OpenFolder()
     {
-        FileBrowser.ShowLoadDialog( ( paths ) => {
-            RuntimeDebug.Log( "Trying to Open: " + paths[0]);
+        FileBrowser.ShowLoadDialog((paths) =>
+        {
+            RuntimeDebug.Log("Trying to Open: " + paths[0]);
             if (DatabaseLoader.checkFoolderIfValid(paths[0]))
             {
                 RuntimeDebug.Log("Path valid");
                 if (DatabaseLoader.importDatabase(paths[0]))
                 {
                     RuntimeDebug.Log("Database imported Successfull");
-                    Main.helix = new Helix();
+                    Main.helix.GenerateHelix();
                 }
             }
             else
             {
                 RuntimeDebug.Log("Path Invalid. Selected Folder not a Binocular DB");
             }
-        },() => { Debug.Log( "Canceled" ); },FileBrowser.PickMode.Folders, false, null, null, "Select Folder", "Select" );
+        }, () => { Debug.Log("Canceled"); }, FileBrowser.PickMode.Folders, false, null, null, "Select Folder", "Select");
     }
 
 }

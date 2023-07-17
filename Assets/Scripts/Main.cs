@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,6 +39,8 @@ public class Main : MonoBehaviour
     public static DBCommitsFiles commitsFiles;
     public static DBFiles files;
 
+    public static Queue<Action> actionQueue = new Queue<Action>();
+
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +50,7 @@ public class Main : MonoBehaviour
         sCommit = commit;
         sBranchTreeMaterial = branchTreeMaterial;
         sCommitTreeMaterial = commitTreeMaterial;
+        helix = new Helix();
     }
 
     // Update is called once per frame
@@ -56,6 +60,14 @@ public class Main : MonoBehaviour
         {
             debugMode = !debugMode;
             RuntimeDebug.Log("Debug Mode: " + debugMode);
+        }
+
+        helix.CheckUpdate();
+
+
+        lock (actionQueue)
+        {
+            while (actionQueue.Count != 0) actionQueue.Dequeue().Invoke();
         }
     }
 
