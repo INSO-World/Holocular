@@ -42,10 +42,10 @@ public class HelixCommit : MonoBehaviour
             Statistics.commitsDrawn++;
         });
 
-
         BuildFileStructure(commitsFiles, files, projectFiles);
-
         RuntimeDebug.Log("Commit created: " + dBCommitStore.sha);
+
+
     }
 
     public Vector3 GetCommitPosition()

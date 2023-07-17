@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 
 public class HelixConnectionTree : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class HelixConnectionTree : MonoBehaviour
 	 */
     Dictionary<string, Mesh> branchLines = new Dictionary<string, Mesh>();
     Dictionary<string, List<Vector3>> branchPositions = new Dictionary<string, List<Vector3>>();
+
 
     GameObject connectionTree;
 
@@ -23,6 +25,7 @@ public class HelixConnectionTree : MonoBehaviour
 
     public void addPoint(string branchName, Vector3 position, string[] parentShas, Dictionary<string, HelixCommit> commits, float uvColorFactor, float lineThickness)
     {
+
         if (!branchLines.ContainsKey(branchName))
         {
 

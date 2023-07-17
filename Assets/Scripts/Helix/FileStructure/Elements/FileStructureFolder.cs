@@ -98,7 +98,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 
             if (elementsInFolder == 1)
             {
-                lr.positionCount = 0;
+                lr.positionCount = 2;
                 lr.SetPosition(0, new Vector3(pos.x, pos.y, pos.z));
                 lr.SetPosition(1, new Vector3(pos.x + r, pos.y, pos.z));
             }

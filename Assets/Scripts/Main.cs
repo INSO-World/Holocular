@@ -21,6 +21,12 @@ public class Main : MonoBehaviour
     public Material commitTreeMaterial;
     public static Material sCommitTreeMaterial;
 
+    public GameObject curvedLine;
+    public static GameObject sCurvedLine;
+
+    public GameObject curvedLinePoint;
+    public static GameObject sCurvedLinePoint;
+
 
     public static int mouseSensitivity = 5;
 
@@ -50,6 +56,8 @@ public class Main : MonoBehaviour
         sCommit = commit;
         sBranchTreeMaterial = branchTreeMaterial;
         sCommitTreeMaterial = commitTreeMaterial;
+        sCurvedLine = curvedLine;
+        sCurvedLinePoint = curvedLinePoint;
         helix = new Helix();
     }
 
@@ -69,6 +77,7 @@ public class Main : MonoBehaviour
         {
             while (actionQueue.Count != 0) actionQueue.Dequeue().Invoke();
         }
+
     }
 
 }

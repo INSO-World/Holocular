@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,17 +6,17 @@ using UnityEngine;
 public class RuntimeDebug : MonoBehaviour
 {
     private static GameObject debugLine;
-    private static List<string> logs = new List<string>();
+    private static List<Log> logs = new List<Log>();
 
     public static void Log(string message)
     {
         Debug.Log(message);
-        logs.Add(message);
+        logs.Add(new Log(message, DateTime.Now));
     }
 
     public static void DrawLine(Vector3 start, Vector3 end, Color color, float duration = 0.2f)
     {
-        if(debugLine == null)
+        if (debugLine == null)
         {
             debugLine = new GameObject("DebugLine");
         }
@@ -33,8 +34,20 @@ public class RuntimeDebug : MonoBehaviour
         GameObject.Destroy(debugLine, duration);
     }
 
-    public static List<string> getLogs()
+    public static List<Log> getLogs()
     {
         return logs;
+    }
+}
+
+public class Log
+{
+    public string message;
+    public DateTime time;
+
+    public Log(string message, DateTime time)
+    {
+        this.message = message;
+        this.time = time;
     }
 }
