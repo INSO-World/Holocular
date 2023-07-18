@@ -91,7 +91,7 @@ public class HelixCommit : MonoBehaviour
                     files[helixCommitFileRelation.dBCommitsFilesStore.from] :
                     files[helixCommitFileRelation.dBCommitsFilesStore._from];
 
-                fileStructure.AddFilePathToFileStructure(file.dBFileStore.path, changedFiles.ContainsKey(file.dBFileStore.path), helixCommitFileRelation);
+                fileStructure.AddFilePathToFileStructure(dBCommitStore, file.dBFileStore.path, changedFiles.ContainsKey(file.dBFileStore.path), helixCommitFileRelation);
             }
 
             //Add new files to File structure
@@ -104,7 +104,7 @@ public class HelixCommit : MonoBehaviour
 
                 if (!projectFiles.ContainsKey(file.dBFileStore.path))
                 {
-                    fileStructure.AddFilePathToFileStructure(file.dBFileStore.path, true, helixCommitFileRelation);
+                    fileStructure.AddFilePathToFileStructure(dBCommitStore, file.dBFileStore.path, true, helixCommitFileRelation);
                     projectFiles.Add(file.dBFileStore.path, helixCommitFileRelation);
                 }
             }

@@ -11,6 +11,7 @@ public class MainSettings : MonoBehaviour
     public Rect settingsWindowRect = new Rect(10, 10, 200, Screen.height / 2);
     public GUIStyle WindowBar;
 
+
     // Start is called before the first frame update
     void Start()
     {

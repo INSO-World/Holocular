@@ -15,11 +15,11 @@ public class FileStructure : MonoBehaviour
         root.Name = "root";
     }
 
-    public void AddFilePathToFileStructure(string path, bool changedInThisCommit, HelixCommitFileRelation helixCommitFileRelation)
+    public void AddFilePathToFileStructure(DBCommit commit, string path, bool changedInThisCommit, HelixCommitFileRelation helixCommitFileRelation)
     {
         string[] splittedPath = path.Split('/');
         maxDepht = splittedPath.Length;
-        (root as FileStructureFolder).AddElement(path, splittedPath, changedInThisCommit, helixCommitFileRelation);
+        (root as FileStructureFolder).AddElement(commit, path, splittedPath, changedInThisCommit, helixCommitFileRelation);
     }
 
     public void DrawHelixRing(Transform commit, string branchName, Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary)

@@ -21,18 +21,10 @@ public class Main : MonoBehaviour
     public Material commitTreeMaterial;
     public static Material sCommitTreeMaterial;
 
-    public GameObject curvedLine;
-    public static GameObject sCurvedLine;
-
-    public GameObject curvedLinePoint;
-    public static GameObject sCurvedLinePoint;
-
-
     public static int mouseSensitivity = 5;
 
     public static int moveSpeed = 100;
 
-    public static bool debugMode = true;
 
     public static Helix helix;
 
@@ -44,9 +36,11 @@ public class Main : MonoBehaviour
     public static DBBranches branches;
     public static DBCommitsFiles commitsFiles;
     public static DBFiles files;
+    public static DBStakeholders stakeholders;
 
     public static Queue<Action> actionQueue = new Queue<Action>();
 
+    public static Color fileDefaultColor = Color.white;
 
     // Start is called before the first frame update
     void Start()
@@ -56,19 +50,13 @@ public class Main : MonoBehaviour
         sCommit = commit;
         sBranchTreeMaterial = branchTreeMaterial;
         sCommitTreeMaterial = commitTreeMaterial;
-        sCurvedLine = curvedLine;
-        sCurvedLinePoint = curvedLinePoint;
         helix = new Helix();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            debugMode = !debugMode;
-            RuntimeDebug.Log("Debug Mode: " + debugMode);
-        }
+        ShortCuts();
 
         helix.CheckUpdate();
 
@@ -80,4 +68,18 @@ public class Main : MonoBehaviour
 
     }
 
+    private static void ShortCuts()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            GlobalSettings.showAuthorColors = !GlobalSettings.showAuthorColors;
+            RuntimeDebug.Log("Show Author Colors: " + GlobalSettings.showAuthorColors);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            GlobalSettings.debugMode = !GlobalSettings.debugMode;
+            RuntimeDebug.Log("Debug Mode: " + GlobalSettings.debugMode);
+        }
+    }
 }

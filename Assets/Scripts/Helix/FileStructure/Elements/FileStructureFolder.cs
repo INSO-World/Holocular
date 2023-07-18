@@ -21,7 +21,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
     bool IFileStructureElement.Changed { get { return changed; } set { changed = value; } }
 
 
-    public void AddElement(string fullPath, string[] pathParts, bool changedInThisCommit, HelixCommitFileRelation helixCommitFileRelation)
+    public void AddElement(DBCommit commit, string fullPath, string[] pathParts, bool changedInThisCommit, HelixCommitFileRelation helixCommitFileRelation)
     {
         string currentPathPart = pathParts[0];
         if (pathParts.Length > 1)
@@ -30,7 +30,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 
             if (folderContent.ContainsKey(currentPathPart))
             {
-                (folderContent[currentPathPart] as FileStructureFolder).AddElement(fullPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
+                (folderContent[currentPathPart] as FileStructureFolder).AddElement(commit, fullPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
                 if (changedInThisCommit)
                 {
                     folderContent[currentPathPart].Changed = changedInThisCommit;
@@ -40,7 +40,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             {
                 IFileStructureElement folder = new FileStructureFolder();
                 folder.Name = currentPathPart;
-                (folder as FileStructureFolder).AddElement(fullPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
+                (folder as FileStructureFolder).AddElement(commit, fullPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
                 folder.Changed = changedInThisCommit;
                 folderContent.Add(currentPathPart, folder);
             }
@@ -52,6 +52,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             file.Changed = changedInThisCommit;
             (file as FileStructureFile).fullPath = fullPath;
             (file as FileStructureFile).helixCommitFileRelation = helixCommitFileRelation;
+            (file as FileStructureFile).authorSignature = commit.signature;
 
             if (helixCommitFileRelation.dBCommitsFilesStore.stats.additions >= Helix.maxAdditions)
             {
@@ -134,7 +135,12 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
                             helixElementObject.transform.position = new Vector3(pos.x + x, pos.y + y, pos.z);
                             string fullFilePath = (element as FileStructureFile).fullPath;
 
-                            Instantiate(Main.sChangedFile, helixElementObject.transform).name = fullFilePath;
+                            GameObject changedFileObject = Instantiate(Main.sChangedFile, helixElementObject.transform);
+
+                            changedFileObject.name = fullFilePath;
+                            FileController fileController = changedFileObject.GetComponent<FileController>();
+                            fileController.authorSighnature = (element as FileStructureFile).authorSignature;
+
                             float additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / Helix.maxAdditions;
                             float deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / Helix.maxDeletions;
 

@@ -26,7 +26,7 @@ public class DebugView : MonoBehaviour
 
     private void OnGUI()
     {
-        if (Main.debugMode)
+        if (GlobalSettings.debugMode)
         {
             GUI.BeginGroup(new Rect(Screen.width - 400, 0, 400, Screen.height), debugBackgroud);
             GUI.Label(new Rect(0, 0, 400, 20), "Move Speed (Mouse wheel): " + Main.moveSpeed + "m/s");

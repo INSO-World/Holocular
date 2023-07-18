@@ -6,7 +6,7 @@ public class DatabaseLoader : MonoBehaviour
 {
     public static bool checkFoolderIfValid(string path)
     {
-        if (!System.IO.File.Exists(path+"/branches.json")
+        if (!System.IO.File.Exists(path + "/branches.json")
             || !System.IO.File.Exists(path + "/builds.json")
             || !System.IO.File.Exists(path + "/commits-commits.json")
             || !System.IO.File.Exists(path + "/commits-files.json")
@@ -35,7 +35,8 @@ public class DatabaseLoader : MonoBehaviour
         if (!importBranches(path)
             || !importCommits(path)
             || !importCommitsFilesRelation(path)
-            || !importFiles(path))
+            || !importFiles(path)
+            || !importStakeholders(path))
         {
             return false;
         }
@@ -104,6 +105,22 @@ public class DatabaseLoader : MonoBehaviour
         {
             return false;
             RuntimeDebug.Log("Error Importing Files");
+        }
+    }
+
+    public static bool importStakeholders(string path)
+    {
+        string stakeholdersJSON = System.IO.File.ReadAllText(path + "/stakeholders.json");
+        try
+        {
+            Main.stakeholders = JsonUtility.FromJson<DBStakeholders>("{\"stakeholders\":" + stakeholdersJSON + "}");
+            RuntimeDebug.Log("Stakeholders Imported Sucessfull");
+            return true;
+        }
+        catch (System.Exception ex)
+        {
+            return false;
+            RuntimeDebug.Log("Error Importing Stakeholders");
         }
     }
 }

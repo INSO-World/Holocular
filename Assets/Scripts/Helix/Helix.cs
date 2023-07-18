@@ -18,6 +18,8 @@ public class Helix : MonoBehaviour
 
     Dictionary<string, HelixCommitFileRelation> projectFiles = new Dictionary<string, HelixCommitFileRelation>(); //key: path
 
+    public static Dictionary<string, HelixStakeholder> stakeholders = new Dictionary<string, HelixStakeholder>(); // Key: siganture
+
     HelixConnectionTree commitConnectionTree = new HelixConnectionTree("Commits-Connections", Main.sCommitTreeMaterial);
 
     Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary = new Dictionary<string, HelixConnectionTree>();
@@ -77,14 +79,18 @@ public class Helix : MonoBehaviour
 
     void CreateStructure()
     {
-        for (int i = 0; i < Main.branches.branches.Length; i++)
-        {
-            if (!branches.ContainsKey(Main.branches.branches[i].branch))
-            {
-                branches.Add(Main.branches.branches[i].branch, new HelixBranch(Main.branches.branches[i], Main.branches.branches.Length));
-            }
-        }
+        CreateBranchesDictionary();
 
+        CreateCommitsDictionary();
+
+        CreateFilesDictionary();
+
+        CreateStakeholdersDictionary();
+    }
+
+
+    private void CreateCommitsDictionary()
+    {
         Array.Sort(Main.commits.commits, (a, b) => DateTime.Parse(a.date).CompareTo(DateTime.Parse(b.date)));
 
         for (int i = 0; i < Main.commits.commits.Length; i++)
@@ -112,10 +118,34 @@ public class Helix : MonoBehaviour
 
             }
         }
+    }
 
+    private void CreateBranchesDictionary()
+    {
+        for (int i = 0; i < Main.branches.branches.Length; i++)
+        {
+            if (!branches.ContainsKey(Main.branches.branches[i].branch))
+            {
+                branches.Add(Main.branches.branches[i].branch, new HelixBranch(Main.branches.branches[i], Main.branches.branches.Length));
+            }
+        }
+    }
+
+    private void CreateFilesDictionary()
+    {
         for (int i = 0; i < Main.files.files.Length; i++)
         {
             files.Add(Main.files.files[i]._id, new HelixFile(Main.files.files[i]));
+        }
+    }
+
+
+    private void CreateStakeholdersDictionary()
+    {
+        Color[] palette = ColorPalette.Generate(Main.stakeholders.stakeholders.Length);
+        for (int i = 0; i < Main.stakeholders.stakeholders.Length; i++)
+        {
+            stakeholders.Add(Main.stakeholders.stakeholders[i].gitSignature, new HelixStakeholder(Main.stakeholders.stakeholders[i], palette[i]));
         }
     }
 

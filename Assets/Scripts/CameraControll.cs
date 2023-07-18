@@ -35,7 +35,7 @@ public class CameraControll : MonoBehaviour
                 selected = true;
                 RuntimeDebug.Log(hit.transform.name);
             }
-            if (Main.debugMode)
+            if (GlobalSettings.debugMode)
             {
                 RuntimeDebug.DrawLine(transform.position - Vector3.up, hit.transform.position, Color.green); ;
                 Debug.Log("hit");
@@ -44,7 +44,7 @@ public class CameraControll : MonoBehaviour
 
         if (Input.GetMouseButton(1))
         {
-   
+
             rotationX += Input.GetAxis("Mouse X") * Main.mouseSensitivity;
             rotationY += Input.GetAxis("Mouse Y") * Main.mouseSensitivity;
             Quaternion xQuaternion = Quaternion.AngleAxis(rotationX, Vector3.up);
@@ -54,7 +54,7 @@ public class CameraControll : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.W))
         {
-            transform.position += transform.forward * Main.moveSpeed *Time.deltaTime;
+            transform.position += transform.forward * Main.moveSpeed * Time.deltaTime;
             selected = false;
         }
         if (Input.GetKey(KeyCode.S))
@@ -112,13 +112,13 @@ public class CameraControll : MonoBehaviour
 
         if (selected)
         {
-            mainCamera.position = Vector3.MoveTowards(mainCamera.position, selectPoint.position, selectFocusSpeed * Time.deltaTime* Vector3.Distance(mainCamera.position, selectPoint.position));
+            mainCamera.position = Vector3.MoveTowards(mainCamera.position, selectPoint.position, selectFocusSpeed * Time.deltaTime * Vector3.Distance(mainCamera.position, selectPoint.position));
             mainCamera.rotation = Quaternion.Lerp(mainCamera.rotation, selectPoint.rotation, selectFocusSpeed * Time.deltaTime);
 
         }
         else
         {
-            mainCamera.localPosition = Vector3.MoveTowards(mainCamera.localPosition, new Vector3(0,0,0), selectFocusSpeed * Time.deltaTime * Vector3.Distance(mainCamera.localPosition, new Vector3(0, 0, 0)));
+            mainCamera.localPosition = Vector3.MoveTowards(mainCamera.localPosition, new Vector3(0, 0, 0), selectFocusSpeed * Time.deltaTime * Vector3.Distance(mainCamera.localPosition, new Vector3(0, 0, 0)));
             mainCamera.rotation = Quaternion.Lerp(mainCamera.rotation, transform.rotation, selectFocusSpeed * Time.deltaTime);
         }
     }
