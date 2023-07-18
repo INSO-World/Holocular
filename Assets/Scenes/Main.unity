@@ -164,7 +164,6 @@ GameObject:
   m_Component:
   - component: {fileID: 518972451}
   - component: {fileID: 518972450}
-  - component: {fileID: 518972452}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -189,8 +188,6 @@ MonoBehaviour:
   commit: {fileID: 4880512911649112285, guid: 11659f32f5aad463291b24c33595ce92, type: 3}
   branchTreeMaterial: {fileID: 2100000, guid: 0a69b032a11b04a808034239cd08ffe4, type: 2}
   commitTreeMaterial: {fileID: 2100000, guid: f5b38880f5c5f44cb958a71315d9ff7b, type: 2}
-  curvedLine: {fileID: 0}
-  curvedLinePoint: {fileID: 0}
 --- !u!4 &518972451
 Transform:
   m_ObjectHideFlags: 0
@@ -206,18 +203,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &518972452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 518972449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62c8cc15ed2454580aad2269a51369c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,6 +494,7 @@ GameObject:
   - component: {fileID: 1862167779}
   - component: {fileID: 1862167780}
   - component: {fileID: 1862167781}
+  - component: {fileID: 1862167782}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -550,10 +536,10 @@ MonoBehaviour:
     y: 10
     width: 200
     height: 403
-  WindowBar:
+  switchBackground:
     m_Name: 
     m_Normal:
-      m_Background: {fileID: 2800000, guid: dd6b1408a8d624bd889eaf0e81038ce3, type: 3}
+      m_Background: {fileID: 2800000, guid: b4de66aee032247769e8d433a4b1e3d9, type: 3}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
@@ -607,7 +593,74 @@ MonoBehaviour:
     m_Font: {fileID: 0}
     m_FontSize: 0
     m_FontStyle: 0
-    m_Alignment: 4
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+  switchKnob:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: 2800000, guid: 69e8ab4906a1b432c9c269f15437bab5, type: 3}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
     m_WordWrap: 0
     m_RichText: 1
     m_TextClipping: 0
@@ -776,3 +829,22 @@ MonoBehaviour:
     m_StretchWidth: 1
     m_StretchHeight: 0
   logScrollPosition: {x: 0, y: 0}
+--- !u!114 &1862167782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862167777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 429baad078a294798bbd22dc24ec52ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
+  authorPaletteWindowRect:
+    serializedVersion: 2
+    x: 40
+    y: 40
+    width: 200
+    height: 681

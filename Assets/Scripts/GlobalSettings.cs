@@ -7,4 +7,5 @@ public class GlobalSettings : MonoBehaviour
 {
     public static bool debugMode = true;
     public static bool showAuthorColors = false;
+    public static bool showAuthorPalette = false;
 }

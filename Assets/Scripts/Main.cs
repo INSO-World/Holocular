@@ -56,7 +56,7 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ShortCuts();
+        CheckShortcuts();
 
         helix.CheckUpdate();
 
@@ -68,7 +68,7 @@ public class Main : MonoBehaviour
 
     }
 
-    private static void ShortCuts()
+    private static void CheckShortcuts()
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -76,10 +76,17 @@ public class Main : MonoBehaviour
             RuntimeDebug.Log("Show Author Colors: " + GlobalSettings.showAuthorColors);
         }
 
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            GlobalSettings.showAuthorPalette = !GlobalSettings.showAuthorPalette;
+            RuntimeDebug.Log("Show Author Palette: " + GlobalSettings.showAuthorPalette);
+        }
+
         if (Input.GetKeyDown(KeyCode.F3))
         {
             GlobalSettings.debugMode = !GlobalSettings.debugMode;
             RuntimeDebug.Log("Debug Mode: " + GlobalSettings.debugMode);
         }
+
     }
 }
