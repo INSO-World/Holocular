@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using static UnityEditor.Handles;
 
 public class FileController : MonoBehaviour
 {
@@ -10,25 +12,28 @@ public class FileController : MonoBehaviour
 
     private Material mat;
 
-    private bool colorUpdate = GlobalSettings.showAuthorColors;
+    private UnityAction updateFileColorListener;
+
 
     // Start is called before the first frame update
     void Start()
     {
         mat = visual.GetComponent<Renderer>().material;
         ChangeColor();
-    }
+        updateFileColorListener = new UnityAction(ChangeColor);
+        EventManager.StartListening("updateFileColor", updateFileColorListener);
 
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (GlobalSettings.showAuthorColors != colorUpdate)
+        /*if (GlobalSettings.showAuthorColors != colorUpdate)
         {
             ChangeColor();
 
             colorUpdate = GlobalSettings.showAuthorColors;
-        }
+        }*/
     }
 
     private void ChangeColor()

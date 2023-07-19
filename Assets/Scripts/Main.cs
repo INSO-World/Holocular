@@ -82,6 +82,12 @@ public class Main : MonoBehaviour
             RuntimeDebug.Log("Show Author Palette: " + GlobalSettings.showAuthorPalette);
         }
 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            GlobalSettings.showSettings = !GlobalSettings.showSettings;
+            RuntimeDebug.Log("Show Settings: " + GlobalSettings.showSettings);
+        }
+
         if (Input.GetKeyDown(KeyCode.F3))
         {
             GlobalSettings.debugMode = !GlobalSettings.debugMode;

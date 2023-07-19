@@ -14,11 +14,12 @@ public class AuthorPalette : MonoBehaviour
 
     Dictionary<string, Texture2D> authorBackgroundTextures = new Dictionary<string, Texture2D>();//key: signature
     bool authorBackgroundTexturesInitialized = false;
+    WindowBar windowBar;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        windowBar = new WindowBar("Author Palette", uiStyle);
     }
 
     // Update is called once per frame
@@ -52,9 +53,8 @@ public class AuthorPalette : MonoBehaviour
 
     void AuthorPaletteWindow(int windowID)
     {
-        GUI.Label(new Rect(0, 0, 200, 20), "Author Palette", uiStyle.GetStyle("windowBar"));
-
-        authorsScrollPosition = GUI.BeginScrollView(new Rect(0, 20, 200, Screen.height / 2 - 20), authorsScrollPosition, new Rect(0, 0, 180, 20 * Helix.stakeholders.Count));
+        windowBar.render();
+        authorsScrollPosition = GUI.BeginScrollView(new Rect(0, 30, 200, Screen.height / 2 - 30), authorsScrollPosition, new Rect(0, 0, 180, 20 * Helix.stakeholders.Count));
         int i = 0;
         foreach (KeyValuePair<string, HelixStakeholder> stakeholder in Helix.stakeholders)
         {
@@ -66,6 +66,5 @@ public class AuthorPalette : MonoBehaviour
 
         GUI.EndScrollView();
 
-        GUI.DragWindow(new Rect(0, 0, 200, 20));
     }
 }

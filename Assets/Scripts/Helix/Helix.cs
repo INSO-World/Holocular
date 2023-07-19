@@ -58,7 +58,7 @@ public class Helix : MonoBehaviour
     public void CheckUpdate()
     {
         createStructureThreadState = createStructureThread.ThreadState;
-        drawStructureThreadState = createStructureThread.ThreadState;
+        drawStructureThreadState = drawStructureThread.ThreadState;
 
         if (createStructureThread.ThreadState == ThreadState.Stopped && !structureCreated)
         {
