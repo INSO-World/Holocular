@@ -32,11 +32,13 @@ public class HelixCommit : MonoBehaviour
 
     public void DrawCommit(Dictionary<string, List<HelixCommitFileRelation>> commitsFiles,
         Dictionary<string, HelixFile> files,
-        Dictionary<string, HelixCommitFileRelation> projectFiles)
+        Dictionary<string, HelixCommitFileRelation> projectFiles,
+        GameObject parent)
     {
         Main.actionQueue.Enqueue(() =>
         {
             commitObject = new GameObject("Commit[" + idStore + "]: " + dBCommitStore.sha);
+            commitObject.transform.parent = parent.transform;
             commitObject.transform.position = commitPosition;
             Instantiate(Main.sCommit, commitObject.transform);
             Statistics.commitsDrawn++;
@@ -59,9 +61,9 @@ public class HelixCommit : MonoBehaviour
     {
         if (commitsFiles.ContainsKey(dBCommitStore._id))
         {
-            List<HelixCommitFileRelation> helixComitFileRelations = commitsFiles[dBCommitStore._id];
+            List<HelixCommitFileRelation> helixCommitFileRelations = commitsFiles[dBCommitStore._id];
             Dictionary<String, HelixCommitFileRelation> changedFiles = new Dictionary<string, HelixCommitFileRelation>();
-            helixComitFileRelations.Sort((r1, r2) =>
+            helixCommitFileRelations.Sort((r1, r2) =>
             {
                 HelixFile file1 = files[r1.dBCommitsFilesStore.from != null ?
                     r1.dBCommitsFilesStore.from :
@@ -74,15 +76,23 @@ public class HelixCommit : MonoBehaviour
             int fileCount = 0;
 
 
-            foreach (HelixCommitFileRelation helixCommitFileRelation in helixComitFileRelations)
+            foreach (HelixCommitFileRelation helixCommitFileRelation in helixCommitFileRelations)
             {
                 HelixFile file = files[helixCommitFileRelation.dBCommitsFilesStore.from != null ?
                     helixCommitFileRelation.dBCommitsFilesStore.from :
                     helixCommitFileRelation.dBCommitsFilesStore._from];
                 changedFiles.Add(file.dBFileStore.path, helixCommitFileRelation);
+                if (projectFiles.ContainsKey(file.dBFileStore.path))
+                {
+                    projectFiles[file.dBFileStore.path] = helixCommitFileRelation;
+                }
+                else
+                {
+                    projectFiles.Add(file.dBFileStore.path, helixCommitFileRelation);
+
+                }
             }
 
-            //Add all historic files to File structure
             foreach (HelixCommitFileRelation helixCommitFileRelation in projectFiles.Values)
             {
                 fileCount++;
@@ -93,26 +103,12 @@ public class HelixCommit : MonoBehaviour
 
                 fileStructure.AddFilePathToFileStructure(dBCommitStore, file.dBFileStore.path, changedFiles.ContainsKey(file.dBFileStore.path), helixCommitFileRelation);
             }
-
-            //Add new files to File structure
-            foreach (HelixCommitFileRelation helixCommitFileRelation in helixComitFileRelations)
-            {
-                fileCount++;
-                HelixFile file = helixCommitFileRelation.dBCommitsFilesStore.from != null ?
-                    files[helixCommitFileRelation.dBCommitsFilesStore.from] :
-                    files[helixCommitFileRelation.dBCommitsFilesStore._from];
-
-                if (!projectFiles.ContainsKey(file.dBFileStore.path))
-                {
-                    fileStructure.AddFilePathToFileStructure(dBCommitStore, file.dBFileStore.path, true, helixCommitFileRelation);
-                    projectFiles.Add(file.dBFileStore.path, helixCommitFileRelation);
-                }
-            }
         }
     }
 
     public void ConnectCommit(HelixConnectionTree connectionTree,
-    Dictionary<string, HelixCommit> shaCommitsRelation)
+        Dictionary<string,
+        HelixCommit> shaCommitsRelation)
     {
         Main.actionQueue.Enqueue(() =>
         {
@@ -120,7 +116,8 @@ public class HelixCommit : MonoBehaviour
         });
     }
 
-    public void DrawHelixRing(Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary)
+    public void DrawHelixRing(Dictionary<string,
+        HelixConnectionTree> fileHelixConnectiontreeDictionary)
     {
         Main.actionQueue.Enqueue(() =>
         {

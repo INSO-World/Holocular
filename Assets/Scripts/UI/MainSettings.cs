@@ -47,7 +47,18 @@ public class MainSettings : MonoBehaviour
         {
             OpenFolder();
         }
-        GUI.BeginGroup(new Rect(10, 60, 200, 200));
+
+        if (GUI.Button(new Rect(10, 65, 150, 20), "Delete Helix"))
+        {
+            Main.helix.DeleteHelix();
+        }
+
+        if (GUI.Button(new Rect(10, 90, 150, 20), "Stop Helix Generation"))
+        {
+            Main.helix.StopThreads();
+        }
+
+        GUI.BeginGroup(new Rect(10, 120, 200, 200));
         GUI.Label(new Rect(0, 0, 200, 20), "Commits: " + Statistics.commitsDrawn + "/" + (Main.commits == null ? "0" : Main.commits.commits.Length));
         GUI.Label(new Rect(0, 20, 200, 20), "Branches: " + (Main.branches == null ? "0" : Main.branches.branches.Length));
         GUI.Label(new Rect(0, 40, 200, 20), "Files: " + (Main.files == null ? "0" : Main.files.files.Length));
@@ -55,7 +66,7 @@ public class MainSettings : MonoBehaviour
         GUI.Label(new Rect(0, 80, 200, 20), "Stakeholders: " + (Main.stakeholders == null ? "0" : Main.stakeholders.stakeholders.Length));
         GUI.EndGroup();
 
-        GUI.BeginGroup(new Rect(10, 190, 200, 200));
+        GUI.BeginGroup(new Rect(10, 240, 200, 200));
         GlobalSettings.showAuthorColors = showAuthorsColorsSwitch.render(GlobalSettings.showAuthorColors);
         GUI.Label(new Rect(50, 0, 160, 40), "Show Committer\nColors (c)");
 
@@ -76,6 +87,7 @@ public class MainSettings : MonoBehaviour
                 if (DatabaseLoader.importDatabase(paths[0]))
                 {
                     RuntimeDebug.Log("Database imported Successfull");
+                    Main.helix = new Helix(GameObject.Find("Helix"));
                     Main.helix.GenerateHelix();
                 }
             }

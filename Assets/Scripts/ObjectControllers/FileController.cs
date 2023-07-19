@@ -25,22 +25,18 @@ public class FileController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        /*if (GlobalSettings.showAuthorColors != colorUpdate)
-        {
-            ChangeColor();
-
-            colorUpdate = GlobalSettings.showAuthorColors;
-        }*/
-    }
-
     private void ChangeColor()
     {
         if (GlobalSettings.showAuthorColors)
         {
-            mat.color = Helix.stakeholders[authorSighnature].colorStore;
+            if (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == authorSighnature)
+            {
+                mat.color = Helix.stakeholders[authorSighnature].colorStore;
+            }
+            else
+            {
+                mat.color = Main.fileDeSelectedColor;
+            }
         }
         else
         {

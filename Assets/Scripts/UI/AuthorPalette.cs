@@ -58,8 +58,21 @@ public class AuthorPalette : MonoBehaviour
         int i = 0;
         foreach (KeyValuePair<string, HelixStakeholder> stakeholder in Helix.stakeholders)
         {
-            GUI.DrawTexture(new Rect(0, 20 * i, 200, 20), authorBackgroundTextures[stakeholder.Key]);
-            GUI.Label(new Rect(10, 20 * i, 200, 20), stakeholder.Value.dBStakeholderStore.gitSignature);
+            if (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == stakeholder.Value.dBStakeholderStore.gitSignature)
+            {
+                GUI.DrawTexture(new Rect(0, 20 * i, 200, 20), authorBackgroundTextures[stakeholder.Key]);
+            }
+            if (GUI.Button(new Rect(10, 20 * i, 800, 20), stakeholder.Value.dBStakeholderStore.gitSignature, uiStyle.label))
+            {
+                if (GlobalSettings.highlightedAuthor == stakeholder.Value.dBStakeholderStore.gitSignature)
+                {
+                    GlobalSettings.highlightedAuthor = null;
+                }
+                else
+                {
+                    GlobalSettings.highlightedAuthor = stakeholder.Value.dBStakeholderStore.gitSignature;
+                }
+            }
 
             i++;
         }

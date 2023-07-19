@@ -32,6 +32,7 @@ public class CameraControll : MonoBehaviour
                 Vector3 dir = (hit.transform.position - mainCamera.position).normalized;
                 selectPoint.position = hit.transform.position + -dir * 5;
                 selectPoint.LookAt(hit.transform.position);
+                Main.lastSelectedObject = hit.transform.gameObject;
                 selected = true;
                 RuntimeDebug.Log(hit.transform.name);
             }

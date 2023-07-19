@@ -28,6 +28,7 @@ public class Main : MonoBehaviour
 
     public static Helix helix;
 
+
     public static float helixReferenceRadius = 5f;
     public static float helixeRadiusSpread = 4f;
     public static float helixBranchOffset = 100f;
@@ -41,6 +42,9 @@ public class Main : MonoBehaviour
     public static Queue<Action> actionQueue = new Queue<Action>();
 
     public static Color fileDefaultColor = Color.white;
+    public static Color fileDeSelectedColor = Color.gray;
+
+    public static GameObject lastSelectedObject;
 
     // Start is called before the first frame update
     void Start()
@@ -50,7 +54,7 @@ public class Main : MonoBehaviour
         sCommit = commit;
         sBranchTreeMaterial = branchTreeMaterial;
         sCommitTreeMaterial = commitTreeMaterial;
-        helix = new Helix();
+        helix = new Helix(GameObject.Find("Helix"));
     }
 
     // Update is called once per frame

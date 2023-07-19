@@ -17,9 +17,10 @@ public class HelixConnectionTree : MonoBehaviour
 
     Material material;
 
-    public HelixConnectionTree(string name, Material material)
+    public HelixConnectionTree(string name, Material material, GameObject parent)
     {
         connectionTree = new GameObject(name);
+        connectionTree.transform.parent = parent.transform;
         this.material = material;
     }
 
@@ -37,27 +38,30 @@ public class HelixConnectionTree : MonoBehaviour
             }
             else
             {
-                AddVertex(instantiatedMesh, branchName, commits[parentShas[0]].GetCommitPosition(), uvColorFactor, lineThickness);
-                AddVertex(instantiatedMesh, branchName, position, uvColorFactor, lineThickness);
+                foreach (string parentSha in parentShas)
+                {
+
+                    AddVertex(instantiatedMesh, branchName, commits[parentSha].GetCommitPosition(), uvColorFactor, lineThickness);
+                    AddVertex(instantiatedMesh, branchName, position, uvColorFactor, lineThickness);
+                }
             }
             branchLines.Add(branchName, instantiatedMesh);
         }
         else
         {
-            if (parentShas != null && parentShas.Length >= 1)
-            {
-                foreach (string parentSha in parentShas)
-                {
-                    Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName + '-' + parentSha, position);
+            Mesh branchMesh = branchLines[branchName];
 
-                    AddVertex(instantiatedMesh, branchName + '-' + parentSha, commits[parentSha].GetCommitPosition(), uvColorFactor, lineThickness);
-                    AddVertex(instantiatedMesh, branchName + '-' + parentSha, position, uvColorFactor, lineThickness);
-                }
+            if (parentShas == null)
+            {
+                AddVertex(branchMesh, branchName, position, uvColorFactor, lineThickness);
             }
             else
             {
-                Mesh branchMesh = branchLines[branchName];
-                AddVertex(branchMesh, branchName, position, uvColorFactor, lineThickness);
+                foreach (string parentSha in parentShas)
+                {
+                    AddVertex(branchMesh, branchName, commits[parentSha].GetCommitPosition(), uvColorFactor, lineThickness);
+                    AddVertex(branchMesh, branchName, position, uvColorFactor, lineThickness);
+                }
             }
         }
     }
@@ -86,10 +90,10 @@ public class HelixConnectionTree : MonoBehaviour
             {
                 foreach (string parentSha in parentShas)
                 {
-                    Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName + '-' + parentSha, position);
+                    Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName, position);
 
-                    AddDualVertex(instantiatedMesh, branchName + '-' + parentSha, commits[parentSha].GetCommitPosition(), line1Thickness, line2Thickness);
-                    AddDualVertex(instantiatedMesh, branchName + '-' + parentSha, position, line1Thickness, line2Thickness);
+                    AddDualVertex(instantiatedMesh, branchName, commits[parentSha].GetCommitPosition(), line1Thickness, line2Thickness);
+                    AddDualVertex(instantiatedMesh, branchName, position, line1Thickness, line2Thickness);
                 }
             }
             else
@@ -147,7 +151,7 @@ public class HelixConnectionTree : MonoBehaviour
     private void AddVertex(Mesh branchMesh, string branchName, Vector3 position, float uvColorFactor, float lineThickness)
     {
         Vector3 lasPos = branchPositions[branchName].Last();
-        AddVertexToMesh(branchMesh, lasPos, position, uvColorFactor, lineThickness);
+        AddVertexToMesh(branchMesh, lasPos - Vector3.up * lineThickness / 2, position - Vector3.up * lineThickness / 2, uvColorFactor, lineThickness);
         branchPositions[branchName].Add(position);
     }
 

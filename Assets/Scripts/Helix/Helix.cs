@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class Helix : MonoBehaviour
 {
+    GameObject helixObject;
+
     Dictionary<string, HelixCommit> commits = new Dictionary<string, HelixCommit>(); //Key: sha
 
     Dictionary<string, HelixBranch> branches = new Dictionary<string, HelixBranch>(); //Key: branch name
@@ -20,7 +22,7 @@ public class Helix : MonoBehaviour
 
     public static Dictionary<string, HelixStakeholder> stakeholders = new Dictionary<string, HelixStakeholder>(); // Key: siganture
 
-    HelixConnectionTree commitConnectionTree = new HelixConnectionTree("Commits-Connections", Main.sCommitTreeMaterial);
+    HelixConnectionTree commitConnectionTree;
 
     Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary = new Dictionary<string, HelixConnectionTree>();
 
@@ -38,12 +40,20 @@ public class Helix : MonoBehaviour
     Thread drawStructureThread;
     public ThreadState drawStructureThreadState;
 
-    public Helix()
+    public Helix(GameObject helixObject)
     {
+        this.helixObject = helixObject;
+
+        //Create Connection Tree
+        commitConnectionTree = new HelixConnectionTree("Commits-Connections", Main.sCommitTreeMaterial, helixObject);
+
+        //Initialize Threads
         createStructureThread = new Thread(CreateStructure);
         createStructureThreadState = createStructureThread.ThreadState;
+        createStructureThread.IsBackground = true;
         drawStructureThread = new Thread(DrawStructure);
         drawStructureThreadState = drawStructureThread.ThreadState;
+        createStructureThread.IsBackground = true;
     }
 
     public void GenerateHelix()
@@ -153,9 +163,23 @@ public class Helix : MonoBehaviour
     {
         foreach (HelixCommit commit in commits.Values)
         {
-            commit.DrawCommit(commitsFiles, files, projectFiles);
+            commit.DrawCommit(commitsFiles, files, projectFiles, helixObject);
             commit.ConnectCommit(commitConnectionTree, commits);
             commit.DrawHelixRing(fileHelixConnectiontreeDictionary);
         }
+    }
+
+    public void DeleteHelix()
+    {
+        foreach (Transform child in helixObject.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public void StopThreads()
+    {
+        createStructureThread.Abort();
+        drawStructureThread.Abort();
     }
 }

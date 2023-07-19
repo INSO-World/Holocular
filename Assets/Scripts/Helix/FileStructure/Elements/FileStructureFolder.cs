@@ -54,12 +54,12 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             (file as FileStructureFile).helixCommitFileRelation = helixCommitFileRelation;
             (file as FileStructureFile).authorSignature = commit.signature;
 
-            if (helixCommitFileRelation.dBCommitsFilesStore.stats.additions >= Helix.maxAdditions)
+            if (helixCommitFileRelation.dBCommitsFilesStore.stats.additions > Helix.maxAdditions)
             {
                 Helix.maxAdditions = helixCommitFileRelation.dBCommitsFilesStore.stats.additions;
             }
 
-            if (helixCommitFileRelation.dBCommitsFilesStore.stats.deletions >= Helix.maxDeletions)
+            if (helixCommitFileRelation.dBCommitsFilesStore.stats.deletions > Helix.maxDeletions)
             {
                 Helix.maxDeletions = helixCommitFileRelation.dBCommitsFilesStore.stats.deletions;
             }
@@ -148,7 +148,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 
                             if (!fileHelixConnectiontreeDictionary.ContainsKey(fullFilePath))
                             {
-                                HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath + "-Connections", Main.sBranchTreeMaterial);
+                                HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath + "-Connections", Main.sBranchTreeMaterial, parent.gameObject);
                                 connectionTree.addDualPoint(branchName, helixElementObject.transform.position, null, null, additionFactor, deletionFactor);
                                 fileHelixConnectiontreeDictionary.Add(fullFilePath, connectionTree);
                             }
