@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
-using System.Drawing;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 public class HelixConnectionTree : MonoBehaviour
 {
@@ -10,8 +9,8 @@ public class HelixConnectionTree : MonoBehaviour
 	 * Value: Linerenderer for Branch
 	 */
     Dictionary<string, Mesh> branchLines = new Dictionary<string, Mesh>();
-    Dictionary<string, List<Vector3>> branchPositions = new Dictionary<string, List<Vector3>>();
-
+    Dictionary<string, List<Position>> branchPositions = new Dictionary<string, List<Position>>();
+    Dictionary<string, Position> shaPositions = new Dictionary<string, Position>();
 
     GameObject connectionTree;
 
@@ -24,25 +23,26 @@ public class HelixConnectionTree : MonoBehaviour
         this.material = material;
     }
 
-    public void addPoint(string branchName, Vector3 position, string[] parentShas, Dictionary<string, HelixCommit> commits, float uvColorFactor, float lineThickness)
+    public void addPoint(string branchName, string fullFileName, HelixCommit commit, string[] parentShas, Vector3 offset, float uvColorFactor, float lineThickness)
     {
+        shaPositions.Add(commit.dBCommitStore.sha, new Position(commit.GetCommitPosition() + offset));
 
         if (!branchLines.ContainsKey(branchName))
         {
+            Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName, commit.GetCommitPosition() + offset);
 
-            Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName, position);
-
-            if (parentShas == null)
+            if (shaPositions.ContainsKey(parentShas[0]))
             {
-                AddVertex(instantiatedMesh, branchName, position, uvColorFactor, lineThickness);
+                branchPositions[branchName].Add(new Position(shaPositions[parentShas[0]].position));
             }
-            else
+
+            if (parentShas != null)
             {
                 foreach (string parentSha in parentShas)
                 {
-
-                    AddVertex(instantiatedMesh, branchName, commits[parentSha].GetCommitPosition(), uvColorFactor, lineThickness);
-                    AddVertex(instantiatedMesh, branchName, position, uvColorFactor, lineThickness);
+                    List<Position> positions = branchPositions[branchName];
+                    Position position = new Position(positions[positions.Count - 1].position, commit.GetCommitPosition() + offset, lineThickness);
+                    AddVertex(instantiatedMesh, branchName, position, uvColorFactor);
                 }
             }
             branchLines.Add(branchName, instantiatedMesh);
@@ -51,64 +51,109 @@ public class HelixConnectionTree : MonoBehaviour
         {
             Mesh branchMesh = branchLines[branchName];
 
-            if (parentShas == null)
-            {
-                AddVertex(branchMesh, branchName, position, uvColorFactor, lineThickness);
-            }
-            else
+            if (parentShas != null)
             {
                 foreach (string parentSha in parentShas)
                 {
-                    AddVertex(branchMesh, branchName, commits[parentSha].GetCommitPosition(), uvColorFactor, lineThickness);
-                    AddVertex(branchMesh, branchName, position, uvColorFactor, lineThickness);
+                    List<Position> positions = branchPositions[branchName];
+                    Position position = new Position(positions[positions.Count - 1].position, commit.GetCommitPosition() + offset, lineThickness);
+                    AddVertex(branchMesh, branchName, position, uvColorFactor);
                 }
             }
         }
     }
 
-    public void addDualPoint(string branchName, Vector3 position, string[] parentShas, Dictionary<string, HelixCommit> commits, float line1Thickness, float line2Thickness)
+    public void addDualPoint(string branchName, string fullFileName, HelixCommit commit, string[] parentShas, Vector3 offset, float line1Thickness, float line2Thickness)
     {
+        shaPositions.Add(commit.dBCommitStore.sha, new Position(commit.GetCommitPosition() + offset));
+
         if (!branchLines.ContainsKey(branchName))
         {
 
-            Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName, position);
-
-            if (parentShas == null)
+            Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName, commit.GetCommitPosition() + offset);
+            if (shaPositions.ContainsKey(parentShas[0]))
             {
-                AddDualVertex(instantiatedMesh, branchName, position, line1Thickness, line2Thickness);
+                branchPositions[branchName].Add(new Position(shaPositions[parentShas[0]].position));
             }
-            else
+            if (parentShas != null)
             {
-                AddDualVertex(instantiatedMesh, branchName, commits[parentShas[0]].GetCommitPosition(), line1Thickness, line2Thickness);
-                AddDualVertex(instantiatedMesh, branchName, position, line1Thickness, line2Thickness);
+                foreach (string parentSha in parentShas)
+                {
+                    List<Position> positions = branchPositions[branchName];
+                    Position position = new Position(positions[positions.Count - 1].position, commit.GetCommitPosition() + offset, line1Thickness, line2Thickness);
+                    AddDualVertex(instantiatedMesh, branchName, position);
+                }
             }
             branchLines.Add(branchName, instantiatedMesh);
         }
         else
         {
-            if (parentShas != null && parentShas.Length >= 1)
+            Mesh branchMesh = branchLines[branchName];
+            if (parentShas != null)
             {
                 foreach (string parentSha in parentShas)
                 {
-                    Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName, position);
-
-                    AddDualVertex(instantiatedMesh, branchName, commits[parentSha].GetCommitPosition(), line1Thickness, line2Thickness);
-                    AddDualVertex(instantiatedMesh, branchName, position, line1Thickness, line2Thickness);
+                    List<Position> positions = branchPositions[branchName];
+                    Position position = new Position(positions[positions.Count - 1].position, commit.GetCommitPosition() + offset, line1Thickness, line2Thickness);
+                    AddDualVertex(branchMesh, branchName, position);
                 }
+            }
+        }
+    }
+
+    public void UpdateDistances()
+    {
+        foreach (string branch in branchPositions.Keys)
+        {
+            updatePositions(branch, branchPositions[branch]);
+        }
+    }
+
+    private void updatePositions(string branch, List<Position> branchPositions)
+    {
+        Mesh branchMesh = branchLines[branch];
+        List<Vector3> vertices = new List<Vector3>(branchPositions.Count);
+
+        foreach (Position position in branchPositions)
+        {
+            if (position.dualPosition)
+            {
+                Vector3 lastPosition = new Vector3(position.lastPosition.x, position.lastPosition.y, position.lastPosition.z * GlobalSettings.commitDistanceMultiplicator);
+                Vector3 currPosition = new Vector3(position.position.x, position.position.y, position.position.z * GlobalSettings.commitDistanceMultiplicator);
+
+                vertices.Add(lastPosition);
+                vertices.Add(lastPosition + Vector3.up * position.lineThickness1 * 4);
+
+                vertices.Add(currPosition);
+                vertices.Add(currPosition + Vector3.up * position.lineThickness1 * 4);
+
+                vertices.Add(lastPosition);
+                vertices.Add(lastPosition + Vector3.up * -position.lineThickness2 * 4);
+
+                vertices.Add(currPosition);
+                vertices.Add(currPosition + Vector3.up * -position.lineThickness2 * 4);
             }
             else
             {
-                Mesh branchMesh = branchLines[branchName];
-                AddDualVertex(branchMesh, branchName, position, line1Thickness, line2Thickness);
+                Vector3 lastPosition = new Vector3(position.lastPosition.x, position.lastPosition.y, position.lastPosition.z * GlobalSettings.commitDistanceMultiplicator) - Vector3.up * position.lineThickness1 / 2;
+                Vector3 currPosition = new Vector3(position.position.x, position.position.y, position.position.z * GlobalSettings.commitDistanceMultiplicator) - Vector3.up * position.lineThickness1 / 2;
+
+                vertices.Add(lastPosition);
+                vertices.Add(lastPosition + Vector3.up * position.lineThickness1);
+
+                vertices.Add(currPosition);
+                vertices.Add(currPosition + Vector3.up * position.lineThickness1);
             }
         }
+
+        branchMesh.vertices = vertices.ToArray();
     }
 
     private Mesh CreateConnectionAndInstantateMesh(string branchName, Vector3 position)
     {
         GameObject connection = new GameObject(branchName);
         connection.transform.parent = connectionTree.transform;
-        connection.transform.position = new Vector3(0, 0, 0);
+        connection.transform.localPosition = new Vector3(0, 0, 0);
         MeshRenderer mr = connection.AddComponent<MeshRenderer>();
         MeshFilter mf = connection.AddComponent<MeshFilter>();
         mr.material = material;
@@ -117,10 +162,9 @@ public class HelixConnectionTree : MonoBehaviour
 
         if (!branchPositions.ContainsKey(branchName))
         {
-            List<Vector3> positions = new List<Vector3>();
-            positions.Add(position);
+            List<Position> positions = new List<Position>();
+            positions.Add(new Position(position));
             branchPositions.Add(branchName, positions);
-
         }
 
         return instantiatedMesh;
@@ -140,18 +184,22 @@ public class HelixConnectionTree : MonoBehaviour
         return mesh;
     }
 
-    private void AddDualVertex(Mesh branchMesh, string branchName, Vector3 position, float line1Thickness, float line2Thickness)
+    private void AddDualVertex(Mesh branchMesh, string branchName, Position position)
     {
-        Vector3 lasPos = branchPositions[branchName].Last();
-        AddVertexToMesh(branchMesh, lasPos, position, 0.75f, line1Thickness * 4);
-        AddVertexToMesh(branchMesh, lasPos, position, 0.25f, -line2Thickness * 4);
+        Vector3 lastPosition = new Vector3(position.lastPosition.x, position.lastPosition.y, position.lastPosition.z * GlobalSettings.commitDistanceMultiplicator);
+        Vector3 currPosition = new Vector3(position.position.x, position.position.y, position.position.z * GlobalSettings.commitDistanceMultiplicator);
+
+        AddVertexToMesh(branchMesh, lastPosition, currPosition, 0.75f, position.lineThickness1 * 4);
+        AddVertexToMesh(branchMesh, lastPosition, currPosition, 0.25f, -position.lineThickness2 * 4);
         branchPositions[branchName].Add(position);
     }
 
-    private void AddVertex(Mesh branchMesh, string branchName, Vector3 position, float uvColorFactor, float lineThickness)
+    private void AddVertex(Mesh branchMesh, string branchName, Position position, float uvColorFactor)
     {
-        Vector3 lasPos = branchPositions[branchName].Last();
-        AddVertexToMesh(branchMesh, lasPos - Vector3.up * lineThickness / 2, position - Vector3.up * lineThickness / 2, uvColorFactor, lineThickness);
+        Vector3 lastPosition = new Vector3(position.lastPosition.x, position.lastPosition.y, position.lastPosition.z * GlobalSettings.commitDistanceMultiplicator) - Vector3.up * position.lineThickness1 / 2;
+        Vector3 currPosition = new Vector3(position.position.x, position.position.y, position.position.z * GlobalSettings.commitDistanceMultiplicator) - Vector3.up * position.lineThickness1 / 2;
+
+        AddVertexToMesh(branchMesh, lastPosition, currPosition, uvColorFactor, position.lineThickness1);
         branchPositions[branchName].Add(position);
     }
 
@@ -161,6 +209,7 @@ public class HelixConnectionTree : MonoBehaviour
         List<Vector3> vertices = new List<Vector3>(branchMesh.vertices);
         List<Vector2> uv = new List<Vector2>(branchMesh.uv);
         List<int> triangles = new List<int>(branchMesh.triangles);
+
 
         vertices.Add(lastPos);
         vertices.Add(lastPos + Vector3.up * lineThickness);
@@ -194,3 +243,42 @@ public class HelixConnectionTree : MonoBehaviour
     }
 }
 
+class Position
+{
+    public Vector3 lastPosition;
+    public Vector3 position;
+    public float lineThickness1;
+    public float lineThickness2;
+    public bool dualPosition = false;
+
+    public Position(Vector3 lastPosition,
+        Vector3 position,
+        float lineThickness1,
+        float lineThickness2)
+    {
+        this.lastPosition = lastPosition;
+        this.position = position;
+        this.lineThickness1 = lineThickness1;
+        this.lineThickness2 = lineThickness2;
+        this.dualPosition = true;
+    }
+
+    public Position(Vector3 lastPosition,
+        Vector3 position,
+        float lineThickness)
+    {
+        this.lastPosition = lastPosition;
+        this.position = position;
+        this.lineThickness1 = lineThickness;
+        this.dualPosition = false;
+    }
+
+    public Position(Vector3 position)
+    {
+        this.lastPosition = position;
+        this.position = position;
+        this.lineThickness1 = 0;
+        this.lineThickness2 = 0;
+        this.dualPosition = true;
+    }
+}

@@ -12,10 +12,14 @@ public class GlobalSettings : MonoBehaviour
     public static bool showAuthorColors = false;
     public static bool showAuthorPalette = false;
 
+    public static int commitDistanceMultiplicator = 5;
+
     public static string highlightedAuthor = null;
 
     bool showAuthorUpdate = showAuthorColors;
     string lasthighlightedAuthor = highlightedAuthor;
+    int lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
+
 
 
     // Update is called once per frame
@@ -31,6 +35,13 @@ public class GlobalSettings : MonoBehaviour
         {
             EventManager.TriggerEvent("updateFileColor");
             lasthighlightedAuthor = highlightedAuthor;
+        }
+
+        if (lastCommitDistanceMultiplicator != commitDistanceMultiplicator)
+        {
+            EventManager.TriggerEvent("updateCommitDistance");
+            Main.helix.UpdateConnectionTreeDistance();
+            lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
         }
     }
 

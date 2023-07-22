@@ -426,7 +426,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 10000
+  far clip plane: 100000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -722,6 +722,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  commitDistanceMultiplicatorTmp: 
 --- !u!114 &1862167780
 MonoBehaviour:
   m_ObjectHideFlags: 0

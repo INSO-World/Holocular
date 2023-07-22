@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
 
@@ -14,9 +15,9 @@ public class HelixCommit : MonoBehaviour
 
     public int idStore;
 
-    Vector3 commitPosition;
+    Vector3 commitPositionLinear;
 
-    GameObject commitObject;
+    public GameObject commitObject;
 
     FileStructure fileStructure;
 
@@ -27,7 +28,6 @@ public class HelixCommit : MonoBehaviour
         helixBranchStore = branch;
         idStore = id;
         fileStructure = new FileStructure();
-        commitPosition = new Vector3(branch.position.x, branch.position.y, id * 4);
     }
 
     public void DrawCommit(Dictionary<string, List<HelixCommitFileRelation>> commitsFiles,
@@ -39,7 +39,9 @@ public class HelixCommit : MonoBehaviour
         {
             commitObject = new GameObject("Commit[" + idStore + "]: " + dBCommitStore.sha);
             commitObject.transform.parent = parent.transform;
-            commitObject.transform.position = commitPosition;
+            commitPositionLinear = new Vector3(helixBranchStore.position.x, helixBranchStore.position.y, idStore);
+            CommitController commitController = commitObject.AddComponent<CommitController>();
+            commitController.positionLinear = commitPositionLinear;
             Instantiate(Main.sCommit, commitObject.transform);
             Statistics.commitsDrawn++;
         });
@@ -52,7 +54,7 @@ public class HelixCommit : MonoBehaviour
 
     public Vector3 GetCommitPosition()
     {
-        return commitPosition;
+        return commitPositionLinear;
     }
 
     private void BuildFileStructure(Dictionary<string, List<HelixCommitFileRelation>> commitsFiles,
@@ -107,21 +109,20 @@ public class HelixCommit : MonoBehaviour
     }
 
     public void ConnectCommit(HelixConnectionTree connectionTree,
-        Dictionary<string,
-        HelixCommit> shaCommitsRelation)
+        Dictionary<string, HelixCommit> shaCommitsRelation)
     {
         Main.actionQueue.Enqueue(() =>
         {
-            connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, commitObject.transform.position, dBCommitStore.parents == "" ? null : dBCommitStore.parents.Split(","), shaCommitsRelation, 0.0f, 0.5f);
+            connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, "commits", this, dBCommitStore.parents == "" ? null : dBCommitStore.parents.Split(","), new Vector3(0, 0, 0), 0.0f, 0.5f);
         });
     }
 
-    public void DrawHelixRing(Dictionary<string,
-        HelixConnectionTree> fileHelixConnectiontreeDictionary)
+    public void DrawHelixRing(Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary,
+        Dictionary<string, HelixCommit> shaCommitsRelation)
     {
         Main.actionQueue.Enqueue(() =>
         {
-            fileStructure.DrawHelixRing(commitObject.transform, helixBranchStore.dBBranchStore.branch, fileHelixConnectiontreeDictionary);
+            fileStructure.DrawHelixRing(this, helixBranchStore.dBBranchStore.branch, fileHelixConnectiontreeDictionary, shaCommitsRelation);
 
         });
     }

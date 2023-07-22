@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Helix : MonoBehaviour
 {
-    GameObject helixObject;
+    public static GameObject helixObject;
 
     Dictionary<string, HelixCommit> commits = new Dictionary<string, HelixCommit>(); //Key: sha
 
@@ -40,9 +40,9 @@ public class Helix : MonoBehaviour
     Thread drawStructureThread;
     public ThreadState drawStructureThreadState;
 
-    public Helix(GameObject helixObject)
+    public Helix(GameObject helixObjectP)
     {
-        this.helixObject = helixObject;
+        helixObject = helixObjectP;
 
         //Create Connection Tree
         commitConnectionTree = new HelixConnectionTree("Commits-Connections", Main.sCommitTreeMaterial, helixObject);
@@ -165,7 +165,7 @@ public class Helix : MonoBehaviour
         {
             commit.DrawCommit(commitsFiles, files, projectFiles, helixObject);
             commit.ConnectCommit(commitConnectionTree, commits);
-            commit.DrawHelixRing(fileHelixConnectiontreeDictionary);
+            commit.DrawHelixRing(fileHelixConnectiontreeDictionary, commits);
         }
     }
 
@@ -181,5 +181,14 @@ public class Helix : MonoBehaviour
     {
         createStructureThread.Abort();
         drawStructureThread.Abort();
+    }
+
+    public void UpdateConnectionTreeDistance()
+    {
+        commitConnectionTree.UpdateDistances();
+        foreach (HelixConnectionTree connectionTree in fileHelixConnectiontreeDictionary.Values)
+        {
+            connectionTree.UpdateDistances();
+        }
     }
 }

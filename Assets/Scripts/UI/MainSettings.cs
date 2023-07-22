@@ -16,12 +16,17 @@ public class MainSettings : MonoBehaviour
     Switch showAuthorsColorsSwitch;
     Switch showAuthorsPaletteSwitch;
     WindowBar windowBar;
+
+    public string commitDistanceMultiplicatorTmp;
+
     // Start is called before the first frame update
     void Start()
     {
         showAuthorsColorsSwitch = new Switch(new Rect(0, 0, 40, 20), switchBackground, switchKnob);
         showAuthorsPaletteSwitch = new Switch(new Rect(0, 40, 40, 20), switchBackground, switchKnob);
         windowBar = new WindowBar("Settings", uiStyle);
+
+        commitDistanceMultiplicatorTmp = "" + GlobalSettings.commitDistanceMultiplicator;
     }
 
     // Update is called once per frame
@@ -43,17 +48,17 @@ public class MainSettings : MonoBehaviour
     void SettingsWindow(int windowID)
     {
         windowBar.render();
-        if (GUI.Button(new Rect(10, 40, 150, 20), "Open Database"))
+        if (GUI.Button(new Rect(10, 40, 180, 20), "Open Database"))
         {
             OpenFolder();
         }
 
-        if (GUI.Button(new Rect(10, 65, 150, 20), "Delete Helix"))
+        if (GUI.Button(new Rect(10, 65, 180, 20), "Delete Helix"))
         {
             Main.helix.DeleteHelix();
         }
 
-        if (GUI.Button(new Rect(10, 90, 150, 20), "Stop Helix Generation"))
+        if (GUI.Button(new Rect(10, 90, 180, 20), "Stop Helix Generation"))
         {
             Main.helix.StopThreads();
         }
@@ -74,6 +79,17 @@ public class MainSettings : MonoBehaviour
         GUI.EndGroup();
 
 
+        GUI.BeginGroup(new Rect(10, 290, 200, 200));
+        GUI.Label(new Rect(0, 0, 200, 20), "Commit Distance Multiplicator");
+
+        commitDistanceMultiplicatorTmp = GUI.TextField(new Rect(0, 20, 180, 20), commitDistanceMultiplicatorTmp);
+        int num;
+        if (int.TryParse(commitDistanceMultiplicatorTmp, out num))
+        {
+            GlobalSettings.commitDistanceMultiplicator = num;
+        }
+
+        GUI.EndGroup();
     }
 
     private void OpenFolder()
