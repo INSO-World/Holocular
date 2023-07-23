@@ -32,7 +32,7 @@ public class FileController : MonoBehaviour
         {
             if (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == authorSighnature)
             {
-                mat.color = Helix.stakeholders[authorSighnature].colorStore;
+                mat.color = Main.helix.stakeholders[authorSighnature].colorStore;
             }
             else
             {

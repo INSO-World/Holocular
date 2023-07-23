@@ -14,7 +14,7 @@ public class MainSettings : MonoBehaviour
     public GUIStyle switchKnob;
 
     Switch showAuthorsColorsSwitch;
-    Switch showAuthorsPaletteSwitch;
+    Switch switchCommitPlacementMode;
     WindowBar windowBar;
 
     public string commitDistanceMultiplicatorTmp;
@@ -23,7 +23,7 @@ public class MainSettings : MonoBehaviour
     void Start()
     {
         showAuthorsColorsSwitch = new Switch(new Rect(0, 0, 40, 20), switchBackground, switchKnob);
-        showAuthorsPaletteSwitch = new Switch(new Rect(0, 40, 40, 20), switchBackground, switchKnob);
+        switchCommitPlacementMode = new Switch(new Rect(0, 40, 40, 20), switchBackground, switchKnob);
         windowBar = new WindowBar("Settings", uiStyle);
 
         commitDistanceMultiplicatorTmp = "" + GlobalSettings.commitDistanceMultiplicator;
@@ -80,14 +80,11 @@ public class MainSettings : MonoBehaviour
 
 
         GUI.BeginGroup(new Rect(10, 290, 200, 200));
-        GUI.Label(new Rect(0, 0, 200, 20), "Commit Distance Multiplicator");
+        GUI.Label(new Rect(0, 0, 200, 20), "Commit Distribution:");
 
-        commitDistanceMultiplicatorTmp = GUI.TextField(new Rect(0, 20, 180, 20), commitDistanceMultiplicatorTmp);
-        int num;
-        if (int.TryParse(commitDistanceMultiplicatorTmp, out num))
-        {
-            GlobalSettings.commitDistanceMultiplicator = num;
-        }
+        GlobalSettings.commitDistanceMultiplicator = GUI.HorizontalSlider(new Rect(0, 20, 180, 20), GlobalSettings.commitDistanceMultiplicator, 1f, 9f);
+        GlobalSettings.commitPlacementMode = switchCommitPlacementMode.render(GlobalSettings.commitPlacementMode);
+        GUI.Label(new Rect(50, 40, 160, 40), "Linar/By Date");
 
         GUI.EndGroup();
     }

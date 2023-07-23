@@ -16,6 +16,7 @@ public class HelixCommit : MonoBehaviour
     public int idStore;
 
     Vector3 commitPositionLinear;
+    Vector3 commitPositionTime;
 
     public GameObject commitObject;
 
@@ -42,6 +43,15 @@ public class HelixCommit : MonoBehaviour
             commitPositionLinear = new Vector3(helixBranchStore.position.x, helixBranchStore.position.y, idStore);
             CommitController commitController = commitObject.AddComponent<CommitController>();
             commitController.positionLinear = commitPositionLinear;
+
+            float timestamp = DateTime.Parse(dBCommitStore.date).Ticks / 10000 / 1000 / 60 / 60 / 24;//10000 ticks, 1000 ms, 60 sec, 60 min, 24 h
+            if (Main.helix.firstTimestamp < 0f)
+            {
+                Main.helix.firstTimestamp = timestamp;
+            }
+            commitPositionTime = new Vector3(helixBranchStore.position.x, helixBranchStore.position.y, timestamp - Main.helix.firstTimestamp);
+            commitController.positionTime = commitPositionTime;
+
             Instantiate(Main.sCommit, commitObject.transform);
             Statistics.commitsDrawn++;
         });
@@ -54,7 +64,24 @@ public class HelixCommit : MonoBehaviour
 
     public Vector3 GetCommitPosition()
     {
+        if (GlobalSettings.commitPlacementMode)
+        {
+            return commitPositionTime;
+        }
+        else
+        {
+            return commitPositionLinear;
+        }
+    }
+
+    public Vector3 GetCommitPositionLinear()
+    {
         return commitPositionLinear;
+    }
+
+    public Vector3 GetCommitPositionTime()
+    {
+        return commitPositionTime;
     }
 
     private void BuildFileStructure(Dictionary<string, List<HelixCommitFileRelation>> commitsFiles,

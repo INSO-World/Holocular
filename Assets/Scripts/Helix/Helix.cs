@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Helix : MonoBehaviour
 {
-    public static GameObject helixObject;
+    public GameObject helixObject;
 
     Dictionary<string, HelixCommit> commits = new Dictionary<string, HelixCommit>(); //Key: sha
 
@@ -20,7 +20,7 @@ public class Helix : MonoBehaviour
 
     Dictionary<string, HelixCommitFileRelation> projectFiles = new Dictionary<string, HelixCommitFileRelation>(); //key: path
 
-    public static Dictionary<string, HelixStakeholder> stakeholders = new Dictionary<string, HelixStakeholder>(); // Key: siganture
+    public Dictionary<string, HelixStakeholder> stakeholders = new Dictionary<string, HelixStakeholder>(); // Key: siganture
 
     HelixConnectionTree commitConnectionTree;
 
@@ -30,15 +30,17 @@ public class Helix : MonoBehaviour
     public bool structureDrawn = false;
 
 
-    public static int changesGenerated = 0;
+    public int changesGenerated = 0;
 
-    public static int maxAdditions = 0;
-    public static int maxDeletions = 0;
+    public int maxAdditions = 0;
+    public int maxDeletions = 0;
 
     Thread createStructureThread;
     public ThreadState createStructureThreadState;
     Thread drawStructureThread;
     public ThreadState drawStructureThreadState;
+
+    public float firstTimestamp = -1f;
 
     public Helix(GameObject helixObjectP)
     {

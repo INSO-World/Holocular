@@ -54,14 +54,14 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             (file as FileStructureFile).helixCommitFileRelation = helixCommitFileRelation;
             (file as FileStructureFile).authorSignature = commit.signature;
 
-            if (helixCommitFileRelation.dBCommitsFilesStore.stats.additions > Helix.maxAdditions)
+            if (helixCommitFileRelation.dBCommitsFilesStore.stats.additions > Main.helix.maxAdditions)
             {
-                Helix.maxAdditions = helixCommitFileRelation.dBCommitsFilesStore.stats.additions;
+                Main.helix.maxAdditions = helixCommitFileRelation.dBCommitsFilesStore.stats.additions;
             }
 
-            if (helixCommitFileRelation.dBCommitsFilesStore.stats.deletions > Helix.maxDeletions)
+            if (helixCommitFileRelation.dBCommitsFilesStore.stats.deletions > Main.helix.maxDeletions)
             {
-                Helix.maxDeletions = helixCommitFileRelation.dBCommitsFilesStore.stats.deletions;
+                Main.helix.maxDeletions = helixCommitFileRelation.dBCommitsFilesStore.stats.deletions;
             }
 
 
@@ -153,14 +153,14 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
                             FileController fileController = changedFileObject.GetComponent<FileController>();
                             fileController.authorSighnature = (element as FileStructureFile).authorSignature;
 
-                            float additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / Helix.maxAdditions;
-                            float deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / Helix.maxDeletions;
+                            float additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / Main.helix.maxAdditions;
+                            float deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / Main.helix.maxDeletions;
 
-                            float changeFactor = (float)((element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions + (element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions) / (Helix.maxAdditions + Helix.maxDeletions);
+                            float changeFactor = (float)((element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions + (element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions) / (Main.helix.maxAdditions + Main.helix.maxDeletions);
 
                             if (!fileHelixConnectiontreeDictionary.ContainsKey(fullFilePath))
                             {
-                                HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath + "-Connections", Main.sBranchTreeMaterial, Helix.helixObject);
+                                HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath + "-Connections", Main.sBranchTreeMaterial, Main.helix.helixObject);
                                 connectionTree.addDualPoint(branchName, fullFilePath, commit, commit.dBCommitStore.parents == "" ? null : commit.dBCommitStore.parents.Split(","), newOffsetPos, changeFactor, changeFactor);
                                 fileHelixConnectiontreeDictionary.Add(fullFilePath, connectionTree);
                             }

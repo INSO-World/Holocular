@@ -25,9 +25,9 @@ public class AuthorPalette : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!authorBackgroundTexturesInitialized && Helix.stakeholders.Count > 0)
+        if (!authorBackgroundTexturesInitialized && Main.helix.stakeholders.Count > 0)
         {
-            foreach (KeyValuePair<string, HelixStakeholder> stakeholder in Helix.stakeholders)
+            foreach (KeyValuePair<string, HelixStakeholder> stakeholder in Main.helix.stakeholders)
             {
                 authorBackgroundTextures[stakeholder.Key] = new Texture2D(1, 1);
                 authorBackgroundTextures[stakeholder.Key].SetPixel(1, 1, stakeholder.Value.colorStore);
@@ -54,9 +54,9 @@ public class AuthorPalette : MonoBehaviour
     void AuthorPaletteWindow(int windowID)
     {
         windowBar.render();
-        authorsScrollPosition = GUI.BeginScrollView(new Rect(0, 30, 200, Screen.height / 2 - 30), authorsScrollPosition, new Rect(0, 0, 180, 20 * Helix.stakeholders.Count));
+        authorsScrollPosition = GUI.BeginScrollView(new Rect(0, 30, 200, Screen.height / 2 - 30), authorsScrollPosition, new Rect(0, 0, 180, 20 * Main.helix.stakeholders.Count));
         int i = 0;
-        foreach (KeyValuePair<string, HelixStakeholder> stakeholder in Helix.stakeholders)
+        foreach (KeyValuePair<string, HelixStakeholder> stakeholder in Main.helix.stakeholders)
         {
             if (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == stakeholder.Value.dBStakeholderStore.gitSignature)
             {

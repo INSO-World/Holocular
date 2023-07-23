@@ -7,6 +7,7 @@ using static UnityEditor.Handles;
 public class CommitController : MonoBehaviour
 {
     public Vector3 positionLinear = new Vector3(0, 0, 0);
+    public Vector3 positionTime = new Vector3(0, 0, 0);
 
     private UnityAction updateCommitDistanceListener;
 
@@ -22,6 +23,13 @@ public class CommitController : MonoBehaviour
 
     private void UpdateCommitDistance()
     {
-        transform.position = new Vector3(positionLinear.x, positionLinear.y, positionLinear.z * GlobalSettings.commitDistanceMultiplicator);
+        if (GlobalSettings.commitPlacementMode)
+        {
+            transform.position = new Vector3(positionTime.x, positionTime.y, positionTime.z * GlobalSettings.commitDistanceMultiplicator);
+        }
+        else
+        {
+            transform.position = new Vector3(positionLinear.x, positionLinear.y, positionLinear.z * GlobalSettings.commitDistanceMultiplicator);
+        }
     }
 }

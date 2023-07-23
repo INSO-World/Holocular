@@ -11,14 +11,16 @@ public class GlobalSettings : MonoBehaviour
     public static bool showSettings = true;
     public static bool showAuthorColors = false;
     public static bool showAuthorPalette = false;
+    public static bool commitPlacementMode = false; //linear(false)/timeBased(true)
 
-    public static int commitDistanceMultiplicator = 5;
+    public static float commitDistanceMultiplicator = 5f;
 
     public static string highlightedAuthor = null;
 
     bool showAuthorUpdate = showAuthorColors;
+    bool commitPlacementModeUpdate = commitPlacementMode;
     string lasthighlightedAuthor = highlightedAuthor;
-    int lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
+    float lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
 
 
 
@@ -35,6 +37,13 @@ public class GlobalSettings : MonoBehaviour
         {
             EventManager.TriggerEvent("updateFileColor");
             lasthighlightedAuthor = highlightedAuthor;
+        }
+
+        if (commitPlacementModeUpdate != commitPlacementMode)
+        {
+            EventManager.TriggerEvent("updateCommitDistance");
+            Main.helix.UpdateConnectionTreeDistance();
+            commitPlacementModeUpdate = commitPlacementMode;
         }
 
         if (lastCommitDistanceMultiplicator != commitDistanceMultiplicator)
