@@ -52,6 +52,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             file.Changed = changedInThisCommit;
             (file as FileStructureFile).fullPath = fullPath;
             (file as FileStructureFile).helixCommitFileRelation = helixCommitFileRelation;
+            (file as FileStructureFile).commit = commit;
             (file as FileStructureFile).authorSignature = commit.signature;
 
             if (helixCommitFileRelation.dBCommitsFilesStore.stats.additions > Main.helix.maxAdditions)
@@ -151,7 +152,12 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 
                             changedFileObject.name = fullFilePath;
                             FileController fileController = changedFileObject.GetComponent<FileController>();
-                            fileController.authorSighnature = (element as FileStructureFile).authorSignature;
+                            fileController.fullFilePath = fullFilePath;
+                            fileController.fileName = element.Name;
+                            fileController.commitFileRelation = (element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore;
+                            fileController.commitFileStakeholderRelationList = (element as FileStructureFile).helixCommitFileRelation.helixCommitFileStakeholderRelationListStore;
+                            fileController.commit = (element as FileStructureFile).commit;
+                            fileController.Init();
 
                             float additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / Main.helix.maxAdditions;
                             float deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / Main.helix.maxDeletions;
@@ -161,12 +167,12 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
                             if (!fileHelixConnectiontreeDictionary.ContainsKey(fullFilePath))
                             {
                                 HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath + "-Connections", Main.sBranchTreeMaterial, Main.helix.helixObject);
-                                connectionTree.addDualPoint(branchName, fullFilePath, commit, commit.dBCommitStore.parents == "" ? null : commit.dBCommitStore.parents.Split(","), newOffsetPos, changeFactor, changeFactor);
+                                connectionTree.addDualPoint(branchName, fullFilePath, commit, commit.dBCommitStore.parents == "" ? null : commit.dBCommitStore.parents.Split(","), newOffsetPos, changeFactor, changeFactor, shaCommitsRelation);
                                 fileHelixConnectiontreeDictionary.Add(fullFilePath, connectionTree);
                             }
                             else
                             {
-                                fileHelixConnectiontreeDictionary[fullFilePath].addDualPoint(branchName, fullFilePath, commit, commit.dBCommitStore.parents == "" ? null : commit.dBCommitStore.parents.Split(","), newOffsetPos, changeFactor, changeFactor);
+                                fileHelixConnectiontreeDictionary[fullFilePath].addDualPoint(branchName, fullFilePath, commit, commit.dBCommitStore.parents == "" ? null : commit.dBCommitStore.parents.Split(","), newOffsetPos, changeFactor, changeFactor, shaCommitsRelation);
                             }
                         }
                     }

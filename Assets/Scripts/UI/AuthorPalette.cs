@@ -9,7 +9,7 @@ using static UnityEngine.Rendering.DebugUI.MessageBox;
 public class AuthorPalette : MonoBehaviour
 {
     public GUISkin uiStyle;
-    Rect authorPaletteWindowRect = new Rect(40, 40, 200, Screen.height / 2);
+    Rect authorPaletteWindowRect = new Rect(220, 10, 200, 800);
     public Vector2 authorsScrollPosition = Vector2.zero;
 
     Dictionary<string, Texture2D> authorBackgroundTextures = new Dictionary<string, Texture2D>();//key: signature
@@ -19,7 +19,7 @@ public class AuthorPalette : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        windowBar = new WindowBar("Author Palette", uiStyle);
+        windowBar = new WindowBar("Author Palette", uiStyle, 200);
     }
 
     // Update is called once per frame
@@ -54,7 +54,7 @@ public class AuthorPalette : MonoBehaviour
     void AuthorPaletteWindow(int windowID)
     {
         windowBar.render();
-        authorsScrollPosition = GUI.BeginScrollView(new Rect(0, 30, 200, Screen.height / 2 - 30), authorsScrollPosition, new Rect(0, 0, 180, 20 * Main.helix.stakeholders.Count));
+        authorsScrollPosition = GUI.BeginScrollView(new Rect(0, 40, 200, 760), authorsScrollPosition, new Rect(0, 0, 180, 20 * Main.helix.stakeholders.Count));
         int i = 0;
         foreach (KeyValuePair<string, HelixStakeholder> stakeholder in Main.helix.stakeholders)
         {
@@ -64,14 +64,7 @@ public class AuthorPalette : MonoBehaviour
             }
             if (GUI.Button(new Rect(10, 20 * i, 800, 20), stakeholder.Value.dBStakeholderStore.gitSignature, uiStyle.label))
             {
-                if (GlobalSettings.highlightedAuthor == stakeholder.Value.dBStakeholderStore.gitSignature)
-                {
-                    GlobalSettings.highlightedAuthor = null;
-                }
-                else
-                {
-                    GlobalSettings.highlightedAuthor = stakeholder.Value.dBStakeholderStore.gitSignature;
-                }
+                GlobalSettings.SelectAuthor(stakeholder.Value.dBStakeholderStore.gitSignature);
             }
 
             i++;

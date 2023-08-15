@@ -10,7 +10,6 @@ public class HelixConnectionTree : MonoBehaviour
 	 */
     Dictionary<string, Mesh> branchLines = new Dictionary<string, Mesh>();
     Dictionary<string, List<Position>> branchPositions = new Dictionary<string, List<Position>>();
-    Dictionary<string, Position> shaPositions = new Dictionary<string, Position>();
 
     GameObject connectionTree;
 
@@ -23,26 +22,21 @@ public class HelixConnectionTree : MonoBehaviour
         this.material = material;
     }
 
-    public void addPoint(string branchName, string fullFileName, HelixCommit commit, string[] parentShas, Vector3 offset, float uvColorFactor, float lineThickness)
+    public void addPoint(string branchName, string fullFileName, HelixCommit commit, string[] parentShas, Vector3 offset, float uvColorFactor, float lineThickness, Dictionary<string, HelixCommit> commits)
     {
-        shaPositions.Add(commit.dBCommitStore.sha, new Position(commit.GetCommitPositionLinear() + offset, commit.GetCommitPositionTime() + offset));
 
         if (!branchLines.ContainsKey(branchName))
         {
             Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName, commit.GetCommitPositionLinear() + offset, commit.GetCommitPositionTime() + offset);
 
-            if (shaPositions.ContainsKey(parentShas[0]))
-            {
-                branchPositions[branchName].Add(new Position(shaPositions[parentShas[0]].positionLinear, shaPositions[parentShas[0]].positionTime));
 
-            }
 
             if (parentShas != null)
             {
                 foreach (string parentSha in parentShas)
                 {
                     List<Position> positions = branchPositions[branchName];
-                    Position position = new Position(positions[positions.Count - 1].positionLinear, commit.GetCommitPositionLinear() + offset, positions[positions.Count - 1].positionTime, commit.GetCommitPositionTime() + offset, lineThickness);
+                    Position position = new Position(commits[parentSha].GetCommitPositionLinear() + offset, commit.GetCommitPositionLinear() + offset, commits[parentSha].GetCommitPositionTime() + offset, commit.GetCommitPositionTime() + offset, lineThickness);
                     AddVertex(instantiatedMesh, branchName, position, uvColorFactor);
                 }
             }
@@ -57,31 +51,26 @@ public class HelixConnectionTree : MonoBehaviour
                 foreach (string parentSha in parentShas)
                 {
                     List<Position> positions = branchPositions[branchName];
-                    Position position = new Position(positions[positions.Count - 1].positionLinear, commit.GetCommitPositionLinear() + offset, positions[positions.Count - 1].positionTime, commit.GetCommitPositionTime() + offset, lineThickness);
+                    Position position = new Position(commits[parentSha].GetCommitPositionLinear() + offset, commit.GetCommitPositionLinear() + offset, commits[parentSha].GetCommitPositionTime() + offset, commit.GetCommitPositionTime() + offset, lineThickness);
                     AddVertex(branchMesh, branchName, position, uvColorFactor);
                 }
             }
         }
     }
 
-    public void addDualPoint(string branchName, string fullFileName, HelixCommit commit, string[] parentShas, Vector3 offset, float line1Thickness, float line2Thickness)
+    public void addDualPoint(string branchName, string fullFileName, HelixCommit commit, string[] parentShas, Vector3 offset, float line1Thickness, float line2Thickness, Dictionary<string, HelixCommit> commits)
     {
-        shaPositions.Add(commit.dBCommitStore.sha, new Position(commit.GetCommitPositionLinear() + offset, commit.GetCommitPositionTime() + offset));
-
         if (!branchLines.ContainsKey(branchName))
         {
 
             Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName, commit.GetCommitPositionLinear() + offset, commit.GetCommitPositionTime() + offset);
-            if (shaPositions.ContainsKey(parentShas[0]))
-            {
-                branchPositions[branchName].Add(new Position(shaPositions[parentShas[0]].positionLinear, shaPositions[parentShas[0]].positionTime));
-            }
+
             if (parentShas != null)
             {
                 foreach (string parentSha in parentShas)
                 {
                     List<Position> positions = branchPositions[branchName];
-                    Position position = new Position(positions[positions.Count - 1].positionLinear, commit.GetCommitPositionLinear() + offset, positions[positions.Count - 1].positionTime, commit.GetCommitPositionTime() + offset, line1Thickness, line2Thickness);
+                    Position position = new Position(commits[parentSha].GetCommitPositionLinear() + offset, commit.GetCommitPositionLinear() + offset, commits[parentSha].GetCommitPositionTime() + offset, commit.GetCommitPositionTime() + offset, line1Thickness, line2Thickness);
                     AddDualVertex(instantiatedMesh, branchName, position);
                 }
             }
@@ -95,7 +84,7 @@ public class HelixConnectionTree : MonoBehaviour
                 foreach (string parentSha in parentShas)
                 {
                     List<Position> positions = branchPositions[branchName];
-                    Position position = new Position(positions[positions.Count - 1].positionLinear, commit.GetCommitPositionLinear() + offset, positions[positions.Count - 1].positionTime, commit.GetCommitPositionTime() + offset, line1Thickness, line2Thickness);
+                    Position position = new Position(commits[parentSha].GetCommitPositionLinear() + offset, commit.GetCommitPositionLinear() + offset, commits[parentSha].GetCommitPositionTime() + offset, commit.GetCommitPositionTime() + offset, line1Thickness, line2Thickness);
                     AddDualVertex(branchMesh, branchName, position);
                 }
             }
@@ -177,6 +166,8 @@ public class HelixConnectionTree : MonoBehaviour
         connection.transform.localPosition = new Vector3(0, 0, 0);
         SkinnedMeshRenderer mr = connection.AddComponent<SkinnedMeshRenderer>();
         mr.material = material;
+        mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        mr.localBounds = new Bounds(new Vector3(0, 0, 5000), new Vector3(10000, 10000, 10000));
         Mesh instantiatedMesh = Instantiate(InitMesh());
         mr.sharedMesh = instantiatedMesh;
 
@@ -200,7 +191,6 @@ public class HelixConnectionTree : MonoBehaviour
         mesh.vertices = vertices;
         mesh.uv = uv;
         mesh.triangles = triangles;
-
         return mesh;
     }
 

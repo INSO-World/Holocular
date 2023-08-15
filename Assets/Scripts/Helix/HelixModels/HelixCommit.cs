@@ -140,7 +140,7 @@ public class HelixCommit : MonoBehaviour
     {
         Main.actionQueue.Enqueue(() =>
         {
-            connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, "commits", this, dBCommitStore.parents == "" ? null : dBCommitStore.parents.Split(","), new Vector3(0, 0, 0), 0.0f, 0.5f);
+            connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, "commits", this, dBCommitStore.parents == "" ? null : dBCommitStore.parents.Split(","), new Vector3(0, 0, 0), 0.0f, 0.5f, shaCommitsRelation);
         });
     }
 

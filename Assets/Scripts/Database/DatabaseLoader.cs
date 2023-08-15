@@ -35,6 +35,7 @@ public class DatabaseLoader : MonoBehaviour
         if (!importBranches(path)
             || !importCommits(path)
             || !importCommitsFilesRelation(path)
+            || !importCommitsFilesStakeholdersRelation(path)
             || !importFiles(path)
             || !importStakeholders(path))
         {
@@ -78,10 +79,10 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importCommitsFilesRelation(string path)
     {
-        string commitsfilesJSON = System.IO.File.ReadAllText(path + "/commits-files.json");
+        string commitsFilesJSON = System.IO.File.ReadAllText(path + "/commits-files.json");
         try
         {
-            Main.commitsFiles = JsonUtility.FromJson<DBCommitsFiles>("{\"commitsFiles\":" + commitsfilesJSON + "}");
+            Main.commitsFiles = JsonUtility.FromJson<DBCommitsFiles>("{\"commitsFiles\":" + commitsFilesJSON + "}");
             RuntimeDebug.Log("Commits-Files Realtion Imported Sucessfull");
             return true;
         }
@@ -89,6 +90,22 @@ public class DatabaseLoader : MonoBehaviour
         {
             return false;
             RuntimeDebug.Log("Error Importing Commits-Files Realtion ");
+        }
+    }
+
+    public static bool importCommitsFilesStakeholdersRelation(string path)
+    {
+        string commitsFilesStakeholdersJSON = System.IO.File.ReadAllText(path + "/commits-files-stakeholders.json");
+        try
+        {
+            Main.commitsFilesStakeholders = JsonUtility.FromJson<DBCommitsFilesStakeholders>("{\"commitsFilesStakeholders\":" + commitsFilesStakeholdersJSON + "}");
+            RuntimeDebug.Log("Commits-Files-Stakeholders Realtion Imported Sucessfull");
+            return true;
+        }
+        catch (System.Exception ex)
+        {
+            return false;
+            RuntimeDebug.Log("Error Importing Commits-Files-Stakeholders Realtion ");
         }
     }
 

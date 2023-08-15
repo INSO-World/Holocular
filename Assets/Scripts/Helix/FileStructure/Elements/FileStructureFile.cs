@@ -10,6 +10,7 @@ public class FileStructureFile : MonoBehaviour, IFileStructureElement
     public string fullPath = "";
     public string authorSignature;
     public HelixCommitFileRelation helixCommitFileRelation;
+    public DBCommit commit;
 
     public FileStructureFile()
     {

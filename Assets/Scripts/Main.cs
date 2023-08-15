@@ -36,6 +36,7 @@ public class Main : MonoBehaviour
     public static DBCommits commits;
     public static DBBranches branches;
     public static DBCommitsFiles commitsFiles;
+    public static DBCommitsFilesStakeholders commitsFilesStakeholders;
     public static DBFiles files;
     public static DBStakeholders stakeholders;
 
@@ -45,6 +46,9 @@ public class Main : MonoBehaviour
     public static Color fileDeSelectedColor = Color.gray;
 
     public static GameObject lastSelectedObject;
+
+    public static FileController selectedFile;
+
 
     // Start is called before the first frame update
     void Start()
@@ -74,16 +78,34 @@ public class Main : MonoBehaviour
 
     private static void CheckShortcuts()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
         {
             GlobalSettings.showAuthorColors = !GlobalSettings.showAuthorColors;
             RuntimeDebug.Log("Show Author Colors: " + GlobalSettings.showAuthorColors);
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            GlobalSettings.showOwnershipColors = !GlobalSettings.showOwnershipColors;
+            RuntimeDebug.Log("Show Ownership Colors: " + GlobalSettings.showOwnershipColors);
+        }
+
+        if (Input.GetKeyDown(KeyCode.B) && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+        {
+            GlobalSettings.showBranchColors = !GlobalSettings.showBranchColors;
+            RuntimeDebug.Log("Show Branch Colors: " + GlobalSettings.showBranchColors);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
         {
             GlobalSettings.showAuthorPalette = !GlobalSettings.showAuthorPalette;
             RuntimeDebug.Log("Show Author Palette: " + GlobalSettings.showAuthorPalette);
+        }
+
+        if (Input.GetKeyDown(KeyCode.B) && Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        {
+            GlobalSettings.showBranchPalette = !GlobalSettings.showBranchPalette;
+            RuntimeDebug.Log("Show Branch Palette: " + GlobalSettings.showBranchPalette);
         }
 
         if (Input.GetKeyDown(KeyCode.E))

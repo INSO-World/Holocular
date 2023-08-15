@@ -29,12 +29,16 @@ public class CameraControll : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Vector3 dir = (hit.transform.position - mainCamera.position).normalized;
-                selectPoint.position = hit.transform.position + -dir * 5;
-                selectPoint.LookAt(hit.transform.position);
-                Main.lastSelectedObject = hit.transform.gameObject;
-                selected = true;
-                RuntimeDebug.Log(hit.transform.name);
+                if (hit.transform.tag == "File")
+                {
+                    Vector3 dir = (hit.transform.position - mainCamera.position).normalized;
+                    selectPoint.position = hit.transform.position + -dir * 5;
+                    selectPoint.LookAt(hit.transform.position);
+                    Main.lastSelectedObject = hit.transform.gameObject;
+                    Main.selectedFile = hit.transform.gameObject.GetComponent<FileController>();
+                    selected = true;
+                    RuntimeDebug.Log(hit.transform.name);
+                }
             }
             if (GlobalSettings.debugMode)
             {

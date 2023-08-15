@@ -8,12 +8,14 @@ using UnityEngine;
 public class MainSettings : MonoBehaviour
 {
     public GUISkin uiStyle;
-    Rect settingsWindowRect = new Rect(10, 10, 200, Screen.height / 2);
+    Rect settingsWindowRect = new Rect(10, 10, 300, 800);
 
     public GUIStyle switchBackground;
     public GUIStyle switchKnob;
 
     Switch showAuthorsColorsSwitch;
+    Switch showBranchColorsSwitch;
+    Switch showOwnershipColorsSwitch;
     Switch switchCommitPlacementMode;
     WindowBar windowBar;
 
@@ -22,9 +24,11 @@ public class MainSettings : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        showAuthorsColorsSwitch = new Switch(new Rect(0, 0, 40, 20), switchBackground, switchKnob);
-        switchCommitPlacementMode = new Switch(new Rect(0, 40, 40, 20), switchBackground, switchKnob);
-        windowBar = new WindowBar("Settings", uiStyle);
+        showAuthorsColorsSwitch = new Switch(new Rect(0, 30, 40, 20), switchBackground, switchKnob);
+        showBranchColorsSwitch = new Switch(new Rect(0, 70, 40, 20), switchBackground, switchKnob);
+        showOwnershipColorsSwitch = new Switch(new Rect(0, 110, 40, 20), switchBackground, switchKnob);
+        switchCommitPlacementMode = new Switch(new Rect(0, 70, 40, 20), switchBackground, switchKnob);
+        windowBar = new WindowBar("Settings", uiStyle, 300);
 
         commitDistanceMultiplicatorTmp = "" + GlobalSettings.commitDistanceMultiplicator;
     }
@@ -32,7 +36,6 @@ public class MainSettings : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
     }
 
 
@@ -48,43 +51,52 @@ public class MainSettings : MonoBehaviour
     void SettingsWindow(int windowID)
     {
         windowBar.render();
-        if (GUI.Button(new Rect(10, 40, 180, 20), "Open Database"))
+        if (GUI.Button(new Rect(10, 40, 280, 20), "Open Database"))
         {
             OpenFolder();
         }
 
-        if (GUI.Button(new Rect(10, 65, 180, 20), "Delete Helix"))
+        if (GUI.Button(new Rect(10, 65, 280, 20), "Delete Helix"))
         {
             Main.helix.DeleteHelix();
         }
 
-        if (GUI.Button(new Rect(10, 90, 180, 20), "Stop Helix Generation"))
+        if (GUI.Button(new Rect(10, 90, 280, 20), "Stop Helix Generation"))
         {
             Main.helix.StopThreads();
         }
 
-        GUI.BeginGroup(new Rect(10, 120, 200, 200));
-        GUI.Label(new Rect(0, 0, 200, 20), "Commits: " + Statistics.commitsDrawn + "/" + (Main.commits == null ? "0" : Main.commits.commits.Length));
-        GUI.Label(new Rect(0, 20, 200, 20), "Branches: " + (Main.branches == null ? "0" : Main.branches.branches.Length));
-        GUI.Label(new Rect(0, 40, 200, 20), "Files: " + (Main.files == null ? "0" : Main.files.files.Length));
-        GUI.Label(new Rect(0, 60, 200, 20), "Commits-Files: " + (Main.commits == null ? "0" : Main.commitsFiles.commitsFiles.Length));
-        GUI.Label(new Rect(0, 80, 200, 20), "Stakeholders: " + (Main.stakeholders == null ? "0" : Main.stakeholders.stakeholders.Length));
+        GUI.BeginGroup(new Rect(10, 120, 300, 200));
+        GUI.Label(new Rect(0, 0, 300, 20), "Stats", uiStyle.GetStyle("headline"));
+        GUI.Label(new Rect(0, 30, 300, 20), "Commits: " + Statistics.commitsDrawn + "/" + (Main.commits == null ? "0" : Main.commits.commits.Length));
+        GUI.Label(new Rect(0, 50, 300, 20), "Branches: " + (Main.branches == null ? "0" : Main.branches.branches.Length));
+        GUI.Label(new Rect(0, 70, 300, 20), "Files: " + (Main.files == null ? "0" : Main.files.files.Length));
+        GUI.Label(new Rect(0, 90, 300, 20), "Commits-Files: " + (Main.commitsFiles == null ? "0" : Main.commitsFiles.commitsFiles.Length));
+        GUI.Label(new Rect(0, 110, 300, 20), "Commits-Files-Stakeholders: " + (Main.commitsFilesStakeholders == null ? "0" : Main.commitsFilesStakeholders.commitsFilesStakeholders.Length));
+        GUI.Label(new Rect(0, 130, 300, 20), "Stakeholders: " + (Main.stakeholders == null ? "0" : Main.stakeholders.stakeholders.Length));
         GUI.EndGroup();
 
-        GUI.BeginGroup(new Rect(10, 240, 200, 200));
+        GUI.BeginGroup(new Rect(10, 300, 200, 200));
+        GUI.Label(new Rect(0, 0, 200, 20), "File Coloring", uiStyle.GetStyle("headline"));
         GlobalSettings.showAuthorColors = showAuthorsColorsSwitch.render(GlobalSettings.showAuthorColors);
-        GUI.Label(new Rect(50, 0, 160, 40), "Show Committer\nColors (c)");
+        GUI.Label(new Rect(50, 30, 120, 40), "Show Committer\nColors (c)");
 
+        GlobalSettings.showBranchColors = showBranchColorsSwitch.render(GlobalSettings.showBranchColors);
+        GUI.Label(new Rect(50, 70, 120, 40), "Show Branch\nColors (b)");
+
+        GlobalSettings.showOwnershipColors = showOwnershipColorsSwitch.render(GlobalSettings.showOwnershipColors);
+        GUI.Label(new Rect(50, 110, 120, 40), "Show Ownership\nColors (o)");
 
         GUI.EndGroup();
 
 
-        GUI.BeginGroup(new Rect(10, 290, 200, 200));
-        GUI.Label(new Rect(0, 0, 200, 20), "Commit Distribution:");
+        GUI.BeginGroup(new Rect(10, 480, 200, 200));
+        GUI.Label(new Rect(0, 0, 200, 20), "Commit Distribution", uiStyle.GetStyle("headline"));
 
-        GlobalSettings.commitDistanceMultiplicator = GUI.HorizontalSlider(new Rect(0, 20, 180, 20), GlobalSettings.commitDistanceMultiplicator, 1f, 9f);
+        GUI.Label(new Rect(0, 30, 200, 20), "Distance Factor:");
+        GlobalSettings.commitDistanceMultiplicator = GUI.HorizontalSlider(new Rect(0, 50, 180, 20), GlobalSettings.commitDistanceMultiplicator, 1f, 9f);
         GlobalSettings.commitPlacementMode = switchCommitPlacementMode.render(GlobalSettings.commitPlacementMode);
-        GUI.Label(new Rect(50, 40, 160, 40), "Linar/By Date");
+        GUI.Label(new Rect(50, 70, 160, 40), "Linar/By Date");
 
         GUI.EndGroup();
     }
