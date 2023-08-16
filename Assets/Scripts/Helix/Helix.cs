@@ -196,7 +196,6 @@ public class Helix : MonoBehaviour
         {
             stakeholders.Add(Main.stakeholders.stakeholders[i].gitSignature, new HelixStakeholder(Main.stakeholders.stakeholders[i], palette[i]));
             stakeholdersID.Add(Main.stakeholders.stakeholders[i]._id, new HelixStakeholder(Main.stakeholders.stakeholders[i], palette[i]));
-
         }
     }
 

@@ -260,6 +260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   file: {fileID: 5090062568418006305, guid: fc5048a3e635941f9ac51902b4eac4c0, type: 3}
+  folder: {fileID: 2928796175780587754, guid: 23daee6b242194ef1bef5f0c495a0e99, type: 3}
   changedFile: {fileID: 5090062568418006305, guid: fc5048a3e635941f9ac51902b4eac4c0, type: 3}
   commit: {fileID: 4880512911649112285, guid: 11659f32f5aad463291b24c33595ce92, type: 3}
   branchTreeMaterial: {fileID: 2100000, guid: 0a69b032a11b04a808034239cd08ffe4, type: 2}
@@ -1334,6 +1335,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
   hunksScrollPosition: {x: 0, y: 0}
+  ownershipScrollPosition: {x: 0, y: 0}
+  fileInfoScrollPosition: {x: 0, y: 0}
 --- !u!114 &1862167785
 MonoBehaviour:
   m_ObjectHideFlags: 0

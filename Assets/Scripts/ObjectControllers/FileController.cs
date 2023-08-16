@@ -12,7 +12,7 @@ public class FileController : MonoBehaviour
     public List<HelixCommitFileStakeholderRelation> commitFileStakeholderRelationList;
     public DBCommit commit;
 
-    public string owner;
+    public string owner = "";
     public int linesOwned = 0;
     public int lines = 0;
 
@@ -22,15 +22,15 @@ public class FileController : MonoBehaviour
 
     private UnityAction updateFileColorListener;
 
-
     // Start is called before the first frame update
     void Start()
     {
-        mat = visual.GetComponent<Renderer>().material;
+        mat = visual.GetComponent<MeshRenderer>().material;
         updateFileColorListener = new UnityAction(ChangeColor);
         EventManager.StartListening("updateFileColor", updateFileColorListener);
-
+        Init();
     }
+
 
     public void Init()
     {
@@ -54,6 +54,7 @@ public class FileController : MonoBehaviour
         }
         else if (GlobalSettings.showOwnershipColors && owner != "" && (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == owner))
         {
+            Debug.Log("Test: " + mat);
             mat.color = Main.helix.stakeholders[owner].colorStore;
         }
         else if (GlobalSettings.showBranchColors && (GlobalSettings.highlightedBranch == null || GlobalSettings.highlightedBranch == commit.branch))

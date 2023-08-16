@@ -16,6 +16,7 @@ public class GlobalSettings : MonoBehaviour
     public static bool showBranchPalette = false;
     public static bool showFileInfo = false;
     public static bool commitPlacementMode = false; //linear(false)/timeBased(true)
+    public static bool showFolderRings = true;
 
     public static float commitDistanceMultiplicator = 5f;
 
@@ -29,6 +30,7 @@ public class GlobalSettings : MonoBehaviour
     string lasthighlightedAuthor = highlightedAuthor;
     string lasthighlightedBranch = highlightedBranch;
     float lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
+    bool lastShowFolderRings = showFolderRings;
 
 
 
@@ -92,6 +94,12 @@ public class GlobalSettings : MonoBehaviour
             EventManager.TriggerEvent("updateCommitDistance");
             Main.helix.UpdateConnectionTreeDistance();
             lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
+        }
+
+        if (lastShowFolderRings != showFolderRings)
+        {
+            EventManager.TriggerEvent("updateFolders");
+            lastShowFolderRings = showFolderRings;
         }
     }
 

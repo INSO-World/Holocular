@@ -16,7 +16,8 @@ public class MainSettings : MonoBehaviour
     Switch showAuthorsColorsSwitch;
     Switch showBranchColorsSwitch;
     Switch showOwnershipColorsSwitch;
-    Switch switchCommitPlacementMode;
+    Switch commitPlacementModeSwitch;
+    Switch showFolderRingsSwitch;
     WindowBar windowBar;
 
     public string commitDistanceMultiplicatorTmp;
@@ -27,7 +28,8 @@ public class MainSettings : MonoBehaviour
         showAuthorsColorsSwitch = new Switch(new Rect(0, 30, 40, 20), switchBackground, switchKnob);
         showBranchColorsSwitch = new Switch(new Rect(0, 70, 40, 20), switchBackground, switchKnob);
         showOwnershipColorsSwitch = new Switch(new Rect(0, 110, 40, 20), switchBackground, switchKnob);
-        switchCommitPlacementMode = new Switch(new Rect(0, 70, 40, 20), switchBackground, switchKnob);
+        commitPlacementModeSwitch = new Switch(new Rect(0, 70, 40, 20), switchBackground, switchKnob);
+        showFolderRingsSwitch = new Switch(new Rect(0, 110, 40, 20), switchBackground, switchKnob);
         windowBar = new WindowBar("Settings", uiStyle, 300);
 
         commitDistanceMultiplicatorTmp = "" + GlobalSettings.commitDistanceMultiplicator;
@@ -91,12 +93,16 @@ public class MainSettings : MonoBehaviour
 
 
         GUI.BeginGroup(new Rect(10, 480, 200, 200));
-        GUI.Label(new Rect(0, 0, 200, 20), "Commit Distribution", uiStyle.GetStyle("headline"));
+        GUI.Label(new Rect(0, 0, 200, 20), "Visuals", uiStyle.GetStyle("headline"));
 
         GUI.Label(new Rect(0, 30, 200, 20), "Distance Factor:");
         GlobalSettings.commitDistanceMultiplicator = GUI.HorizontalSlider(new Rect(0, 50, 180, 20), GlobalSettings.commitDistanceMultiplicator, 1f, 9f);
-        GlobalSettings.commitPlacementMode = switchCommitPlacementMode.render(GlobalSettings.commitPlacementMode);
-        GUI.Label(new Rect(50, 70, 160, 40), "Linar/By Date");
+
+        GlobalSettings.commitPlacementMode = commitPlacementModeSwitch.render(GlobalSettings.commitPlacementMode);
+        GUI.Label(new Rect(50, 70, 160, 40), "Commit Distribution\nLinar/By Date");
+
+        GlobalSettings.showFolderRings = showFolderRingsSwitch.render(GlobalSettings.showFolderRings);
+        GUI.Label(new Rect(50, 110, 120, 40), "Show Folder\nRings (f)");
 
         GUI.EndGroup();
     }

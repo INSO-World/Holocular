@@ -9,6 +9,9 @@ public class Main : MonoBehaviour
     public GameObject file;
     public static GameObject sFile;
 
+    public GameObject folder;
+    public static GameObject sFolder;
+
     public GameObject changedFile;
     public static GameObject sChangedFile;
 
@@ -54,6 +57,7 @@ public class Main : MonoBehaviour
     void Start()
     {
         sFile = file;
+        sFolder = folder;
         sChangedFile = changedFile;
         sCommit = commit;
         sBranchTreeMaterial = branchTreeMaterial;
@@ -106,6 +110,12 @@ public class Main : MonoBehaviour
         {
             GlobalSettings.showBranchPalette = !GlobalSettings.showBranchPalette;
             RuntimeDebug.Log("Show Branch Palette: " + GlobalSettings.showBranchPalette);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            GlobalSettings.showFolderRings = !GlobalSettings.showFolderRings;
+            RuntimeDebug.Log("Show Folder Rings: " + GlobalSettings.showFolderRings);
         }
 
         if (Input.GetKeyDown(KeyCode.E))
