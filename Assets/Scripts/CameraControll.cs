@@ -27,25 +27,41 @@ public class CameraControll : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
         {
-            if (Input.GetMouseButtonDown(0))
+            if (hit.transform.tag == "File")
             {
-                if (hit.transform.tag == "File")
+                if (Input.GetMouseButtonDown(0))
                 {
+
+
                     Vector3 dir = (hit.transform.position - mainCamera.position).normalized;
-                    selectPoint.position = hit.transform.position + -dir * 5;
+                    selectPoint.position = hit.transform.position + -dir * 5 * GlobalSettings.fileSize;
                     selectPoint.LookAt(hit.transform.position);
                     Main.lastSelectedObject = hit.transform.gameObject;
                     Main.selectedFile = hit.transform.gameObject.GetComponent<FileController>();
                     selected = true;
+                    if (!GlobalSettings.showFileInfo)
+                    {
+                        GlobalSettings.showFileInfo = true;
+                    }
                     RuntimeDebug.Log(hit.transform.name);
                 }
-            }
-            if (GlobalSettings.debugMode)
-            {
-                RuntimeDebug.DrawLine(transform.position - Vector3.up, hit.transform.position, Color.green); ;
-                Debug.Log("hit");
+                else
+                {
+                    Main.hoveredFile = hit.transform.gameObject.GetComponent<FileController>();
+                    Main.fileHover = true;
+                }
+                if (GlobalSettings.debugMode)
+                {
+                    RuntimeDebug.DrawLine(transform.position - Vector3.up, hit.transform.position, Color.green); ;
+                }
             }
         }
+        else
+        {
+            Main.fileHover = false;
+        }
+
+
 
         if (Input.GetMouseButton(1))
         {

@@ -630,6 +630,7 @@ GameObject:
   - component: {fileID: 1862167784}
   - component: {fileID: 1862167783}
   - component: {fileID: 1862167785}
+  - component: {fileID: 1862167786}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -1351,3 +1352,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
   branchesScrollPosition: {x: 0, y: 0}
+--- !u!114 &1862167786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862167777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4110bb1bd5e654fc89ee36de360df5de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}

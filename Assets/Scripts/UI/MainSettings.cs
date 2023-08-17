@@ -96,13 +96,17 @@ public class MainSettings : MonoBehaviour
         GUI.Label(new Rect(0, 0, 200, 20), "Visuals", uiStyle.GetStyle("headline"));
 
         GUI.Label(new Rect(0, 30, 200, 20), "Distance Factor:");
-        GlobalSettings.commitDistanceMultiplicator = GUI.HorizontalSlider(new Rect(0, 50, 180, 20), GlobalSettings.commitDistanceMultiplicator, 1f, 9f);
+        GlobalSettings.commitDistanceMultiplicator = Slider.render(new Rect(0, 50, 180, 20), GlobalSettings.commitDistanceMultiplicator, 1f, 9f, uiStyle.GetStyle("sliderEmpty"), uiStyle.GetStyle("sliderFilled"), uiStyle.GetStyle("sliderKnob"));
 
         GlobalSettings.commitPlacementMode = commitPlacementModeSwitch.render(GlobalSettings.commitPlacementMode);
         GUI.Label(new Rect(50, 70, 160, 40), "Commit Distribution\nLinar/By Date");
 
         GlobalSettings.showFolderRings = showFolderRingsSwitch.render(GlobalSettings.showFolderRings);
         GUI.Label(new Rect(50, 110, 120, 40), "Show Folder\nRings (f)");
+
+        GUI.Label(new Rect(0, 150, 200, 20), "File Size:");
+        GlobalSettings.fileSize = Slider.render(new Rect(0, 170, 180, 20), GlobalSettings.fileSize, 0.1f, 15f, uiStyle.GetStyle("sliderEmpty"), uiStyle.GetStyle("sliderFilled"), uiStyle.GetStyle("sliderKnob"));
+
 
         GUI.EndGroup();
     }

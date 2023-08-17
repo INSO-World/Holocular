@@ -39,8 +39,8 @@ public class DebugView : MonoBehaviour
 
             GUI.Label(new Rect(0, 180, 400, 20), "Selections:");
             GUI.Label(new Rect(0, 200, 800, 20), "Highlighted Author: " + GlobalSettings.highlightedAuthor);
-
-            GUI.Label(new Rect(0, 220, 800, 20), "Last Selected Object: " + (Main.lastSelectedObject == null ? "none" : Main.lastSelectedObject.name));
+            GUI.Label(new Rect(0, 220, 800, 20), "Highlight Mode: " + (GlobalSettings.showAuthorColors ? "committer" : GlobalSettings.showBranchColors ? "branch" : GlobalSettings.showOwnershipColors ? "ownership" : "none"));
+            GUI.Label(new Rect(0, 240, 800, 20), "Last Selected Object: " + (Main.lastSelectedObject == null ? "none" : Main.lastSelectedObject.name));
 
 
             LogScrollView();

@@ -52,6 +52,9 @@ public class Main : MonoBehaviour
 
     public static FileController selectedFile;
 
+    public static bool fileHover = false;
+    public static FileController hoveredFile;
+
 
     // Start is called before the first frame update
     void Start()

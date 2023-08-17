@@ -21,13 +21,16 @@ public class FileController : MonoBehaviour
     private Material mat;
 
     private UnityAction updateFileColorListener;
+    private UnityAction updateFileSizeListener;
 
     // Start is called before the first frame update
     void Start()
     {
         mat = visual.GetComponent<MeshRenderer>().material;
         updateFileColorListener = new UnityAction(ChangeColor);
+        updateFileSizeListener = new UnityAction(ChangeSize);
         EventManager.StartListening("updateFileColor", updateFileColorListener);
+        EventManager.StartListening("updateFileSize", updateFileSizeListener);
         Init();
     }
 
@@ -44,6 +47,7 @@ public class FileController : MonoBehaviour
             }
         }
         ChangeColor();
+        ChangeSize();
     }
 
     private void ChangeColor()
@@ -69,5 +73,10 @@ public class FileController : MonoBehaviour
         {
             mat.color = Main.fileDefaultColor;
         }
+    }
+
+    private void ChangeSize()
+    {
+        transform.localScale = new Vector3(GlobalSettings.fileSize, GlobalSettings.fileSize, GlobalSettings.fileSize);
     }
 }

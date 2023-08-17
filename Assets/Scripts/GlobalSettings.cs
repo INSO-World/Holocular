@@ -19,6 +19,7 @@ public class GlobalSettings : MonoBehaviour
     public static bool showFolderRings = true;
 
     public static float commitDistanceMultiplicator = 5f;
+    public static float fileSize = 2f;
 
     public static string highlightedAuthor = null;
     public static string highlightedBranch = null;
@@ -30,6 +31,7 @@ public class GlobalSettings : MonoBehaviour
     string lasthighlightedAuthor = highlightedAuthor;
     string lasthighlightedBranch = highlightedBranch;
     float lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
+    float lastFileSize = fileSize;
     bool lastShowFolderRings = showFolderRings;
 
 
@@ -96,6 +98,12 @@ public class GlobalSettings : MonoBehaviour
             lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
         }
 
+        if (lastFileSize != fileSize)
+        {
+            EventManager.TriggerEvent("updateFileSize");
+            lastFileSize = fileSize;
+        }
+
         if (lastShowFolderRings != showFolderRings)
         {
             EventManager.TriggerEvent("updateFolders");
@@ -108,11 +116,11 @@ public class GlobalSettings : MonoBehaviour
         if (highlightedAuthor != signature)
         {
             highlightedAuthor = signature;
-        }
-        else if (showAuthorColors == false && showOwnershipColors == false && highlightedAuthor == signature)
-        {
-            showAuthorColors = true;
-            showOwnershipColors = false;
+            if (!showAuthorColors && !showOwnershipColors)
+            {
+                showAuthorColors = true;
+                showOwnershipColors = false;
+            }
         }
         else if (showAuthorColors == true && showOwnershipColors == false && highlightedAuthor == signature)
         {
