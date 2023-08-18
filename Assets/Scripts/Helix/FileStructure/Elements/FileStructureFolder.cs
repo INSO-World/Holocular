@@ -4,10 +4,12 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
+using static UnityEditor.Rendering.FilterWindow;
 
 public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 {
     private string name = "";
+    private string path = "";
     private bool changed = false;
 
     Dictionary<string, IFileStructureElement> folderContent = new Dictionary<string, IFileStructureElement>();
@@ -21,16 +23,16 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
     bool IFileStructureElement.Changed { get { return changed; } set { changed = value; } }
 
 
-    public void AddElement(DBCommit commit, string fullPath, string[] pathParts, bool changedInThisCommit, HelixCommitFileRelation helixCommitFileRelation)
+    public void AddElement(DBCommit commit, string fullPath, string currPath, string[] pathParts, bool changedInThisCommit, HelixCommitFileRelation helixCommitFileRelation)
     {
         string currentPathPart = pathParts[0];
         if (pathParts.Length > 1)
         {
             string[] remainingPathParts = pathParts.Skip(1).ToArray();
-
+            currPath += currentPathPart + "/";
             if (folderContent.ContainsKey(currentPathPart))
             {
-                (folderContent[currentPathPart] as FileStructureFolder).AddElement(commit, fullPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
+                (folderContent[currentPathPart] as FileStructureFolder).AddElement(commit, fullPath, currPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
                 if (changedInThisCommit)
                 {
                     folderContent[currentPathPart].Changed = changedInThisCommit;
@@ -40,7 +42,8 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             {
                 IFileStructureElement folder = new FileStructureFolder();
                 folder.Name = currentPathPart;
-                (folder as FileStructureFolder).AddElement(commit, fullPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
+                (folder as FileStructureFolder).path = currPath;
+                (folder as FileStructureFolder).AddElement(commit, fullPath, currPath, remainingPathParts, changedInThisCommit, helixCommitFileRelation);
                 folder.Changed = changedInThisCommit;
                 folderContent.Add(currentPathPart, folder);
             }
@@ -92,8 +95,12 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
         {
             GameObject ring = Instantiate(Main.sFolder, parent);
             ring.transform.localPosition = new Vector3(0, 0, 0);
-
+            ring.name = name;
+            FolderController folderController = ring.GetComponent<FolderController>();
+            folderController.fullPath = path;
             LineRenderer lr = ring.GetComponent<LineRenderer>();
+
+
             lr.SetColors(ringColor, ringColor);
 
             lr.positionCount = elementsInFolder;

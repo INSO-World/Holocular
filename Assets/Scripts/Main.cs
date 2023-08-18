@@ -78,7 +78,10 @@ public class Main : MonoBehaviour
 
         lock (actionQueue)
         {
-            while (actionQueue.Count != 0) actionQueue.Dequeue().Invoke();
+            while (actionQueue.Count != 0)
+            {
+                actionQueue.Dequeue().Invoke();
+            }
         }
 
     }

@@ -18,19 +18,26 @@ public class FileController : MonoBehaviour
 
     public GameObject visual;
 
+    private BoxCollider bc;
+    private MeshRenderer mr;
     private Material mat;
 
     private UnityAction updateFileColorListener;
     private UnityAction updateFileSizeListener;
+    private UnityAction updateFolderSearchListener;
 
     // Start is called before the first frame update
     void Start()
     {
-        mat = visual.GetComponent<MeshRenderer>().material;
+        bc = transform.GetComponent<BoxCollider>();
+        mr = visual.GetComponent<MeshRenderer>();
+        mat = mr.material;
         updateFileColorListener = new UnityAction(ChangeColor);
         updateFileSizeListener = new UnityAction(ChangeSize);
+        updateFolderSearchListener = new UnityAction(ChangeVisibility);
         EventManager.StartListening("updateFileColor", updateFileColorListener);
         EventManager.StartListening("updateFileSize", updateFileSizeListener);
+        EventManager.StartListening("updateFolders", updateFolderSearchListener);
         Init();
     }
 
@@ -48,6 +55,7 @@ public class FileController : MonoBehaviour
         }
         ChangeColor();
         ChangeSize();
+        ChangeVisibility();
     }
 
     private void ChangeColor()
@@ -78,5 +86,19 @@ public class FileController : MonoBehaviour
     private void ChangeSize()
     {
         transform.localScale = new Vector3(GlobalSettings.fileSize, GlobalSettings.fileSize, GlobalSettings.fileSize);
+    }
+
+    private void ChangeVisibility()
+    {
+        if (GlobalSettings.folderSearch.Length == 0 || fullFilePath.StartsWith(GlobalSettings.folderSearch))
+        {
+            bc.enabled = true;
+            mr.enabled = true;
+        }
+        else
+        {
+            bc.enabled = false;
+            mr.enabled = false;
+        }
     }
 }

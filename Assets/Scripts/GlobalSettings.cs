@@ -24,6 +24,8 @@ public class GlobalSettings : MonoBehaviour
     public static string highlightedAuthor = null;
     public static string highlightedBranch = null;
 
+    public static string folderSearch = "";
+
     bool lastShowAuthorColors = showAuthorColors;
     bool lastShowBranchColors = showBranchColors;
     bool lastShowOwnerhshipColors = showOwnershipColors;
@@ -33,7 +35,7 @@ public class GlobalSettings : MonoBehaviour
     float lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
     float lastFileSize = fileSize;
     bool lastShowFolderRings = showFolderRings;
-
+    string lastFolderSearch = folderSearch;
 
 
     // Update is called once per frame
@@ -108,6 +110,12 @@ public class GlobalSettings : MonoBehaviour
         {
             EventManager.TriggerEvent("updateFolders");
             lastShowFolderRings = showFolderRings;
+        }
+
+        if (lastFolderSearch != folderSearch)
+        {
+            EventManager.TriggerEvent("updateFolders");
+            lastFolderSearch = folderSearch;
         }
     }
 

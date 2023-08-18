@@ -23,7 +23,7 @@ public class FileStructure : MonoBehaviour
     {
         string[] splittedPath = path.Split('/');
         maxDepht = splittedPath.Length;
-        (root as FileStructureFolder).AddElement(commit, path, splittedPath, changedInThisCommit, helixCommitFileRelation);
+        (root as FileStructureFolder).AddElement(commit, path, "", splittedPath, changedInThisCommit, helixCommitFileRelation);
     }
 
     public void DrawHelixRing(HelixCommit commit,

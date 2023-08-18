@@ -79,7 +79,7 @@ public class MainSettings : MonoBehaviour
         GUI.EndGroup();
 
         GUI.BeginGroup(new Rect(10, 300, 200, 200));
-        GUI.Label(new Rect(0, 0, 200, 20), "File Coloring", uiStyle.GetStyle("headline"));
+        GUI.Label(new Rect(0, 0, 200, 20), "Highlighting", uiStyle.GetStyle("headline"));
         GlobalSettings.showAuthorColors = showAuthorsColorsSwitch.render(GlobalSettings.showAuthorColors);
         GUI.Label(new Rect(50, 30, 120, 40), "Show Committer\nColors (c)");
 
@@ -89,10 +89,13 @@ public class MainSettings : MonoBehaviour
         GlobalSettings.showOwnershipColors = showOwnershipColorsSwitch.render(GlobalSettings.showOwnershipColors);
         GUI.Label(new Rect(50, 110, 120, 40), "Show Ownership\nColors (o)");
 
+        GUI.Label(new Rect(0, 150, 200, 20), "Highlight Path:");
+        GlobalSettings.folderSearch = TextField.render(new Rect(0, 170, 200, 20), GlobalSettings.folderSearch, uiStyle.GetStyle("textFieldText"), uiStyle.GetStyle("textFieldBack"), uiStyle.GetStyle("textFieldBorder"));
+
         GUI.EndGroup();
 
 
-        GUI.BeginGroup(new Rect(10, 480, 200, 200));
+        GUI.BeginGroup(new Rect(10, 520, 200, 200));
         GUI.Label(new Rect(0, 0, 200, 20), "Visuals", uiStyle.GetStyle("headline"));
 
         GUI.Label(new Rect(0, 30, 200, 20), "Distance Factor:");

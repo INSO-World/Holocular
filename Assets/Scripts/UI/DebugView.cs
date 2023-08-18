@@ -36,11 +36,12 @@ public class DebugView : MonoBehaviour
             GUI.Label(new Rect(0, 100, 400, 20), "Threads:");
             GUI.Label(new Rect(0, 120, 400, 20), "Create Structure Thread: " + Main.helix.createStructureThreadState);
             GUI.Label(new Rect(0, 140, 400, 20), "Draw Structure Thread: " + Main.helix.drawStructureThreadState);
+            GUI.Label(new Rect(0, 160, 400, 20), "Action Queue Size: " + Main.actionQueue.Count);
 
-            GUI.Label(new Rect(0, 180, 400, 20), "Selections:");
-            GUI.Label(new Rect(0, 200, 800, 20), "Highlighted Author: " + GlobalSettings.highlightedAuthor);
-            GUI.Label(new Rect(0, 220, 800, 20), "Highlight Mode: " + (GlobalSettings.showAuthorColors ? "committer" : GlobalSettings.showBranchColors ? "branch" : GlobalSettings.showOwnershipColors ? "ownership" : "none"));
-            GUI.Label(new Rect(0, 240, 800, 20), "Last Selected Object: " + (Main.lastSelectedObject == null ? "none" : Main.lastSelectedObject.name));
+            GUI.Label(new Rect(0, 200, 400, 20), "Selections:");
+            GUI.Label(new Rect(0, 220, 800, 20), "Highlighted Author: " + GlobalSettings.highlightedAuthor);
+            GUI.Label(new Rect(0, 240, 800, 20), "Highlight Mode: " + (GlobalSettings.showAuthorColors ? "committer" : GlobalSettings.showBranchColors ? "branch" : GlobalSettings.showOwnershipColors ? "ownership" : "none"));
+            GUI.Label(new Rect(0, 260, 800, 20), "Last Selected Object: " + (Main.lastSelectedObject == null ? "none" : Main.lastSelectedObject.name));
 
 
             LogScrollView();

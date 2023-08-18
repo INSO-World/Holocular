@@ -151,7 +151,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bea2ba9658464a1d8b7f92adaa801f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  authorSighnature: 
+  fullFilePath: 
+  fileName: 
+  commitFileRelation:
+    _id: 
+    from: 
+    to: 
+    _from: 
+    _to: 
+    lineCount: 0
+    hunks: []
+    stats:
+      additions: 0
+      deletions: 0
+  commit:
+    _id: 
+    sha: 
+    signature: 
+    date: 
+    message: 
+    webUrl: 
+    branch: 
+    parents: 
+    stats:
+      additions: 0
+      deletions: 0
+  owner: 
+  linesOwned: 0
+  lines: 0
   visual: {fileID: 392191768799254914}
 --- !u!65 &1681780510245784209
 BoxCollider:

@@ -9,6 +9,7 @@ public class FolderController : MonoBehaviour
 
     private UnityAction updateFolderListener;
     private LineRenderer lr;
+    public string fullPath = "";
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +22,7 @@ public class FolderController : MonoBehaviour
 
     private void UpdateFolder()
     {
-        if (GlobalSettings.showFolderRings)
+        if (GlobalSettings.showFolderRings && (GlobalSettings.folderSearch.Length == 0 || fullPath.StartsWith(GlobalSettings.folderSearch)))
         {
             lr.enabled = true;
         }
