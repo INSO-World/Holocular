@@ -10,4 +10,11 @@ public class Utils
         return end * (value * value * value + 1) + start;
     }
 
+    public static void GUIDrawSprite(Rect rect, Sprite sprite)
+    {
+        Rect spriteRect = sprite.rect;
+        Texture2D tex = sprite.texture;
+        GUI.DrawTextureWithTexCoords(rect, tex, new Rect(spriteRect.x / tex.width, spriteRect.y / tex.height, spriteRect.width / tex.width, spriteRect.height / tex.height));
+    }
+
 }

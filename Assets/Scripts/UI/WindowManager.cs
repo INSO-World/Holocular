@@ -24,7 +24,7 @@ public class WindowManager : MonoBehaviour
     int windowCount = 5;
 
 
-    int padding = 10;
+    int padding = 5;
     int buttonSize = Screen.height / 20;
 
     // Start is called before the first frame update

@@ -9,17 +9,17 @@ using static UnityEngine.Rendering.DebugUI.MessageBox;
 public class AuthorPalette : MonoBehaviour
 {
     public GUISkin uiStyle;
-    Rect authorPaletteWindowRect = new Rect(220, 10, 200, 800);
+    Rect authorPaletteWindowRect = new Rect(330, 10, 200, 800);
     public Vector2 authorsScrollPosition = Vector2.zero;
 
     Dictionary<string, Texture2D> authorBackgroundTextures = new Dictionary<string, Texture2D>();//key: signature
     bool authorBackgroundTexturesInitialized = false;
-    WindowBar windowBar;
+    Window window;
 
     // Start is called before the first frame update
     void Start()
     {
-        windowBar = new WindowBar("Author Palette", uiStyle, 200);
+        window = new Window("Author Palette", uiStyle, 200, 800);
     }
 
     // Update is called once per frame
@@ -53,7 +53,7 @@ public class AuthorPalette : MonoBehaviour
 
     void AuthorPaletteWindow(int windowID)
     {
-        windowBar.render();
+        window.render();
         authorsScrollPosition = GUI.BeginScrollView(new Rect(0, 40, 200, 760), authorsScrollPosition, new Rect(0, 0, 180, 20 * Main.helix.stakeholders.Count));
         int i = 0;
         foreach (KeyValuePair<string, HelixStakeholder> stakeholder in Main.helix.stakeholders)

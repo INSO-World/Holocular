@@ -151,20 +151,20 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
                         fileController.commitFileStakeholderRelationList = (element as FileStructureFile).helixCommitFileRelation.helixCommitFileStakeholderRelationListStore;
                         fileController.commit = (element as FileStructureFile).commit;
 
-                        float additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / Main.helix.maxAdditions;
-                        float deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / Main.helix.maxDeletions;
+                        float additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / (Main.helix.maxAdditions + Main.helix.maxDeletions) * 2;
+                        float deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / (Main.helix.maxAdditions + Main.helix.maxDeletions) * 2;
 
                         float changeFactor = (float)((element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions + (element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions) / (Main.helix.maxAdditions + Main.helix.maxDeletions);
 
                         if (!fileHelixConnectiontreeDictionary.ContainsKey(fullFilePath))
                         {
                             HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath + "-Connections", Main.sBranchTreeMaterial, Main.helix.helixObject);
-                            connectionTree.addDualPoint(branchName, fullFilePath, commit, commit.dBCommitStore.parents == "" ? null : commit.dBCommitStore.parents.Split(","), newOffsetPos, changeFactor, changeFactor, shaCommitsRelation);
+                            connectionTree.addDualPoint(branchName, fullFilePath, commit, commit.dBCommitStore.parents == "" ? null : commit.dBCommitStore.parents.Split(","), newOffsetPos, additionFactor, deletionFactor, shaCommitsRelation);
                             fileHelixConnectiontreeDictionary.Add(fullFilePath, connectionTree);
                         }
                         else
                         {
-                            fileHelixConnectiontreeDictionary[fullFilePath].addDualPoint(branchName, fullFilePath, commit, commit.dBCommitStore.parents == "" ? null : commit.dBCommitStore.parents.Split(","), newOffsetPos, changeFactor, changeFactor, shaCommitsRelation);
+                            fileHelixConnectiontreeDictionary[fullFilePath].addDualPoint(branchName, fullFilePath, commit, commit.dBCommitStore.parents == "" ? null : commit.dBCommitStore.parents.Split(","), newOffsetPos, additionFactor, deletionFactor, shaCommitsRelation);
                         }
                     }
                 }

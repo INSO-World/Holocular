@@ -18,7 +18,7 @@ public class MainSettings : MonoBehaviour
     Switch showOwnershipColorsSwitch;
     Switch commitPlacementModeSwitch;
     Switch showFolderRingsSwitch;
-    WindowBar windowBar;
+    Window window;
 
     public string commitDistanceMultiplicatorTmp;
 
@@ -30,7 +30,7 @@ public class MainSettings : MonoBehaviour
         showOwnershipColorsSwitch = new Switch(new Rect(0, 110, 40, 20), switchBackground, switchKnob);
         commitPlacementModeSwitch = new Switch(new Rect(0, 70, 40, 20), switchBackground, switchKnob);
         showFolderRingsSwitch = new Switch(new Rect(0, 110, 40, 20), switchBackground, switchKnob);
-        windowBar = new WindowBar("Settings", uiStyle, 300);
+        window = new Window("Settings", uiStyle, 300, 800);
 
         commitDistanceMultiplicatorTmp = "" + GlobalSettings.commitDistanceMultiplicator;
     }
@@ -52,7 +52,7 @@ public class MainSettings : MonoBehaviour
 
     void SettingsWindow(int windowID)
     {
-        windowBar.render();
+        window.render();
         if (GUI.Button(new Rect(10, 40, 280, 20), "Open Database"))
         {
             OpenFolder();

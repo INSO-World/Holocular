@@ -10,17 +10,17 @@ using static UnityEngine.Rendering.DebugUI.MessageBox;
 public class BranchPalette : MonoBehaviour
 {
     public GUISkin uiStyle;
-    Rect branchPaletteWindowRect = new Rect(430, 10, 200, 800);
+    Rect branchPaletteWindowRect = new Rect(550, 10, 200, 800);
     public Vector2 branchesScrollPosition = Vector2.zero;
 
     Dictionary<string, Texture2D> branchBackgroundTextures = new Dictionary<string, Texture2D>();//key: signature
     bool branchBackgroundTexturesInitialized = false;
-    WindowBar windowBar;
+    Window window;
 
     // Start is called before the first frame update
     void Start()
     {
-        windowBar = new WindowBar("Branch Palette", uiStyle, 200);
+        window = new Window("Branch Palette", uiStyle, 200, 800);
     }
 
     // Update is called once per frame
@@ -58,7 +58,7 @@ public class BranchPalette : MonoBehaviour
 
     void BranchPaletteWindow(int windowID)
     {
-        windowBar.render();
+        window.render();
         branchesScrollPosition = GUI.BeginScrollView(new Rect(0, 40, 200, 760), branchesScrollPosition, new Rect(0, 0, 180, 20 * Main.branches.branches.Length));
         int i = 0;
         foreach (KeyValuePair<string, HelixBranch> branch in Main.helix.branches)

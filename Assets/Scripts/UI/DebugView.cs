@@ -11,6 +11,8 @@ public class DebugView : MonoBehaviour
 
     public Vector2 logScrollPosition = Vector2.zero;
 
+    int debugWindowWidth = 400;
+    int margin = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -28,24 +30,25 @@ public class DebugView : MonoBehaviour
     {
         if (GlobalSettings.debugMode)
         {
-            GUI.BeginGroup(new Rect(Screen.width - 400, 0, 400, Screen.height), debugBackgroud);
-            GUI.Label(new Rect(0, 0, 400, 20), "Move Speed (Mouse wheel): " + Main.moveSpeed + "m/s");
-            GUI.Label(new Rect(0, 20, 400, 20), "Mouse Sensitivity (alt + Mouse wheel): " + Main.mouseSensitivity);
-            GUI.Label(new Rect(0, 60, 400, 20), "FPS: " + ((int)(1f / Time.unscaledDeltaTime)));
+            GUI.BeginGroup(new Rect(Screen.width - debugWindowWidth, 0, debugWindowWidth, Screen.height), debugBackgroud);
+            GUI.BeginGroup(new Rect(margin, margin, debugWindowWidth - 2 * margin, Screen.height));
+            GUILayout.BeginVertical();
+            GUILayout.Label("Move Speed (Mouse wheel): " + Main.moveSpeed + "m/s");
+            GUILayout.Label("Mouse Sensitivity (alt + Mouse wheel): " + Main.mouseSensitivity);
+            GUILayout.Label("FPS: " + ((int)(1f / Time.unscaledDeltaTime)));
 
-            GUI.Label(new Rect(0, 100, 400, 20), "Threads:");
-            GUI.Label(new Rect(0, 120, 400, 20), "Create Structure Thread: " + Main.helix.createStructureThreadState);
-            GUI.Label(new Rect(0, 140, 400, 20), "Draw Structure Thread: " + Main.helix.drawStructureThreadState);
-            GUI.Label(new Rect(0, 160, 400, 20), "Action Queue Size: " + Main.actionQueue.Count);
+            GUILayout.Label("Threads:");
+            GUILayout.Label("Create Structure Thread: " + Main.helix.createStructureThreadState);
+            GUILayout.Label("Draw Structure Thread: " + Main.helix.drawStructureThreadState);
+            GUILayout.Label("Action Queue Size: " + Main.actionQueue.Count);
 
-            GUI.Label(new Rect(0, 200, 400, 20), "Selections:");
-            GUI.Label(new Rect(0, 220, 800, 20), "Highlighted Author: " + GlobalSettings.highlightedAuthor);
-            GUI.Label(new Rect(0, 240, 800, 20), "Highlight Mode: " + (GlobalSettings.showAuthorColors ? "committer" : GlobalSettings.showBranchColors ? "branch" : GlobalSettings.showOwnershipColors ? "ownership" : "none"));
-            GUI.Label(new Rect(0, 260, 800, 20), "Last Selected Object: " + (Main.lastSelectedObject == null ? "none" : Main.lastSelectedObject.name));
-
-
+            GUILayout.Label("Selections:");
+            GUILayout.Label("Highlighted Author: " + GlobalSettings.highlightedAuthor);
+            GUILayout.Label("Highlight Mode: " + (GlobalSettings.showAuthorColors ? "committer" : GlobalSettings.showBranchColors ? "branch" : GlobalSettings.showOwnershipColors ? "ownership" : "none"));
+            GUILayout.Label("Last Selected Object: " + (Main.lastSelectedObject == null ? "none" : Main.lastSelectedObject.name));
+            GUILayout.EndVertical();
+            GUI.EndGroup();
             LogScrollView();
-
             GUI.EndGroup();
         }
         else
@@ -58,11 +61,11 @@ public class DebugView : MonoBehaviour
     private void LogScrollView()
     {
         List<Log> logs = RuntimeDebug.getLogs();
-        logScrollPosition = GUI.BeginScrollView(new Rect(0, Screen.height - 20 * logOutputLines, 400, 20 * logOutputLines), logScrollPosition, new Rect(0, 0, 380, 20 * logs.Count));
+        logScrollPosition = GUI.BeginScrollView(new Rect(margin, Screen.height - 20 * logOutputLines, debugWindowWidth - margin, 20 * logOutputLines), logScrollPosition, new Rect(0, 0, debugWindowWidth - margin - 20, 20 * logs.Count));
 
         for (int i = 0; i < logs.Count; i++)
         {
-            GUI.Label(new Rect(0, 20 * (logs.Count - i), 600, 20), "[" + logs[i].time.ToLongTimeString() + "]: " + logs[i].message);
+            GUI.Label(new Rect(0, 20 * (logs.Count - i), debugWindowWidth * 2, 20), "[" + logs[i].time.ToLongTimeString() + "]: " + logs[i].message);
         }
         GUI.EndScrollView();
     }

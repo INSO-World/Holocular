@@ -813,6 +813,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef72d470f84d14b02a355082e213df0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dockBrakground: {fileID: 21300000, guid: bbefbe8d4c65746098bccab95eeb65ac, type: 3}
 --- !u!114 &1862167781
 MonoBehaviour:
   m_ObjectHideFlags: 0
