@@ -63,7 +63,7 @@ public class FileInfo : MonoBehaviour
             GUILayout.Label("Owner:\n" + Main.selectedFile.owner);
             GUILayout.Label("(" + Main.selectedFile.linesOwned + " of " + Main.selectedFile.lines + " lines owned)");
             GUILayout.EndVertical();
-            GUILayout.Space(10);
+            GUILayout.Space(20);
 
             //Commit Info
             GUILayout.BeginVertical();
@@ -84,7 +84,7 @@ public class FileInfo : MonoBehaviour
                 Application.OpenURL(Main.selectedFile.commit.webUrl);
             }
             GUILayout.EndVertical();
-            GUILayout.Space(10);
+            GUILayout.Space(20);
 
             //Stats
             GUILayout.BeginVertical();
@@ -92,7 +92,7 @@ public class FileInfo : MonoBehaviour
             GUILayout.Label("Additions:\n" + Main.selectedFile.commitFileRelation.stats.additions);
             GUILayout.Label("Deletions:\n" + Main.selectedFile.commitFileRelation.stats.deletions);
             GUILayout.EndVertical();
-            GUILayout.Space(10);
+            GUILayout.Space(20);
 
             //hunks
             GUILayout.BeginVertical();
