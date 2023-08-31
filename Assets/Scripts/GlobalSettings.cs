@@ -7,16 +7,22 @@ using UnityEngine.Events;
 
 public class GlobalSettings : MonoBehaviour
 {
+    //Windows
     public static bool debugMode = true;
     public static bool showSettings = true;
+    public static bool showFileInfo = false;
+    public static bool showAuthorPalette = false;
+    public static bool showBranchPalette = false;
+    public static bool showFileCompare = false;
+
+    //Coloring/Brushing
     public static bool showAuthorColors = false;
     public static bool showBranchColors = false;
     public static bool showOwnershipColors = false;
-    public static bool showAuthorPalette = false;
-    public static bool showBranchPalette = false;
-    public static bool showFileInfo = false;
     public static bool commitPlacementMode = false; //linear(false)/timeBased(true)
     public static bool showFolderRings = true;
+
+    public static bool fileIsSelected = false;
 
     public static float commitDistanceMultiplicator = 5f;
     public static float fileSize = 2f;
@@ -36,6 +42,7 @@ public class GlobalSettings : MonoBehaviour
     float lastFileSize = fileSize;
     bool lastShowFolderRings = showFolderRings;
     string lastFolderSearch = folderSearch;
+    bool lastFileIsSelected = fileIsSelected;
 
 
     // Update is called once per frame
@@ -84,6 +91,12 @@ public class GlobalSettings : MonoBehaviour
         {
             EventManager.TriggerEvent("updateFileColor");
             lasthighlightedBranch = highlightedBranch;
+        }
+
+        if (lastFileIsSelected != fileIsSelected)
+        {
+            EventManager.TriggerEvent("updateFileColor");
+            lastFileIsSelected = fileIsSelected;
         }
 
         if (lastCommitPlacementMode != commitPlacementMode)

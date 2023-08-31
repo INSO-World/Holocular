@@ -45,7 +45,6 @@ public class FileInfo : MonoBehaviour
         window.render();
 
         GUI.BeginGroup(new Rect(10, 40, windowWidth - 10, 1200));
-        fileInfoScrollPosition = GUILayout.BeginScrollView(fileInfoScrollPosition, false, true, GUILayout.Height(windowHeight - 40), GUILayout.Width(windowWidth - 10));
         if (Main.selectedFile == null)
         {
             GUILayout.BeginVertical();
@@ -55,6 +54,7 @@ public class FileInfo : MonoBehaviour
         }
         else
         {
+            fileInfoScrollPosition = GUILayout.BeginScrollView(fileInfoScrollPosition, false, true, GUILayout.Height(windowHeight - 40), GUILayout.Width(windowWidth - 20));
             GUILayout.BeginVertical();
             //Main File Info
             GUILayout.BeginVertical();
@@ -70,6 +70,10 @@ public class FileInfo : MonoBehaviour
             GUILayout.Label("Commit", uiStyle.GetStyle("headline"));
             GUILayout.Label("SHA:\n" + Main.selectedFile.commit.sha);
             GUILayout.Label("Parents:\n" + Main.selectedFile.commit.parents.Replace(",", "\n"));
+            if (GUILayout.Button("Compare With Parent", GUILayout.Width(windowWidth - 30)))
+            {
+                GlobalSettings.showFileCompare = true;
+            }
             GUILayout.Label("Author (Click to show all files edited by this Author):");
             uiStyle.GetStyle("author").normal.textColor = Main.helix.stakeholders[Main.selectedFile.commit.signature].colorStore;
             if (GUILayout.Button(Main.selectedFile.commit.signature, uiStyle.GetStyle("author"), GUILayout.Width(windowWidth - 30)))
@@ -94,7 +98,7 @@ public class FileInfo : MonoBehaviour
             GUILayout.EndVertical();
             GUILayout.Space(20);
 
-            //hunks
+            //Hunks
             GUILayout.BeginVertical();
             GUILayout.Label("Hunks", uiStyle.GetStyle("headline"));
             hunksScrollPosition = GUILayout.BeginScrollView(hunksScrollPosition, false, true, GUILayout.Height(200));
@@ -115,6 +119,7 @@ public class FileInfo : MonoBehaviour
 
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
+            GUILayout.Space(20);
 
             //OwnerShip Hunks
             GUILayout.BeginVertical();
@@ -131,9 +136,12 @@ public class FileInfo : MonoBehaviour
 
             GUI.EndScrollView();
             GUILayout.EndVertical();
+            GUILayout.Space(20);
+
             GUILayout.EndVertical();
+            GUILayout.EndVertical();
+            GUILayout.EndScrollView();
         }
-        GUILayout.EndScrollView();
         GUI.EndGroup();
 
 

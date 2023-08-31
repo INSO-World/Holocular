@@ -13,6 +13,7 @@ public class WindowManager : MonoBehaviour
     public GUIStyle authorListIcon;
     public GUIStyle debugViewIcon;
     public GUIStyle fileInfoIcon;
+    public GUIStyle fileCompareIcon;
     public GUIStyle branchListIcon;
 
 
@@ -20,8 +21,9 @@ public class WindowManager : MonoBehaviour
     WindowButton authorListButton;
     WindowButton debugViewButton;
     WindowButton fileInfoButton;
+    WindowButton fileCompareButton;
     WindowButton branchListButton;
-    int windowCount = 5;
+    int windowCount = 6;
 
 
     int padding = 5;
@@ -34,7 +36,8 @@ public class WindowManager : MonoBehaviour
         authorListButton = new WindowButton(new Rect(2 * padding + buttonSize, padding, buttonSize, buttonSize), authorListIcon, uiStyle.GetStyle("windowButtonActive"));
         branchListButton = new WindowButton(new Rect(3 * padding + 2 * buttonSize, padding, buttonSize, buttonSize), branchListIcon, uiStyle.GetStyle("windowButtonActive"));
         fileInfoButton = new WindowButton(new Rect(4 * padding + 3 * buttonSize, padding, buttonSize, buttonSize), fileInfoIcon, uiStyle.GetStyle("windowButtonActive"));
-        debugViewButton = new WindowButton(new Rect(5 * padding + 4 * buttonSize, padding, buttonSize, buttonSize), debugViewIcon, uiStyle.GetStyle("windowButtonActive"));
+        fileCompareButton = new WindowButton(new Rect(5 * padding + 4 * buttonSize, padding, buttonSize, buttonSize), fileCompareIcon, uiStyle.GetStyle("windowButtonActive"));
+        debugViewButton = new WindowButton(new Rect(6 * padding + 5 * buttonSize, padding, buttonSize, buttonSize), debugViewIcon, uiStyle.GetStyle("windowButtonActive"));
     }
 
     // Update is called once per frame
@@ -53,6 +56,7 @@ public class WindowManager : MonoBehaviour
         GlobalSettings.showAuthorPalette = authorListButton.render(GlobalSettings.showAuthorPalette);
         GlobalSettings.showBranchPalette = branchListButton.render(GlobalSettings.showBranchPalette);
         GlobalSettings.showFileInfo = fileInfoButton.render(GlobalSettings.showFileInfo);
+        GlobalSettings.showFileCompare = fileCompareButton.render(GlobalSettings.showFileCompare);
         GlobalSettings.debugMode = debugViewButton.render(GlobalSettings.debugMode);
         GUI.EndGroup();
     }

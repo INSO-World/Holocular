@@ -10,7 +10,7 @@ public class Helix : MonoBehaviour
 {
     public GameObject helixObject;
 
-    Dictionary<string, HelixCommit> commits = new Dictionary<string, HelixCommit>(); //Key: sha
+    public Dictionary<string, HelixCommit> commits = new Dictionary<string, HelixCommit>(); //Key: sha
 
     public Dictionary<string, HelixBranch> branches = new Dictionary<string, HelixBranch>(); //Key: branch name
 

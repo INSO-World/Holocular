@@ -60,13 +60,16 @@ public class FileController : MonoBehaviour
 
     private void ChangeColor()
     {
-        if (GlobalSettings.showAuthorColors && (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == commit.signature))
+        if (GlobalSettings.fileIsSelected && fullFilePath != Main.selectedFile.fullFilePath)
+        {
+            mat.color = Main.fileDeSelectedColor;
+        }
+        else if (GlobalSettings.showAuthorColors && (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == commit.signature))
         {
             mat.color = Main.helix.stakeholders[commit.signature].colorStore;
         }
         else if (GlobalSettings.showOwnershipColors && owner != "" && (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == owner))
         {
-            Debug.Log("Test: " + mat);
             mat.color = Main.helix.stakeholders[owner].colorStore;
         }
         else if (GlobalSettings.showBranchColors && (GlobalSettings.highlightedBranch == null || GlobalSettings.highlightedBranch == commit.branch))

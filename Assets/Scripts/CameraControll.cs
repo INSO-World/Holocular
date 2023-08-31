@@ -10,8 +10,9 @@ public class CameraControll : MonoBehaviour
     Quaternion originalRotation;
     Transform selectPoint;
     Transform mainCamera;
-    bool selected = false;
     float selectFocusSpeed = 10f;
+
+    float zoomDistanceToFile = 20f;
 
     // Start is called before the first frame update
     void Start()
@@ -31,14 +32,12 @@ public class CameraControll : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-
-
                     Vector3 dir = (hit.transform.position - mainCamera.position).normalized;
-                    selectPoint.position = hit.transform.position + -dir * 5 * GlobalSettings.fileSize;
+                    selectPoint.position = hit.transform.position + -dir * zoomDistanceToFile * GlobalSettings.fileSize;
                     selectPoint.LookAt(hit.transform.position);
                     Main.lastSelectedObject = hit.transform.gameObject;
                     Main.selectedFile = hit.transform.gameObject.GetComponent<FileController>();
-                    selected = true;
+                    GlobalSettings.fileIsSelected = true;
                     if (!GlobalSettings.showFileInfo)
                     {
                         GlobalSettings.showFileInfo = true;
@@ -52,7 +51,7 @@ public class CameraControll : MonoBehaviour
                 }
                 if (GlobalSettings.debugMode)
                 {
-                    RuntimeDebug.DrawLine(transform.position - Vector3.up, hit.transform.position, Color.green); ;
+                    RuntimeDebug.DrawLine(mainCamera.position - Vector3.up, hit.transform.position, Color.green); ;
                 }
             }
         }
@@ -71,37 +70,37 @@ public class CameraControll : MonoBehaviour
             Quaternion xQuaternion = Quaternion.AngleAxis(rotationX, Vector3.up);
             Quaternion yQuaternion = Quaternion.AngleAxis(rotationY, -Vector3.right);
             transform.localRotation = originalRotation * xQuaternion * yQuaternion;
-            selected = false;
+            GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.W))
         {
             transform.position += transform.forward * Main.moveSpeed * Time.deltaTime;
-            selected = false;
+            GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.S))
         {
             transform.position -= transform.forward * Main.moveSpeed * Time.deltaTime;
-            selected = false;
+            GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.A))
         {
             transform.position -= transform.right * Main.moveSpeed * Time.deltaTime;
-            selected = false;
+            GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.D))
         {
             transform.position += transform.right * Main.moveSpeed * Time.deltaTime;
-            selected = false;
+            GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.Space))
         {
             transform.position += Vector3.up * Main.moveSpeed * Time.deltaTime;
-            selected = false;
+            GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.LeftShift))
         {
             transform.position -= Vector3.up * Main.moveSpeed * Time.deltaTime;
-            selected = false;
+            GlobalSettings.fileIsSelected = false;
         }
         if (Input.mouseScrollDelta.y != 0)
         {
@@ -131,7 +130,7 @@ public class CameraControll : MonoBehaviour
             }
         }
 
-        if (selected)
+        if (GlobalSettings.fileIsSelected)
         {
             mainCamera.position = Vector3.MoveTowards(mainCamera.position, selectPoint.position, selectFocusSpeed * Time.deltaTime * Vector3.Distance(mainCamera.position, selectPoint.position));
             mainCamera.rotation = Quaternion.Lerp(mainCamera.rotation, selectPoint.rotation, selectFocusSpeed * Time.deltaTime);
