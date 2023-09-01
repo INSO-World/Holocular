@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class HelixCommit : MonoBehaviour
 {

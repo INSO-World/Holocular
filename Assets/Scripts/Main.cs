@@ -106,23 +106,36 @@ public class Main : MonoBehaviour
             RuntimeDebug.Log("Show Branch Colors: " + GlobalSettings.showBranchColors);
         }
 
-        if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        if (Input.GetKeyDown(KeyCode.C) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
         {
             GlobalSettings.showAuthorPalette = !GlobalSettings.showAuthorPalette;
             RuntimeDebug.Log("Show Author Palette: " + GlobalSettings.showAuthorPalette);
         }
 
-        if (Input.GetKeyDown(KeyCode.B) && Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        if (Input.GetKeyDown(KeyCode.B) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
         {
             GlobalSettings.showBranchPalette = !GlobalSettings.showBranchPalette;
             RuntimeDebug.Log("Show Branch Palette: " + GlobalSettings.showBranchPalette);
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
         {
             GlobalSettings.showFolderRings = !GlobalSettings.showFolderRings;
             RuntimeDebug.Log("Show Folder Rings: " + GlobalSettings.showFolderRings);
         }
+
+        if (Input.GetKeyDown(KeyCode.F) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+        {
+            GlobalSettings.showFileInfo = !GlobalSettings.showFileInfo;
+            RuntimeDebug.Log("Show File Info: " + GlobalSettings.showFileInfo);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+        {
+            GlobalSettings.showFileCompare = !GlobalSettings.showFileCompare;
+            RuntimeDebug.Log("Show File Compare: " + GlobalSettings.showFileCompare);
+        }
+
 
         if (Input.GetKeyDown(KeyCode.E))
         {

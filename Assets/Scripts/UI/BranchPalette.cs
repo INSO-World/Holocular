@@ -1,11 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
-using SimpleFileBrowser;
-using UnityEditor;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.MessageBox;
 
 public class BranchPalette : MonoBehaviour
 {

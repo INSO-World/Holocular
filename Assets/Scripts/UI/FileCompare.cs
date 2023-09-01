@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Search;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -75,9 +72,19 @@ public class FileCompare : MonoBehaviour
         GUI.Label(new Rect(new Rect(windowWidth / 2, 30, windowWidth / 2 - 20, 20)), Main.selectedFile.commit.parents.Split(",")[0], uiStyle.GetStyle("headline"));
         contentScrollPosition = GUI.BeginScrollView(new Rect(0, 50, windowWidth, windowHeight - 50), contentScrollPosition, new Rect(0, 0, windowWidth - 20, 20 * maxLines));
 
-        GUI.BeginGroup(new Rect(0, 0, windowWidth / 2 - 20, 20 * maxLines));
-        fileContentView(parentFileContentLines, false, Main.selectedFile.commitFileRelation.hunks);
-        GUI.EndGroup();
+
+
+        if (Main.selectedFile.commit.parents.Split(",").Length > 1)
+        {
+            GUI.Label(new Rect(0, 0, windowWidth / 2, 20), "Merge Commit", uiStyle.GetStyle("headline"));
+            GUI.Label(new Rect(0, 20, windowWidth / 2, 20), "No Comparision Possible");
+        }
+        else
+        {
+            GUI.BeginGroup(new Rect(0, 0, windowWidth / 2 - 20, 20 * maxLines));
+            fileContentView(parentFileContentLines, false, Main.selectedFile.commitFileRelation.hunks);
+            GUI.EndGroup();
+        }
         GUI.DrawTexture(new Rect(windowWidth / 2 - 20, 0, 20, maxLines * 20), hunkTexture);
         GUI.BeginGroup(new Rect(windowWidth / 2, 0, windowWidth / 2 - 20, 20 * maxLines));
         fileContentView(currFileContentLines, true, Main.selectedFile.commitFileRelation.hunks);
