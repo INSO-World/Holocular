@@ -39,6 +39,8 @@ public class Main : MonoBehaviour
     public static DBCommits commits;
     public static DBBranches branches;
     public static DBCommitsFiles commitsFiles;
+    public static DBCommitsCommits commitsCommits;
+    public static DBCommitsStakeholders commitsStakeholders;
     public static DBCommitsFilesStakeholders commitsFilesStakeholders;
     public static DBFiles files;
     public static DBStakeholders stakeholders;

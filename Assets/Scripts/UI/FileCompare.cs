@@ -41,14 +41,14 @@ public class FileCompare : MonoBehaviour
         {
             if (selectedFilePath != Main.selectedFile.fullFilePath)
             {
-                StartCoroutine(getFileContent(Main.selectedFile.fullFilePath, Main.selectedFile.commit.webUrl, Main.helix.commits[Main.selectedFile.commit.parents.Split(",")[0]].dBCommitStore.webUrl));
+                StartCoroutine(getFileContent(Main.selectedFile.fullFilePath, Main.selectedFile.commit.dBCommitStore.webUrl, Main.helix.commits[Main.selectedFile.parents[0]].dBCommitStore.webUrl));
                 selectedFilePath = Main.selectedFile.fullFilePath;
             }
 
-            if (selectedSha != Main.selectedFile.commit.sha)
+            if (selectedSha != Main.selectedFile.commit.dBCommitStore.sha)
             {
-                StartCoroutine(getFileContent(Main.selectedFile.fullFilePath, Main.selectedFile.commit.webUrl, Main.helix.commits[Main.selectedFile.commit.parents.Split(",")[0]].dBCommitStore.webUrl));
-                selectedSha = Main.selectedFile.commit.sha;
+                StartCoroutine(getFileContent(Main.selectedFile.fullFilePath, Main.selectedFile.commit.dBCommitStore.webUrl, Main.helix.commits[Main.selectedFile.parents[0]].dBCommitStore.webUrl));
+                selectedSha = Main.selectedFile.commit.dBCommitStore.sha;
             }
         }
     }
@@ -69,12 +69,12 @@ public class FileCompare : MonoBehaviour
     {
         window.render();
         GUI.Label(new Rect(new Rect(0, 30, windowWidth / 2 - 20, 20)), selectedSha, uiStyle.GetStyle("headline"));
-        GUI.Label(new Rect(new Rect(windowWidth / 2, 30, windowWidth / 2 - 20, 20)), Main.selectedFile.commit.parents.Split(",")[0], uiStyle.GetStyle("headline"));
+        GUI.Label(new Rect(new Rect(windowWidth / 2, 30, windowWidth / 2 - 20, 20)), Main.selectedFile.commit.parents[0], uiStyle.GetStyle("headline"));
         contentScrollPosition = GUI.BeginScrollView(new Rect(0, 50, windowWidth, windowHeight - 50), contentScrollPosition, new Rect(0, 0, windowWidth - 20, 20 * maxLines));
 
 
 
-        if (Main.selectedFile.commit.parents.Split(",").Length > 1)
+        if (Main.selectedFile.commit.parents.Length > 1)
         {
             GUI.Label(new Rect(0, 0, windowWidth / 2, 20), "Merge Commit", uiStyle.GetStyle("headline"));
             GUI.Label(new Rect(0, 20, windowWidth / 2, 20), "No Comparision Possible");

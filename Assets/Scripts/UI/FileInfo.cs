@@ -68,8 +68,8 @@ public class FileInfo : MonoBehaviour
             //Commit Info
             GUILayout.BeginVertical();
             GUILayout.Label("Commit", uiStyle.GetStyle("headline"));
-            GUILayout.Label("SHA:\n" + Main.selectedFile.commit.sha);
-            GUILayout.Label("Parents:\n" + Main.selectedFile.commit.parents.Replace(",", "\n"));
+            GUILayout.Label("SHA:\n" + Main.selectedFile.commit.dBCommitStore.sha);
+            GUILayout.Label("Parents:\n" + string.Join(",", Main.selectedFile.parents));
             if (GUILayout.Button("Compare With Parent", GUILayout.Width(windowWidth - 30)))
             {
                 GlobalSettings.showFileCompare = true;
@@ -80,12 +80,12 @@ public class FileInfo : MonoBehaviour
             {
                 GlobalSettings.SelectAuthor(Main.selectedFile.commit.signature);
             }
-            GUILayout.Label("Date:\n" + Main.selectedFile.commit.date);
-            GUILayout.Label("Branch:\n" + Main.selectedFile.commit.branch);
+            GUILayout.Label("Date:\n" + Main.selectedFile.commit.dBCommitStore.date);
+            GUILayout.Label("Branch:\n" + Main.selectedFile.commit.dBCommitStore.branch);
             GUILayout.Label("Url:");
-            if (GUILayout.Button(Main.selectedFile.commit.webUrl, uiStyle.GetStyle("url"), GUILayout.Width(windowWidth - 30)))
+            if (GUILayout.Button(Main.selectedFile.commit.dBCommitStore.webUrl, uiStyle.GetStyle("url"), GUILayout.Width(windowWidth - 30)))
             {
-                Application.OpenURL(Main.selectedFile.commit.webUrl);
+                Application.OpenURL(Main.selectedFile.commit.dBCommitStore.webUrl);
             }
             GUILayout.EndVertical();
             GUILayout.Space(20);

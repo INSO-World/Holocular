@@ -8,8 +8,10 @@ public class FileController : MonoBehaviour
     public string fileName = "";
     public DBCommitFileRelation commitFileRelation;
     public List<HelixCommitFileStakeholderRelation> commitFileStakeholderRelationList;
-    public DBCommit commit;
+    public HelixCommit commit;
+    public string[] parents;
 
+    public string siganture = "";
     public string owner = "";
     public int linesOwned = 0;
     public int lines = 0;
@@ -70,9 +72,9 @@ public class FileController : MonoBehaviour
         {
             mat.color = Main.helix.stakeholders[owner].colorStore;
         }
-        else if (GlobalSettings.showBranchColors && (GlobalSettings.highlightedBranch == null || GlobalSettings.highlightedBranch == commit.branch))
+        else if (GlobalSettings.showBranchColors && (GlobalSettings.highlightedBranch == null || GlobalSettings.highlightedBranch == commit.dBCommitStore.branch))
         {
-            mat.color = Main.helix.branches[commit.branch].colorStore;
+            mat.color = Main.helix.branches[commit.dBCommitStore.branch].colorStore;
         }
         else if (GlobalSettings.showAuthorColors || GlobalSettings.showOwnershipColors || GlobalSettings.showBranchColors)
         {

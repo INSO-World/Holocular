@@ -18,6 +18,8 @@ public class HelixCommit : MonoBehaviour
 
     FileStructure fileStructure;
 
+    public string[] parents;
+    public string signature;
 
     public HelixCommit(int id, DBCommit dbCommit, HelixBranch branch)
     {
@@ -25,6 +27,8 @@ public class HelixCommit : MonoBehaviour
         helixBranchStore = branch;
         idStore = id;
         fileStructure = new FileStructure();
+        parents = GetParents();
+        signature = GetSignature();
     }
 
     public void DrawCommit(Dictionary<string, List<HelixCommitFileRelation>> commitsFiles,
@@ -72,6 +76,7 @@ public class HelixCommit : MonoBehaviour
 
     public Vector3 GetCommitPositionLinear()
     {
+        Debug.Log(commitPositionLinear);
         return commitPositionLinear;
     }
 
@@ -136,7 +141,7 @@ public class HelixCommit : MonoBehaviour
     {
         Main.actionQueue.Enqueue(() =>
         {
-            connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, "commits", this, dBCommitStore.parents == "" ? null : dBCommitStore.parents.Split(","), new Vector3(0, 0, 0), 0.0f, 0.5f, shaCommitsRelation);
+            connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, "commits", this, parents, new Vector3(0, 0, 0), 0.0f, 0.5f, shaCommitsRelation);
         });
     }
 
@@ -148,5 +153,48 @@ public class HelixCommit : MonoBehaviour
             fileStructure.DrawHelixRing(this, helixBranchStore.dBBranchStore.branch, fileHelixConnectiontreeDictionary, shaCommitsRelation);
 
         });
+    }
+
+    public string[] GetParents()
+    {
+        List<string> parents = new List<string>();
+        if (dBCommitStore.parents != null && dBCommitStore.parents != "")
+        {
+            foreach (string parent in dBCommitStore.parents.Split(","))
+            {
+                parents.Add(parent);
+            }
+        }
+        else if (Main.helix.commitCommitRelations.Count > 0 && Main.helix.commitCommitRelations.ContainsKey(dBCommitStore._id))
+        {
+            foreach (HelixCommitCommitRelation parent in Main.helix.commitCommitRelations[dBCommitStore._id])
+            {
+                parents.Add(parent.dbCommitStore.sha);
+            }
+        }
+        return parents.ToArray();
+    }
+
+    public string GetSignature()
+    {
+        string signature = "";
+
+        if (dBCommitStore.signature != null && dBCommitStore.signature != "")
+        {
+            signature = dBCommitStore.signature;
+        }
+        else if (Main.helix.commitStakeholderRelations.Count > 0 && Main.helix.commitStakeholderRelations.ContainsKey(dBCommitStore._id))
+        {
+            if (Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore.from != null && Main.helix.stakeholdersID.ContainsKey(Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore.from))
+            {
+                signature = Main.helix.stakeholdersID[Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore.from].dBStakeholderStore.gitSignature;
+            }
+            else if (Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore._from != null && Main.helix.stakeholdersID.ContainsKey(Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore._from))
+            {
+                signature = Main.helix.stakeholdersID[Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore._from].dBStakeholderStore.gitSignature;
+            }
+        }
+
+        return signature;
     }
 }

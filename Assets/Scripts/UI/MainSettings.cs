@@ -74,11 +74,13 @@ public class MainSettings : MonoBehaviour
         GUI.Label(new Rect(0, 50, 300, 20), "Branches: " + (Main.branches == null ? "0" : Main.branches.branches.Length));
         GUI.Label(new Rect(0, 70, 300, 20), "Files: " + (Main.files == null ? "0" : Main.files.files.Length));
         GUI.Label(new Rect(0, 90, 300, 20), "Commits-Files: " + (Main.commitsFiles == null ? "0" : Main.commitsFiles.commitsFiles.Length));
-        GUI.Label(new Rect(0, 110, 300, 20), "Commits-Files-Stakeholders: " + (Main.commitsFilesStakeholders == null ? "0" : Main.commitsFilesStakeholders.commitsFilesStakeholders.Length));
-        GUI.Label(new Rect(0, 130, 300, 20), "Stakeholders: " + (Main.stakeholders == null ? "0" : Main.stakeholders.stakeholders.Length));
+        GUI.Label(new Rect(0, 110, 300, 20), "Commits-Commits: " + (Main.commitsCommits == null ? "0" : Main.commitsCommits.commitsCommits.Length));
+        GUI.Label(new Rect(0, 130, 300, 20), "Commits-Stakeholders: " + (Main.commitsStakeholders == null ? "0" : Main.commitsStakeholders.commitsStakeholders.Length));
+        GUI.Label(new Rect(0, 150, 300, 20), "Commits-Files-Stakeholders: " + (Main.commitsFilesStakeholders == null ? "0" : Main.commitsFilesStakeholders.commitsFilesStakeholders.Length));
+        GUI.Label(new Rect(0, 170, 300, 20), "Stakeholders: " + (Main.stakeholders == null ? "0" : Main.stakeholders.stakeholders.Length));
         GUI.EndGroup();
 
-        GUI.BeginGroup(new Rect(10, 300, 200, 200));
+        GUI.BeginGroup(new Rect(10, 340, 200, 200));
         GUI.Label(new Rect(0, 0, 200, 20), "Highlighting", uiStyle.GetStyle("headline"));
         GlobalSettings.showAuthorColors = showAuthorsColorsSwitch.render(GlobalSettings.showAuthorColors);
         GUI.Label(new Rect(50, 30, 120, 40), "Show Committer\nColors (c)");
@@ -95,7 +97,7 @@ public class MainSettings : MonoBehaviour
         GUI.EndGroup();
 
 
-        GUI.BeginGroup(new Rect(10, 520, 200, 200));
+        GUI.BeginGroup(new Rect(10, 560, 200, 200));
         GUI.Label(new Rect(0, 0, 200, 20), "Visuals", uiStyle.GetStyle("headline"));
 
         GUI.Label(new Rect(0, 30, 200, 20), "Distance Factor:");

@@ -29,8 +29,8 @@ public class MouseHint : MonoBehaviour
             GUI.skin = uiStyle;
             GUI.BeginGroup(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, 600, 70), uiStyle.GetStyle("hint"));
             GUI.Label(new Rect(10, 10, 580, 20), Main.hoveredFile.fullFilePath, uiStyle.GetStyle("headline"));
-            GUI.Label(new Rect(10, 30, 580, 20), "Commit: " + Main.hoveredFile.commit.sha);
-            GUI.Label(new Rect(10, 50, 580, 20), "Commit Date: " + Main.hoveredFile.commit.date);
+            GUI.Label(new Rect(10, 30, 580, 20), "Commit: " + Main.hoveredFile.commit.dBCommitStore.sha);
+            GUI.Label(new Rect(10, 50, 580, 20), "Commit Date: " + Main.hoveredFile.commit.dBCommitStore.date);
             GUI.EndGroup();
         }
     }
