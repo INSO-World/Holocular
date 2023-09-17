@@ -164,18 +164,9 @@ MonoBehaviour:
     stats:
       additions: 0
       deletions: 0
-  commit:
-    _id: 
-    sha: 
-    signature: 
-    date: 
-    message: 
-    webUrl: 
-    branch: 
-    parents: 
-    stats:
-      additions: 0
-      deletions: 0
+  commit: {fileID: 0}
+  parents: []
+  siganture: 
   owner: 
   linesOwned: 0
   lines: 0

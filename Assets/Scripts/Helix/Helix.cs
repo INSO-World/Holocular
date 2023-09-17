@@ -44,6 +44,7 @@ public class Helix : MonoBehaviour
 
     public int maxAdditions = 0;
     public int maxDeletions = 0;
+    public int maxChanges = 0;
 
     Thread createStructureThread;
     public ThreadState createStructureThreadState;

@@ -72,6 +72,10 @@ public class FileController : MonoBehaviour
         {
             mat.color = Main.helix.stakeholders[owner].colorStore;
         }
+        else if (GlobalSettings.showHotspotColors)
+        {
+            mat.color = Color.Lerp(Main.fileDefaultColor, Main.fileHotspotColor, 1f / GlobalSettings.hotspotThreshold * (commitFileRelation.stats.additions + commitFileRelation.stats.deletions));
+        }
         else if (GlobalSettings.showBranchColors && (GlobalSettings.highlightedBranch == null || GlobalSettings.highlightedBranch == commit.dBCommitStore.branch))
         {
             mat.color = Main.helix.branches[commit.dBCommitStore.branch].colorStore;

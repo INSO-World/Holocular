@@ -65,6 +65,12 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             }
 
 
+            if ((helixCommitFileRelation.dBCommitsFilesStore.stats.deletions + helixCommitFileRelation.dBCommitsFilesStore.stats.additions) > Main.helix.maxChanges)
+            {
+                Main.helix.maxChanges = helixCommitFileRelation.dBCommitsFilesStore.stats.deletions + helixCommitFileRelation.dBCommitsFilesStore.stats.additions;
+            }
+
+
             folderContent.Add(currentPathPart, file);
         }
     }

@@ -49,6 +49,7 @@ public class Main : MonoBehaviour
 
     public static Color fileDefaultColor = Color.white;
     public static Color fileDeSelectedColor = Color.gray;
+    public static Color fileHotspotColor = new Color(0f, 122f / 255f, 1f);
 
     public static GameObject lastSelectedObject;
 
@@ -102,6 +103,12 @@ public class Main : MonoBehaviour
             RuntimeDebug.Log("Show Ownership Colors: " + GlobalSettings.showOwnershipColors);
         }
 
+        if (Input.GetKeyDown(KeyCode.H) && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+        {
+            GlobalSettings.showHotspotColors = !GlobalSettings.showHotspotColors;
+            RuntimeDebug.Log("Show Hotspot Colors: " + GlobalSettings.showHotspotColors);
+        }
+
         if (Input.GetKeyDown(KeyCode.B) && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
         {
             GlobalSettings.showBranchColors = !GlobalSettings.showBranchColors;
@@ -138,7 +145,6 @@ public class Main : MonoBehaviour
             RuntimeDebug.Log("Show File Compare: " + GlobalSettings.showFileCompare);
         }
 
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             GlobalSettings.showSettings = !GlobalSettings.showSettings;
@@ -149,6 +155,16 @@ public class Main : MonoBehaviour
         {
             GlobalSettings.debugMode = !GlobalSettings.debugMode;
             RuntimeDebug.Log("Debug Mode: " + GlobalSettings.debugMode);
+        }
+
+        if (Input.GetKey(KeyCode.H) && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+        {
+
+            GlobalSettings.hotspotThreshold -= (int)Input.mouseScrollDelta.y;
+            if (GlobalSettings.hotspotThreshold < 0)
+            {
+                GlobalSettings.hotspotThreshold = 0;
+            }
         }
 
     }

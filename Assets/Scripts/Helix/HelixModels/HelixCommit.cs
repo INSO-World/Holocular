@@ -29,6 +29,14 @@ public class HelixCommit : MonoBehaviour
         fileStructure = new FileStructure();
         parents = GetParents();
         signature = GetSignature();
+
+        commitPositionLinear = new Vector3(branch.position.x, branch.position.y, id);
+        float timestamp = DateTime.Parse(dbCommit.date).Ticks / 10000 / 1000 / 60 / 60 / 24;//10000 ticks, 1000 ms, 60 sec, 60 min, 24 h
+        if (Main.helix.firstTimestamp < 0f)
+        {
+            Main.helix.firstTimestamp = timestamp;
+        }
+        commitPositionTime = new Vector3(helixBranchStore.position.x, helixBranchStore.position.y, timestamp - Main.helix.firstTimestamp);
     }
 
     public void DrawCommit(Dictionary<string, List<HelixCommitFileRelation>> commitsFiles,
@@ -36,22 +44,15 @@ public class HelixCommit : MonoBehaviour
         Dictionary<string, HelixCommitFileRelation> projectFiles,
         GameObject parent)
     {
+
+
         Main.actionQueue.Enqueue(() =>
         {
             commitObject = new GameObject("Commit[" + idStore + "]: " + dBCommitStore.sha);
             commitObject.transform.parent = parent.transform;
-            commitPositionLinear = new Vector3(helixBranchStore.position.x, helixBranchStore.position.y, idStore);
             CommitController commitController = commitObject.AddComponent<CommitController>();
             commitController.positionLinear = commitPositionLinear;
-
-            float timestamp = DateTime.Parse(dBCommitStore.date).Ticks / 10000 / 1000 / 60 / 60 / 24;//10000 ticks, 1000 ms, 60 sec, 60 min, 24 h
-            if (Main.helix.firstTimestamp < 0f)
-            {
-                Main.helix.firstTimestamp = timestamp;
-            }
-            commitPositionTime = new Vector3(helixBranchStore.position.x, helixBranchStore.position.y, timestamp - Main.helix.firstTimestamp);
             commitController.positionTime = commitPositionTime;
-
             Instantiate(Main.sCommit, commitObject.transform);
             Statistics.commitsDrawn++;
         });

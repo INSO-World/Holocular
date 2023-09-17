@@ -19,6 +19,7 @@ public class GlobalSettings : MonoBehaviour
     public static bool showAuthorColors = false;
     public static bool showBranchColors = false;
     public static bool showOwnershipColors = false;
+    public static bool showHotspotColors = false;
     public static bool commitPlacementMode = false; //linear(false)/timeBased(true)
     public static bool showFolderRings = true;
 
@@ -31,15 +32,18 @@ public class GlobalSettings : MonoBehaviour
     public static string highlightedBranch = null;
 
     public static string folderSearch = "";
+    public static float hotspotThreshold = 100f;
 
     bool lastShowAuthorColors = showAuthorColors;
     bool lastShowBranchColors = showBranchColors;
     bool lastShowOwnerhshipColors = showOwnershipColors;
+    bool lastShowHotspotColors = showHotspotColors;
     bool lastCommitPlacementMode = commitPlacementMode;
     string lasthighlightedAuthor = highlightedAuthor;
     string lasthighlightedBranch = highlightedBranch;
     float lastCommitDistanceMultiplicator = commitDistanceMultiplicator;
     float lastFileSize = fileSize;
+    float lastHotspotThreshold = hotspotThreshold;
     bool lastShowFolderRings = showFolderRings;
     string lastFolderSearch = folderSearch;
     bool lastFileIsSelected = fileIsSelected;
@@ -54,6 +58,7 @@ public class GlobalSettings : MonoBehaviour
             {
                 showBranchColors = false;
                 showOwnershipColors = false;
+                showHotspotColors = false;
             }
             EventManager.TriggerEvent("updateFileColor");
             lastShowAuthorColors = showAuthorColors;
@@ -65,6 +70,7 @@ public class GlobalSettings : MonoBehaviour
             {
                 showAuthorColors = false;
                 showOwnershipColors = false;
+                showHotspotColors = false;
             }
             EventManager.TriggerEvent("updateFileColor");
             lastShowBranchColors = showBranchColors;
@@ -76,9 +82,22 @@ public class GlobalSettings : MonoBehaviour
             {
                 showBranchColors = false;
                 showAuthorColors = false;
+                showHotspotColors = false;
             }
             EventManager.TriggerEvent("updateFileColor");
             lastShowOwnerhshipColors = showOwnershipColors;
+        }
+
+        if (lastShowHotspotColors != showHotspotColors)
+        {
+            if (showHotspotColors)
+            {
+                showBranchColors = false;
+                showAuthorColors = false;
+                showOwnershipColors = false;
+            }
+            EventManager.TriggerEvent("updateFileColor");
+            lastShowHotspotColors = showHotspotColors;
         }
 
         if (lasthighlightedAuthor != highlightedAuthor)
@@ -129,6 +148,12 @@ public class GlobalSettings : MonoBehaviour
         {
             EventManager.TriggerEvent("updateFolders");
             lastFolderSearch = folderSearch;
+        }
+
+        if (showHotspotColors && lastHotspotThreshold != hotspotThreshold)
+        {
+            EventManager.TriggerEvent("updateFileColor");
+            lastHotspotThreshold = hotspotThreshold;
         }
     }
 

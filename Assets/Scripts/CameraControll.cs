@@ -1,23 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CameraControll : MonoBehaviour
 {
-
-    float rotationX = 0F;
-    float rotationY = 0F;
-    Quaternion originalRotation;
     Transform selectPoint;
     Transform mainCamera;
     float selectFocusSpeed = 10f;
 
     float zoomDistanceToFile = 20f;
 
+    Quaternion targetRotation;
+    Vector3 targetPosition;
+
     // Start is called before the first frame update
     void Start()
     {
-        originalRotation = transform.localRotation;
+        targetRotation = transform.rotation;
+        targetPosition = transform.position;
         selectPoint = transform.Find("SelectPoint");
         mainCamera = transform.Find("Main Camera");
     }
@@ -54,6 +55,46 @@ public class CameraControll : MonoBehaviour
                     RuntimeDebug.DrawLine(mainCamera.position - Vector3.up, hit.transform.position, Color.green); ;
                 }
             }
+            else if (hit.transform.name == "Z-Axis +" && Input.GetMouseButtonDown(0))
+            {
+                targetRotation.eulerAngles = new Vector3(0, 0, 0);
+                GlobalSettings.fileIsSelected = false;
+            }
+            else if (hit.transform.name == "Z-Axis -" && Input.GetMouseButtonDown(0))
+            {
+                targetRotation.eulerAngles = new Vector3(0, 180, 0);
+                GlobalSettings.fileIsSelected = false;
+            }
+            else if (hit.transform.name == "X-Axis +" && Input.GetMouseButtonDown(0))
+            {
+                targetRotation.eulerAngles = new Vector3(0, 90, 0);
+                GlobalSettings.fileIsSelected = false;
+            }
+            else if (hit.transform.name == "X-Axis -" && Input.GetMouseButtonDown(0))
+            {
+                targetRotation.eulerAngles = new Vector3(0, 270, 0);
+                GlobalSettings.fileIsSelected = false;
+            }
+            else if (hit.transform.name == "Y-Axis +" && Input.GetMouseButtonDown(0))
+            {
+                targetRotation.eulerAngles = new Vector3(270, 0, 270);
+                GlobalSettings.fileIsSelected = false;
+            }
+            else if (hit.transform.name == "Y-Axis -" && Input.GetMouseButtonDown(0))
+            {
+                targetRotation.eulerAngles = new Vector3(90, 0, 270);
+                GlobalSettings.fileIsSelected = false;
+            }
+            else if (hit.transform.name == "Anchor" && Input.GetMouseButtonDown(0))
+            {
+                if (Main.commits != null && Main.commits.commits.Length > 0)
+                {
+                    HelixCommit lastCommit = Main.helix.commits[Main.commits.commits[Main.commits.commits.Length - 1].sha];
+                    targetPosition = new Vector3(0, 0, lastCommit.GetCommitPosition().z * GlobalSettings.commitDistanceMultiplicator / 2);
+                    targetPosition -= transform.forward * lastCommit.GetCommitPosition().z * GlobalSettings.commitDistanceMultiplicator * 0.6f;
+                }
+                GlobalSettings.fileIsSelected = false;
+            }
         }
         else
         {
@@ -64,68 +105,66 @@ public class CameraControll : MonoBehaviour
 
         if (Input.GetMouseButton(1))
         {
-
-            rotationX += Input.GetAxis("Mouse X") * Main.mouseSensitivity;
-            rotationY += Input.GetAxis("Mouse Y") * Main.mouseSensitivity;
-            Quaternion xQuaternion = Quaternion.AngleAxis(rotationX, Vector3.up);
-            Quaternion yQuaternion = Quaternion.AngleAxis(rotationY, -Vector3.right);
-            transform.localRotation = originalRotation * xQuaternion * yQuaternion;
+            targetRotation = Quaternion.Euler(targetRotation.eulerAngles.x - Input.GetAxis("Mouse Y") * Main.mouseSensitivity, targetRotation.eulerAngles.y + Input.GetAxis("Mouse X") * Main.mouseSensitivity, targetRotation.eulerAngles.z);
             GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.W))
         {
-            transform.position += transform.forward * Main.moveSpeed * Time.deltaTime;
+            targetPosition += transform.forward * Main.moveSpeed * Time.deltaTime;
             GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            transform.position -= transform.forward * Main.moveSpeed * Time.deltaTime;
+            targetPosition -= transform.forward * Main.moveSpeed * Time.deltaTime;
             GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            transform.position -= transform.right * Main.moveSpeed * Time.deltaTime;
+            targetPosition -= transform.right * Main.moveSpeed * Time.deltaTime;
             GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.position += transform.right * Main.moveSpeed * Time.deltaTime;
+            targetPosition += transform.right * Main.moveSpeed * Time.deltaTime;
             GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.Space))
         {
-            transform.position += Vector3.up * Main.moveSpeed * Time.deltaTime;
+            targetPosition += Vector3.up * Main.moveSpeed * Time.deltaTime;
             GlobalSettings.fileIsSelected = false;
         }
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            transform.position -= Vector3.up * Main.moveSpeed * Time.deltaTime;
+            targetPosition -= Vector3.up * Main.moveSpeed * Time.deltaTime;
             GlobalSettings.fileIsSelected = false;
         }
         if (Input.mouseScrollDelta.y != 0)
         {
-            if (Input.GetKey(KeyCode.LeftAlt))
+            if (!(Input.GetKey(KeyCode.H) && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))))
             {
-                Main.mouseSensitivity -= (int)Input.mouseScrollDelta.y;
-                if (Main.mouseSensitivity >= 0)
+                if (Input.GetKey(KeyCode.LeftAlt))
                 {
                     Main.mouseSensitivity -= (int)Input.mouseScrollDelta.y;
+                    if (Main.mouseSensitivity >= 0)
+                    {
+                        Main.mouseSensitivity -= (int)Input.mouseScrollDelta.y;
+                    }
+                    else
+                    {
+                        Main.mouseSensitivity = 0;
+                    }
                 }
                 else
-                {
-                    Main.mouseSensitivity = 0;
-                }
-            }
-            else
-            {
-                Main.moveSpeed -= (int)Input.mouseScrollDelta.y;
-                if (Main.moveSpeed >= 0)
                 {
                     Main.moveSpeed -= (int)Input.mouseScrollDelta.y;
-                }
-                else
-                {
-                    Main.moveSpeed = 0;
+                    if (Main.moveSpeed >= 0)
+                    {
+                        Main.moveSpeed -= (int)Input.mouseScrollDelta.y;
+                    }
+                    else
+                    {
+                        Main.moveSpeed = 0;
+                    }
                 }
             }
         }
@@ -141,5 +180,8 @@ public class CameraControll : MonoBehaviour
             mainCamera.localPosition = Vector3.MoveTowards(mainCamera.localPosition, new Vector3(0, 0, 0), selectFocusSpeed * Time.deltaTime * Vector3.Distance(mainCamera.localPosition, new Vector3(0, 0, 0)));
             mainCamera.rotation = Quaternion.Lerp(mainCamera.rotation, transform.rotation, selectFocusSpeed * Time.deltaTime);
         }
+
+        transform.rotation = Quaternion.LerpUnclamped(transform.rotation, targetRotation, Time.deltaTime * 10);
+        transform.position = Vector3.LerpUnclamped(transform.position, targetPosition, Time.deltaTime * 10);
     }
 }
