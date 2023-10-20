@@ -1,0 +1,171 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Main : MonoBehaviour
+{
+
+    public GameObject file;
+    public static GameObject sFile;
+
+    public GameObject folder;
+    public static GameObject sFolder;
+
+    public GameObject changedFile;
+    public static GameObject sChangedFile;
+
+    public GameObject commit;
+    public static GameObject sCommit;
+
+    public Material branchTreeMaterial;
+    public static Material sBranchTreeMaterial;
+
+    public Material commitTreeMaterial;
+    public static Material sCommitTreeMaterial;
+
+    public static int mouseSensitivity = 5;
+
+    public static int moveSpeed = 100;
+
+
+    public static Helix helix;
+
+
+    public static float helixReferenceRadius = 5f;
+    public static float helixeRadiusSpread = 4f;
+    public static float helixBranchOffset = 100f;
+
+    public static DBCommits commits;
+    public static DBBranches branches;
+    public static DBCommitsFiles commitsFiles;
+    public static DBCommitsCommits commitsCommits;
+    public static DBCommitsStakeholders commitsStakeholders;
+    public static DBCommitsFilesStakeholders commitsFilesStakeholders;
+    public static DBFiles files;
+    public static DBStakeholders stakeholders;
+
+    public static Queue<Action> actionQueue = new Queue<Action>();
+
+    public static Color fileDefaultColor = Color.white;
+    public static Color fileDeSelectedColor = Color.gray;
+    public static Color fileHotspotColor = new Color(0f, 122f / 255f, 1f);
+
+    public static GameObject lastSelectedObject;
+
+    public static FileController selectedFile;
+
+    public static bool fileHover = false;
+    public static FileController hoveredFile;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        sFile = file;
+        sFolder = folder;
+        sChangedFile = changedFile;
+        sCommit = commit;
+        sBranchTreeMaterial = branchTreeMaterial;
+        sCommitTreeMaterial = commitTreeMaterial;
+        helix = new Helix(GameObject.Find("Helix"));
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        CheckShortcuts();
+
+        helix.CheckUpdate();
+
+
+        lock (actionQueue)
+        {
+            while (actionQueue.Count != 0)
+            {
+                actionQueue.Dequeue().Invoke();
+            }
+        }
+
+    }
+
+    private static void CheckShortcuts()
+    {
+        if (Input.GetKeyDown(KeyCode.C) && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+        {
+            GlobalSettings.showAuthorColors = !GlobalSettings.showAuthorColors;
+            RuntimeDebug.Log("Show Author Colors: " + GlobalSettings.showAuthorColors);
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            GlobalSettings.showOwnershipColors = !GlobalSettings.showOwnershipColors;
+            RuntimeDebug.Log("Show Ownership Colors: " + GlobalSettings.showOwnershipColors);
+        }
+
+        if (Input.GetKeyDown(KeyCode.H) && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+        {
+            GlobalSettings.showHotspotColors = !GlobalSettings.showHotspotColors;
+            RuntimeDebug.Log("Show Hotspot Colors: " + GlobalSettings.showHotspotColors);
+        }
+
+        if (Input.GetKeyDown(KeyCode.B) && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+        {
+            GlobalSettings.showBranchColors = !GlobalSettings.showBranchColors;
+            RuntimeDebug.Log("Show Branch Colors: " + GlobalSettings.showBranchColors);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+        {
+            GlobalSettings.showAuthorPalette = !GlobalSettings.showAuthorPalette;
+            RuntimeDebug.Log("Show Author Palette: " + GlobalSettings.showAuthorPalette);
+        }
+
+        if (Input.GetKeyDown(KeyCode.B) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+        {
+            GlobalSettings.showBranchPalette = !GlobalSettings.showBranchPalette;
+            RuntimeDebug.Log("Show Branch Palette: " + GlobalSettings.showBranchPalette);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && !(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+        {
+            GlobalSettings.showFolderRings = !GlobalSettings.showFolderRings;
+            RuntimeDebug.Log("Show Folder Rings: " + GlobalSettings.showFolderRings);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && !(Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+        {
+            GlobalSettings.showFileInfo = !GlobalSettings.showFileInfo;
+            RuntimeDebug.Log("Show File Info: " + GlobalSettings.showFileInfo);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+        {
+            GlobalSettings.showFileCompare = !GlobalSettings.showFileCompare;
+            RuntimeDebug.Log("Show File Compare: " + GlobalSettings.showFileCompare);
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            GlobalSettings.showSettings = !GlobalSettings.showSettings;
+            RuntimeDebug.Log("Show Settings: " + GlobalSettings.showSettings);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            GlobalSettings.debugMode = !GlobalSettings.debugMode;
+            RuntimeDebug.Log("Debug Mode: " + GlobalSettings.debugMode);
+        }
+
+        if (Input.GetKey(KeyCode.H) && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+        {
+
+            GlobalSettings.hotspotThreshold -= (int)Input.mouseScrollDelta.y;
+            if (GlobalSettings.hotspotThreshold < 0)
+            {
+                GlobalSettings.hotspotThreshold = 0;
+            }
+        }
+
+    }
+}
