@@ -41,13 +41,13 @@ public class FileCompare : MonoBehaviour
         {
             if (selectedFilePath != Main.selectedFile.fullFilePath)
             {
-                StartCoroutine(getFileContent(Main.selectedFile.fullFilePath, Main.selectedFile.commit.dBCommitStore.webUrl, Main.helix.commits[Main.selectedFile.parents[0]].dBCommitStore.webUrl));
+                StartCoroutine(getFileContent(Main.selectedFile.fullFilePath, Main.selectedFile.commit.dBCommitStore.webUrl, Main.helix.commits[Main.selectedFile.commit.parents[0]].dBCommitStore.webUrl));
                 selectedFilePath = Main.selectedFile.fullFilePath;
             }
 
             if (selectedSha != Main.selectedFile.commit.dBCommitStore.sha)
             {
-                StartCoroutine(getFileContent(Main.selectedFile.fullFilePath, Main.selectedFile.commit.dBCommitStore.webUrl, Main.helix.commits[Main.selectedFile.parents[0]].dBCommitStore.webUrl));
+                StartCoroutine(getFileContent(Main.selectedFile.fullFilePath, Main.selectedFile.commit.dBCommitStore.webUrl, Main.helix.commits[Main.selectedFile.commit.parents[0]].dBCommitStore.webUrl));
                 selectedSha = Main.selectedFile.commit.dBCommitStore.sha;
             }
         }

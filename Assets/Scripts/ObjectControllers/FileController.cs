@@ -9,7 +9,6 @@ public class FileController : MonoBehaviour
     public DBCommitFileRelation commitFileRelation;
     public List<HelixCommitFileStakeholderRelation> commitFileStakeholderRelationList;
     public HelixCommit commit;
-    public string[] parents;
 
     public string siganture = "";
     public string owner = "";

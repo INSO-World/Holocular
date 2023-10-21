@@ -69,7 +69,7 @@ public class FileInfo : MonoBehaviour
             GUILayout.BeginVertical();
             GUILayout.Label("Commit", uiStyle.GetStyle("headline"));
             GUILayout.Label("SHA:\n" + Main.selectedFile.commit.dBCommitStore.sha);
-            GUILayout.Label("Parents:\n" + string.Join(",", Main.selectedFile.parents));
+            GUILayout.Label("Parents:\n" + string.Join(",", Main.selectedFile.commit.parents));
             if (GUILayout.Button("Compare With Parent", GUILayout.Width(windowWidth - 30)))
             {
                 GlobalSettings.showFileCompare = true;
