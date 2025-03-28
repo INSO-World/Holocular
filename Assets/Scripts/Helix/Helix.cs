@@ -124,10 +124,9 @@ public class Helix : MonoBehaviour
     {
         for (int i = 0; i < Main.commitsFilesStakeholders.commitsFilesStakeholders.Length; i++)
         {
-
-            if (Main.commitsFilesStakeholders.commitsFilesStakeholders[i].to != null)
+            if (Main.commitsFilesStakeholders.commitsFilesStakeholders[i].from != null)
             {
-                if (!commitFileStakeholderRelations.ContainsKey(Main.commitsFilesStakeholders.commitsFilesStakeholders[i].to))
+                if (!commitFileStakeholderRelations.ContainsKey(Main.commitsFilesStakeholders.commitsFilesStakeholders[i].from))
                 {
                     commitFileStakeholderRelations.Add(Main.commitsFilesStakeholders.commitsFilesStakeholders[i].from, new List<HelixCommitFileStakeholderRelation>());
                 }
@@ -141,7 +140,6 @@ public class Helix : MonoBehaviour
                 }
                 commitFileStakeholderRelations[Main.commitsFilesStakeholders.commitsFilesStakeholders[i]._from].Add(new HelixCommitFileStakeholderRelation(Main.commitsFilesStakeholders.commitsFilesStakeholders[i], stakeholdersID[Main.commitsFilesStakeholders.commitsFilesStakeholders[i]._to]));
             }
-
         }
     }
 
@@ -150,21 +148,21 @@ public class Helix : MonoBehaviour
         for (int i = 0; i < Main.commitsCommits.commitsCommits.Length; i++)
         {
 
-            if (Main.commitsCommits.commitsCommits[i].to != null)
+            if (Main.commitsCommits.commitsCommits[i].from != null)
             {
-                if (!commitCommitRelations.ContainsKey(Main.commitsCommits.commitsCommits[i].to))
+                if (!commitCommitRelations.ContainsKey(Main.commitsCommits.commitsCommits[i].from))
                 {
-                    commitCommitRelations.Add(Main.commitsCommits.commitsCommits[i].to, new List<HelixCommitCommitRelation>());
+                    commitCommitRelations.Add(Main.commitsCommits.commitsCommits[i].from, new List<HelixCommitCommitRelation>());
                 }
-                commitCommitRelations[Main.commitsCommits.commitsCommits[i].to].Add(new HelixCommitCommitRelation(Main.commitsCommits.commitsCommits[i], commitsID[Main.commitsCommits.commitsCommits[i].from]));
+                commitCommitRelations[Main.commitsCommits.commitsCommits[i].from].Add(new HelixCommitCommitRelation(Main.commitsCommits.commitsCommits[i], commitsID[Main.commitsCommits.commitsCommits[i].to]));
             }
             else
             {
-                if (!commitCommitRelations.ContainsKey(Main.commitsCommits.commitsCommits[i]._to))
+                if (!commitCommitRelations.ContainsKey(Main.commitsCommits.commitsCommits[i]._from))
                 {
-                    commitCommitRelations.Add(Main.commitsCommits.commitsCommits[i]._to, new List<HelixCommitCommitRelation>());
+                    commitCommitRelations.Add(Main.commitsCommits.commitsCommits[i]._from, new List<HelixCommitCommitRelation>());
                 }
-                commitCommitRelations[Main.commitsCommits.commitsCommits[i]._to].Add(new HelixCommitCommitRelation(Main.commitsCommits.commitsCommits[i], commitsID[Main.commitsCommits.commitsCommits[i]._from]));
+                commitCommitRelations[Main.commitsCommits.commitsCommits[i]._from].Add(new HelixCommitCommitRelation(Main.commitsCommits.commitsCommits[i], commitsID[Main.commitsCommits.commitsCommits[i]._to]));
             }
 
         }
@@ -175,14 +173,14 @@ public class Helix : MonoBehaviour
         for (int i = 0; i < Main.commitsStakeholders.commitsStakeholders.Length; i++)
         {
 
-            if (Main.commitsStakeholders.commitsStakeholders[i].to != null)
+            if (Main.commitsStakeholders.commitsStakeholders[i].from != null)
             {
 
-                commitStakeholderRelations.Add(Main.commitsStakeholders.commitsStakeholders[i].to, new HelixCommitStakeholderRelation(Main.commitsStakeholders.commitsStakeholders[i]));
+                commitStakeholderRelations.Add(Main.commitsStakeholders.commitsStakeholders[i].from, new HelixCommitStakeholderRelation(Main.commitsStakeholders.commitsStakeholders[i]));
             }
             else
             {
-                commitStakeholderRelations.Add(Main.commitsStakeholders.commitsStakeholders[i]._to, new HelixCommitStakeholderRelation(Main.commitsStakeholders.commitsStakeholders[i]));
+                commitStakeholderRelations.Add(Main.commitsStakeholders.commitsStakeholders[i]._from, new HelixCommitStakeholderRelation(Main.commitsStakeholders.commitsStakeholders[i]));
             }
 
         }
@@ -214,21 +212,21 @@ public class Helix : MonoBehaviour
                 commitFileStakeholderRelations[Main.commitsFiles.commitsFiles[i]._id] :
                 new List<HelixCommitFileStakeholderRelation>();
 
-            if (Main.commitsFiles.commitsFiles[i].to != null)
+            if (Main.commitsFiles.commitsFiles[i].from != null)
             {
-                if (!commitsFiles.ContainsKey(Main.commitsFiles.commitsFiles[i].to))
+                if (!commitsFiles.ContainsKey(Main.commitsFiles.commitsFiles[i].from))
                 {
-                    commitsFiles.Add(Main.commitsFiles.commitsFiles[i].to, new List<HelixCommitFileRelation>());
+                    commitsFiles.Add(Main.commitsFiles.commitsFiles[i].from, new List<HelixCommitFileRelation>());
                 }
-                commitsFiles[Main.commitsFiles.commitsFiles[i].to].Add(new HelixCommitFileRelation(Main.commitsFiles.commitsFiles[i], tmpCommitFileStakeholderRelationList));
+                commitsFiles[Main.commitsFiles.commitsFiles[i].from].Add(new HelixCommitFileRelation(Main.commitsFiles.commitsFiles[i], tmpCommitFileStakeholderRelationList));
             }
             else
             {
-                if (!commitsFiles.ContainsKey(Main.commitsFiles.commitsFiles[i]._to))
+                if (!commitsFiles.ContainsKey(Main.commitsFiles.commitsFiles[i]._from))
                 {
-                    commitsFiles.Add(Main.commitsFiles.commitsFiles[i]._to, new List<HelixCommitFileRelation>());
+                    commitsFiles.Add(Main.commitsFiles.commitsFiles[i]._from, new List<HelixCommitFileRelation>());
                 }
-                commitsFiles[Main.commitsFiles.commitsFiles[i]._to].Add(new HelixCommitFileRelation(Main.commitsFiles.commitsFiles[i], tmpCommitFileStakeholderRelationList));
+                commitsFiles[Main.commitsFiles.commitsFiles[i]._from].Add(new HelixCommitFileRelation(Main.commitsFiles.commitsFiles[i], tmpCommitFileStakeholderRelationList));
 
             }
         }

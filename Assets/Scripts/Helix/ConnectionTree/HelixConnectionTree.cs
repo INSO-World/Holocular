@@ -24,16 +24,16 @@ public class HelixConnectionTree : MonoBehaviour
 
     public void addPoint(string branchName, string fullFileName, HelixCommit commit, string[] parentShas, Vector3 offset, float uvColorFactor, float lineThickness, Dictionary<string, HelixCommit> commits)
     {
-
+        if (!branchPositions.ContainsKey(branchName))
+        {
+            branchPositions.Add(branchName, new List<Position>());
+        }
         if (!branchLines.ContainsKey(branchName))
         {
             Mesh instantiatedMesh = CreateConnectionAndInstantateMesh(branchName);
-            branchPositions.Add(branchName, new List<Position>());
-
 
             foreach (string parentSha in parentShas)
             {
-                Debug.Log(commits[parentSha].GetCommitPositionLinear());
                 Position position = new Position(commits[parentSha].GetCommitPositionLinear() + offset, commit.GetCommitPositionLinear() + offset, commits[parentSha].GetCommitPositionTime() + offset, commit.GetCommitPositionTime() + offset, lineThickness);
                 branchPositions[branchName].Add(position);
                 AddVertex(instantiatedMesh, branchName, position, uvColorFactor);
@@ -44,7 +44,6 @@ public class HelixConnectionTree : MonoBehaviour
         else
         {
             Mesh branchMesh = branchLines[branchName];
-
             foreach (string parentSha in parentShas)
             {
                 Position lastPos;

@@ -17,15 +17,19 @@ public class DBCommitFileStakeholderRelation
     public string _to;
     public string from;
     public string to;
-    public int ownedLines;
     public DBOwnershipHunk[] hunks;
 }
 
 [System.Serializable]
 public class DBOwnershipHunk
 {
-    public string signature;
-    public int linesChanged;
-    public int startLine;
-    public int endLine;
+    public string orignalCommit;
+    public DBOwnershipHunkLine[] lines;
+}
+
+[System.Serializable]
+public class DBOwnershipHunkLine
+{
+    public int from;
+    public int to;
 }

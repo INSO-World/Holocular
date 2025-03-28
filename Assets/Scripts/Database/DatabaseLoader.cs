@@ -6,24 +6,15 @@ public class DatabaseLoader : MonoBehaviour
 {
     public static bool checkFoolderIfValid(string path)
     {
-        if (!System.IO.File.Exists(path + "/branches.json")
-            || !System.IO.File.Exists(path + "/builds.json")
-            || !System.IO.File.Exists(path + "/commits-commits.json")
-            || !System.IO.File.Exists(path + "/commits-files.json")
-            || !System.IO.File.Exists(path + "/commits-languages.json")
-            || !System.IO.File.Exists(path + "/commits-modules.json")
-            || !System.IO.File.Exists(path + "/commits-stakeholders.json")
-            || !System.IO.File.Exists(path + "/commits.json")
-            || !System.IO.File.Exists(path + "/files.json")
-            || !System.IO.File.Exists(path + "/issues-commits.json")
-            || !System.IO.File.Exists(path + "/issues-stakeholders.json")
-            || !System.IO.File.Exists(path + "/issues.json")
-            || !System.IO.File.Exists(path + "/languages-files.json")
-            || !System.IO.File.Exists(path + "/languages.json")
-            || !System.IO.File.Exists(path + "/modules-files.json")
-            || !System.IO.File.Exists(path + "/modules-modules.json")
-            || !System.IO.File.Exists(path + "/modules.json")
-            || !System.IO.File.Exists(path + "/stakeholders.json"))
+        RuntimeDebug.Log("Checking if path " + path + " is a Binocular Export");
+        if (!System.IO.File.Exists(path + System.IO.Path.DirectorySeparatorChar + "branches.json")
+            || !System.IO.File.Exists(path + System.IO.Path.DirectorySeparatorChar + "commits-commits.json")
+            || !System.IO.File.Exists(path + System.IO.Path.DirectorySeparatorChar + "commits-files.json")
+            || !System.IO.File.Exists(path + System.IO.Path.DirectorySeparatorChar + "commits-files-users.json")
+            || !System.IO.File.Exists(path + System.IO.Path.DirectorySeparatorChar + "commits-users.json")
+            || !System.IO.File.Exists(path + System.IO.Path.DirectorySeparatorChar + "commits.json")
+            || !System.IO.File.Exists(path + System.IO.Path.DirectorySeparatorChar + "files.json")
+            || !System.IO.File.Exists(path + System.IO.Path.DirectorySeparatorChar + "users.json"))
         {
             return false;
         }
@@ -49,7 +40,7 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importBranches(string path)
     {
-        string branchesJSON = System.IO.File.ReadAllText(path + "/branches.json");
+        string branchesJSON = System.IO.File.ReadAllText(path + System.IO.Path.DirectorySeparatorChar + "branches.json");
         try
         {
             Main.branches = JsonUtility.FromJson<DBBranches>("{\"branches\":" + branchesJSON + "}");
@@ -65,7 +56,7 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importCommits(string path)
     {
-        string commitsJSON = System.IO.File.ReadAllText(path + "/commits.json");
+        string commitsJSON = System.IO.File.ReadAllText(path + System.IO.Path.DirectorySeparatorChar + "commits.json");
         try
         {
             Main.commits = JsonUtility.FromJson<DBCommits>("{\"commits\":" + commitsJSON + "}");
@@ -81,7 +72,7 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importCommitsFilesRelation(string path)
     {
-        string commitsFilesJSON = System.IO.File.ReadAllText(path + "/commits-files.json");
+        string commitsFilesJSON = System.IO.File.ReadAllText(path + System.IO.Path.DirectorySeparatorChar + "commits-files.json");
         try
         {
             Main.commitsFiles = JsonUtility.FromJson<DBCommitsFiles>("{\"commitsFiles\":" + commitsFilesJSON + "}");
@@ -97,7 +88,7 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importCommitsStakeholdersRelation(string path)
     {
-        string commitsStakeholdersJSON = System.IO.File.ReadAllText(path + "/commits-stakeholders.json");
+        string commitsStakeholdersJSON = System.IO.File.ReadAllText(path + System.IO.Path.DirectorySeparatorChar + "commits-users.json");
         try
         {
             Main.commitsStakeholders = JsonUtility.FromJson<DBCommitsStakeholders>("{\"commitsStakeholders\":" + commitsStakeholdersJSON + "}");
@@ -113,7 +104,7 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importCommitsCommitsRelation(string path)
     {
-        string commitsCommitsJSON = System.IO.File.ReadAllText(path + "/commits-commits.json");
+        string commitsCommitsJSON = System.IO.File.ReadAllText(path + System.IO.Path.DirectorySeparatorChar + "commits-commits.json");
         try
         {
             Main.commitsCommits = JsonUtility.FromJson<DBCommitsCommits>("{\"commitsCommits\":" + commitsCommitsJSON + "}");
@@ -130,7 +121,7 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importCommitsFilesStakeholdersRelation(string path)
     {
-        string commitsFilesStakeholdersJSON = System.IO.File.ReadAllText(path + "/commits-files-stakeholders.json");
+        string commitsFilesStakeholdersJSON = System.IO.File.ReadAllText(path + System.IO.Path.DirectorySeparatorChar + "commits-files-users.json");
         try
         {
             Main.commitsFilesStakeholders = JsonUtility.FromJson<DBCommitsFilesStakeholders>("{\"commitsFilesStakeholders\":" + commitsFilesStakeholdersJSON + "}");
@@ -146,7 +137,7 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importFiles(string path)
     {
-        string filesJSON = System.IO.File.ReadAllText(path + "/files.json");
+        string filesJSON = System.IO.File.ReadAllText(path + System.IO.Path.DirectorySeparatorChar + "files.json");
         try
         {
             Main.files = JsonUtility.FromJson<DBFiles>("{\"files\":" + filesJSON + "}");
@@ -162,7 +153,7 @@ public class DatabaseLoader : MonoBehaviour
 
     public static bool importStakeholders(string path)
     {
-        string stakeholdersJSON = System.IO.File.ReadAllText(path + "/stakeholders.json");
+        string stakeholdersJSON = System.IO.File.ReadAllText(path + System.IO.Path.DirectorySeparatorChar + "users.json");
         try
         {
             Main.stakeholders = JsonUtility.FromJson<DBStakeholders>("{\"stakeholders\":" + stakeholdersJSON + "}");

@@ -10,13 +10,12 @@ public class FileController : MonoBehaviour
     public List<HelixCommitFileStakeholderRelation> commitFileStakeholderRelationList;
     public HelixCommit commit;
 
-    public string siganture = "";
+    public string userId = "";
     public string owner = "";
     public int linesOwned = 0;
     public int lines = 0;
 
     public GameObject visual;
-
     private BoxCollider bc;
     private MeshRenderer mr;
     private Material mat;
@@ -45,10 +44,11 @@ public class FileController : MonoBehaviour
     {
         for (int i = 0; i < commitFileStakeholderRelationList.Count; i++)
         {
-            lines += commitFileStakeholderRelationList[i].dBCommitsFilesStakeholderStore.ownedLines;
-            if (commitFileStakeholderRelationList[i].dBCommitsFilesStakeholderStore.ownedLines > linesOwned)
+            int ownedLinesByAuthor = Utils.CalculateOwnedLines(commitFileStakeholderRelationList[i].dBCommitsFilesStakeholderStore.hunks);
+            lines += ownedLinesByAuthor;
+            if (ownedLinesByAuthor > linesOwned)
             {
-                linesOwned = commitFileStakeholderRelationList[i].dBCommitsFilesStakeholderStore.ownedLines;
+                linesOwned = ownedLinesByAuthor;
                 owner = commitFileStakeholderRelationList[i].helixStakeholderStore.dBStakeholderStore.gitSignature;
             }
         }

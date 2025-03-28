@@ -77,7 +77,6 @@ public class HelixCommit : MonoBehaviour
 
     public Vector3 GetCommitPositionLinear()
     {
-        Debug.Log(commitPositionLinear);
         return commitPositionLinear;
     }
 
@@ -96,12 +95,12 @@ public class HelixCommit : MonoBehaviour
             Dictionary<String, HelixCommitFileRelation> changedFiles = new Dictionary<string, HelixCommitFileRelation>();
             helixCommitFileRelations.Sort((r1, r2) =>
             {
-                HelixFile file1 = files[r1.dBCommitsFilesStore.from != null ?
-                    r1.dBCommitsFilesStore.from :
-                    r1.dBCommitsFilesStore._from];
-                HelixFile file2 = files[r2.dBCommitsFilesStore.from != null ?
-                    r2.dBCommitsFilesStore.from :
-                    r2.dBCommitsFilesStore._from];
+                HelixFile file1 = files[r1.dBCommitsFilesStore.to != null ?
+                    r1.dBCommitsFilesStore.to :
+                    r1.dBCommitsFilesStore._to];
+                HelixFile file2 = files[r2.dBCommitsFilesStore.to != null ?
+                    r2.dBCommitsFilesStore.to :
+                    r2.dBCommitsFilesStore._to];
                 return file1.dBFileStore.path.CompareTo(file2.dBFileStore.path);
             });
             int fileCount = 0;
@@ -109,9 +108,9 @@ public class HelixCommit : MonoBehaviour
 
             foreach (HelixCommitFileRelation helixCommitFileRelation in helixCommitFileRelations)
             {
-                HelixFile file = files[helixCommitFileRelation.dBCommitsFilesStore.from != null ?
-                    helixCommitFileRelation.dBCommitsFilesStore.from :
-                    helixCommitFileRelation.dBCommitsFilesStore._from];
+                HelixFile file = files[helixCommitFileRelation.dBCommitsFilesStore.to != null ?
+                    helixCommitFileRelation.dBCommitsFilesStore.to :
+                    helixCommitFileRelation.dBCommitsFilesStore._to];
                 changedFiles.Add(file.dBFileStore.path, helixCommitFileRelation);
                 if (projectFiles.ContainsKey(file.dBFileStore.path))
                 {
@@ -128,9 +127,9 @@ public class HelixCommit : MonoBehaviour
             {
                 fileCount++;
 
-                HelixFile file = helixCommitFileRelation.dBCommitsFilesStore.from != null ?
-                    files[helixCommitFileRelation.dBCommitsFilesStore.from] :
-                    files[helixCommitFileRelation.dBCommitsFilesStore._from];
+                HelixFile file = helixCommitFileRelation.dBCommitsFilesStore.to != null ?
+                    files[helixCommitFileRelation.dBCommitsFilesStore.to] :
+                    files[helixCommitFileRelation.dBCommitsFilesStore._to];
 
                 fileStructure.AddFilePathToFileStructure(dBCommitStore, file.dBFileStore.path, changedFiles.ContainsKey(file.dBFileStore.path), helixCommitFileRelation);
             }
@@ -140,6 +139,7 @@ public class HelixCommit : MonoBehaviour
     public void ConnectCommit(HelixConnectionTree connectionTree,
         Dictionary<string, HelixCommit> shaCommitsRelation)
     {
+        Debug.Log("Parents: " + parents.Length);
         Main.actionQueue.Enqueue(() =>
         {
             connectionTree.addPoint(helixBranchStore.dBBranchStore.branch, "commits", this, parents, new Vector3(0, 0, 0), 0.0f, 0.5f, shaCommitsRelation);
@@ -186,13 +186,13 @@ public class HelixCommit : MonoBehaviour
         }
         else if (Main.helix.commitStakeholderRelations.Count > 0 && Main.helix.commitStakeholderRelations.ContainsKey(dBCommitStore._id))
         {
-            if (Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore.from != null && Main.helix.stakeholdersID.ContainsKey(Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore.from))
+            if (Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore.to != null && Main.helix.stakeholdersID.ContainsKey(Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore.to))
             {
-                signature = Main.helix.stakeholdersID[Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore.from].dBStakeholderStore.gitSignature;
+                signature = Main.helix.stakeholdersID[Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore.to].dBStakeholderStore.gitSignature;
             }
-            else if (Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore._from != null && Main.helix.stakeholdersID.ContainsKey(Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore._from))
+            else if (Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore._to != null && Main.helix.stakeholdersID.ContainsKey(Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore._to))
             {
-                signature = Main.helix.stakeholdersID[Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore._from].dBStakeholderStore.gitSignature;
+                signature = Main.helix.stakeholdersID[Main.helix.commitStakeholderRelations[dBCommitStore._id].dBCommitStakeholderStore._to].dBStakeholderStore.gitSignature;
             }
         }
 

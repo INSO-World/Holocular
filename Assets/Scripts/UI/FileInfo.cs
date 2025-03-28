@@ -129,7 +129,7 @@ public class FileInfo : MonoBehaviour
             {
                 GUILayout.BeginVertical(uiStyle.GetStyle("hunk"));
                 GUILayout.Label(Main.selectedFile.commitFileStakeholderRelationList[i].helixStakeholderStore.dBStakeholderStore.gitSignature, uiStyle.GetStyle("subheadline"));
-                GUILayout.Label("OwnedLines: " + Main.selectedFile.commitFileStakeholderRelationList[i].dBCommitsFilesStakeholderStore.ownedLines);
+                GUILayout.Label("OwnedLines: " + Utils.CalculateOwnedLines(Main.selectedFile.commitFileStakeholderRelationList[i].dBCommitsFilesStakeholderStore.hunks));
                 GUILayout.EndVertical();
                 GUILayout.Space(5);
             }

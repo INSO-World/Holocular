@@ -17,4 +17,18 @@ public class Utils
         GUI.DrawTextureWithTexCoords(rect, tex, new Rect(spriteRect.x / tex.width, spriteRect.y / tex.height, spriteRect.width / tex.width, spriteRect.height / tex.height));
     }
 
+    public static int CalculateOwnedLines(DBOwnershipHunk[] ownershipHunks)
+    {
+        int ownedLines = 0;
+
+        foreach (DBOwnershipHunk ownershipHunk in ownershipHunks)
+        {
+            foreach (DBOwnershipHunkLine line in ownershipHunk.lines)
+            {
+                ownedLines += (line.to - line.from);
+            }
+        }
+        return ownedLines;
+    }
+
 }
