@@ -21,7 +21,7 @@ That Database Export can now be imported into Holocular.
 
 ## Screenshots
 
-![Demo Video.mp4](ScreenshotsAndVideos/Videos/Demo%20Video.mp4)
+https://github.com/user-attachments/assets/090a8ae8-e284-4f35-9aaf-c8844f237cb4
 
 Here a small demonstration is shown of how Holocular is used to analyze the Binocular repository.
 
