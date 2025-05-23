@@ -23,9 +23,11 @@ public class Utils
 
         foreach (DBOwnershipHunk ownershipHunk in ownershipHunks)
         {
-            foreach (DBOwnershipHunkLine line in ownershipHunk.lines)
+            foreach (string line in ownershipHunk.lines)
             {
-                ownedLines += (line.to - line.from);
+                int from = int.Parse(line.Split(",")[0]);
+                int to = int.Parse(line.Split(",")[1]);
+                ownedLines += (to - from);
             }
         }
         return ownedLines;

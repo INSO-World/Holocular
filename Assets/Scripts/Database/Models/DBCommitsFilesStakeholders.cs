@@ -24,12 +24,5 @@ public class DBCommitFileStakeholderRelation
 public class DBOwnershipHunk
 {
     public string orignalCommit;
-    public DBOwnershipHunkLine[] lines;
-}
-
-[System.Serializable]
-public class DBOwnershipHunkLine
-{
-    public int from;
-    public int to;
+    public string[] lines;
 }
