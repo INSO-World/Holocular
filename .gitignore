@@ -62,3 +62,7 @@ crashlytics-build.properties
 .binocularrc
 .DS_Store
 /UserSettings
+.idea
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
