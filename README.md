@@ -96,4 +96,4 @@ The author and branch palettes show which authors and branches correlate to whic
 The debug panel offers the developers deeper insights into the behavior of Holocular.
 
 ## Contributing
-To edisdwt Holocular currently Unity3D Version: 2021.3.16f1 LTS is required.
+To edit Holocular Unity3D Version: 6000.0.56f1 LTS is required.

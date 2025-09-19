@@ -6,7 +6,7 @@ using UnityEngine;
 public class CameraControll : MonoBehaviour
 {
     Transform selectPoint;
-    Transform mainCamera;
+    public static Transform mainCamera;
     float selectFocusSpeed = 10f;
 
     float zoomDistanceToFile = 20f;
@@ -140,7 +140,7 @@ public class CameraControll : MonoBehaviour
         }
         if (Input.mouseScrollDelta.y != 0)
         {
-            if (!(Input.GetKey(KeyCode.H) && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))))
+            if (!(Input.GetKey(KeyCode.H) && (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) || Input.GetKey(KeyCode.V)))
             {
                 if (Input.GetKey(KeyCode.LeftAlt))
                 {
@@ -166,6 +166,19 @@ public class CameraControll : MonoBehaviour
                         Main.moveSpeed = 0;
                     }
                 }
+            }
+            if (Input.GetKey(KeyCode.V))
+            {
+                Main.viewDistance -= (int)Input.mouseScrollDelta.y * 100;
+                if (Main.viewDistance >= 100)
+                {
+                    Main.viewDistance -= (int)Input.mouseScrollDelta.y;
+                }
+                else
+                {
+                    Main.viewDistance = 100;
+                }
+                mainCamera.GetComponent<Camera>().farClipPlane = Main.viewDistance;
             }
         }
 

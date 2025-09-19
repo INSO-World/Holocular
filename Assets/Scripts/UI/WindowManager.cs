@@ -9,6 +9,7 @@ public class WindowManager : MonoBehaviour
 {
     public GUISkin uiStyle;
 
+    public GUIStyle parametersIcon;
     public GUIStyle settingsIcon;
     public GUIStyle authorListIcon;
     public GUIStyle debugViewIcon;
@@ -16,14 +17,14 @@ public class WindowManager : MonoBehaviour
     public GUIStyle fileCompareIcon;
     public GUIStyle branchListIcon;
 
-
+    WindowButton parametersButton;
     WindowButton settingsButton;
     WindowButton authorListButton;
     WindowButton debugViewButton;
     WindowButton fileInfoButton;
     WindowButton fileCompareButton;
     WindowButton branchListButton;
-    int windowCount = 6;
+    int windowCount = 7;
 
 
     int padding = 5;
@@ -32,12 +33,13 @@ public class WindowManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        settingsButton = new WindowButton(new Rect(padding, padding, buttonSize, buttonSize), settingsIcon, uiStyle.GetStyle("windowButtonActive"));
+        parametersButton = new WindowButton(new Rect(padding, padding, buttonSize, buttonSize), parametersIcon, uiStyle.GetStyle("windowButtonActive"));
         authorListButton = new WindowButton(new Rect(2 * padding + buttonSize, padding, buttonSize, buttonSize), authorListIcon, uiStyle.GetStyle("windowButtonActive"));
         branchListButton = new WindowButton(new Rect(3 * padding + 2 * buttonSize, padding, buttonSize, buttonSize), branchListIcon, uiStyle.GetStyle("windowButtonActive"));
         fileInfoButton = new WindowButton(new Rect(4 * padding + 3 * buttonSize, padding, buttonSize, buttonSize), fileInfoIcon, uiStyle.GetStyle("windowButtonActive"));
         fileCompareButton = new WindowButton(new Rect(5 * padding + 4 * buttonSize, padding, buttonSize, buttonSize), fileCompareIcon, uiStyle.GetStyle("windowButtonActive"));
-        debugViewButton = new WindowButton(new Rect(6 * padding + 5 * buttonSize, padding, buttonSize, buttonSize), debugViewIcon, uiStyle.GetStyle("windowButtonActive"));
+        settingsButton = new WindowButton(new Rect(6 * padding + 5 * buttonSize, padding, buttonSize, buttonSize), settingsIcon, uiStyle.GetStyle("windowButtonActive"));
+        debugViewButton = new WindowButton(new Rect(7 * padding + 6 * buttonSize, padding, buttonSize, buttonSize), debugViewIcon, uiStyle.GetStyle("windowButtonActive"));
     }
 
     // Update is called once per frame
@@ -52,11 +54,12 @@ public class WindowManager : MonoBehaviour
 
         GUI.Label(new Rect(0, Screen.height - 2 * padding - buttonSize, windowCount * (padding + buttonSize) + padding, 2 * padding + buttonSize), "", uiStyle.GetStyle("windowDock"));
         GUI.BeginGroup(new Rect(0, Screen.height - 2 * padding - buttonSize, windowCount * (padding + buttonSize) + padding, 2 * padding + buttonSize));
-        GlobalSettings.showSettings = settingsButton.render(GlobalSettings.showSettings);
+        GlobalSettings.showParameters = parametersButton.render(GlobalSettings.showParameters);
         GlobalSettings.showAuthorPalette = authorListButton.render(GlobalSettings.showAuthorPalette);
         GlobalSettings.showBranchPalette = branchListButton.render(GlobalSettings.showBranchPalette);
         GlobalSettings.showFileInfo = fileInfoButton.render(GlobalSettings.showFileInfo);
         GlobalSettings.showFileCompare = fileCompareButton.render(GlobalSettings.showFileCompare);
+        GlobalSettings.showSettings = settingsButton.render(GlobalSettings.showSettings);
         GlobalSettings.debugMode = debugViewButton.render(GlobalSettings.debugMode);
         GUI.EndGroup();
     }

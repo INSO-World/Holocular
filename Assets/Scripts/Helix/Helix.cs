@@ -34,7 +34,7 @@ public class Helix : MonoBehaviour
 
     HelixConnectionTree commitConnectionTree;
 
-    Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary = new Dictionary<string, HelixConnectionTree>();
+    public Dictionary<string, HelixConnectionTree> fileHelixConnectiontreeDictionary = new Dictionary<string, HelixConnectionTree>();
 
     public bool structureCreated = false;
     public bool structureDrawn = false;
@@ -52,7 +52,7 @@ public class Helix : MonoBehaviour
     public ThreadState drawStructureThreadState;
 
     public float firstTimestamp = -1f;
-
+    
     public Helix(GameObject helixObjectP)
     {
         helixObject = helixObjectP;

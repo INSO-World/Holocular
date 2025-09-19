@@ -1,6 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using UnityEngine;
 using UnityEngine.Events;
+using Utilities;
 
 public class FileController : MonoBehaviour
 {
@@ -15,28 +18,73 @@ public class FileController : MonoBehaviour
     public int linesOwned = 0;
     public int lines = 0;
 
-    public GameObject visual;
     private BoxCollider bc;
-    private MeshRenderer mr;
-    private Material mat;
+    private MeshRenderer mrHD;
+    private MeshRenderer mrMD;
+    private Material matHD;
+    private Material matMD;
 
     private UnityAction updateFileColorListener;
     private UnityAction updateFileSizeListener;
     private UnityAction updateFolderSearchListener;
+    private UnityAction updateLODListener;
 
+    //LoD
+    public GameObject visualHighDetail;
+    public GameObject visualMediumDetail;
+    
+    private LevelOfDetail.LevelOfDetailType levelOfDetail;
+    
     // Start is called before the first frame update
     void Start()
     {
+        levelOfDetail = LevelOfDetail.LevelOfDetailType.Low;
+        ChangeVisual(levelOfDetail);
         bc = transform.GetComponent<BoxCollider>();
-        mr = visual.GetComponent<MeshRenderer>();
-        mat = mr.material;
+        mrHD = visualHighDetail.transform.GetChild(0).GetComponent<MeshRenderer>();
+        mrMD = visualMediumDetail.transform.GetChild(0).GetComponent<MeshRenderer>();
+        matHD = mrHD.material;
+        matMD = mrMD.material;
         updateFileColorListener = new UnityAction(ChangeColor);
         updateFileSizeListener = new UnityAction(ChangeSize);
         updateFolderSearchListener = new UnityAction(ChangeVisibility);
+        updateLODListener = new UnityAction(UpdateLOD);
         EventManager.StartListening("updateFileColor", updateFileColorListener);
         EventManager.StartListening("updateFileSize", updateFileSizeListener);
         EventManager.StartListening("updateFolders", updateFolderSearchListener);
+        EventManager.StartListening("updateLOD", updateLODListener);
         Init();
+    }
+    
+    
+    void UpdateLOD()
+    {
+        if (Vector3.Distance(CameraControll.mainCamera.position, transform.position) < Main.lodDistanceHeight)
+        {
+            if (levelOfDetail != LevelOfDetail.LevelOfDetailType.High)
+            {
+                levelOfDetail = LevelOfDetail.LevelOfDetailType.High;
+                ChangeVisual(levelOfDetail);
+            }
+        }
+        else if (Vector3.Distance(CameraControll.mainCamera.position, transform.position) >= Main.lodDistanceHeight
+                 && Vector3.Distance(CameraControll.mainCamera.position, transform.position) < Main.lodDistanceMedium)
+        {
+            if (levelOfDetail != LevelOfDetail.LevelOfDetailType.Medium)
+            {
+                levelOfDetail = LevelOfDetail.LevelOfDetailType.Medium;
+                ChangeVisual(levelOfDetail);
+            }
+        }
+        else
+        {
+            if (levelOfDetail != LevelOfDetail.LevelOfDetailType.Low)
+            {
+                levelOfDetail = LevelOfDetail.LevelOfDetailType.Low;
+                ChangeVisual(levelOfDetail);
+            }
+        }
+
     }
 
 
@@ -59,34 +107,42 @@ public class FileController : MonoBehaviour
 
     private void ChangeColor()
     {
+        Color color;
         if (GlobalSettings.fileIsSelected && fullFilePath != Main.selectedFile.fullFilePath)
         {
-            mat.color = Main.fileDeSelectedColor;
+            color = Main.fileDeSelectedColor;
+        }
+        else if (GlobalSettings.fileIsSelected && this == Main.selectedFile)
+        {
+            color = Main.fileSelectedColor;
         }
         else if (GlobalSettings.showAuthorColors && (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == commit.signature))
         {
-            mat.color = Main.helix.stakeholders[commit.signature].colorStore;
+            color = Main.helix.stakeholders[commit.signature].colorStore;
         }
         else if (GlobalSettings.showOwnershipColors && owner != "" && (GlobalSettings.highlightedAuthor == null || GlobalSettings.highlightedAuthor == owner))
         {
-            mat.color = Main.helix.stakeholders[owner].colorStore;
+            color = Main.helix.stakeholders[owner].colorStore;
         }
         else if (GlobalSettings.showHotspotColors)
         {
-            mat.color = Color.Lerp(Main.fileDefaultColor, Main.fileHotspotColor, 1f / GlobalSettings.hotspotThreshold * (commitFileRelation.stats.additions + commitFileRelation.stats.deletions));
+            color = Color.Lerp(Main.fileDefaultColor, Main.fileHotspotColor, 1f / GlobalSettings.hotspotThreshold * (commitFileRelation.stats.additions + commitFileRelation.stats.deletions));
         }
         else if (GlobalSettings.showBranchColors && (GlobalSettings.highlightedBranch == null || GlobalSettings.highlightedBranch == commit.dBCommitStore.branch))
         {
-            mat.color = Main.helix.branches[commit.dBCommitStore.branch].colorStore;
+            color = Main.helix.branches[commit.dBCommitStore.branch].colorStore;
         }
         else if (GlobalSettings.showAuthorColors || GlobalSettings.showOwnershipColors || GlobalSettings.showBranchColors)
         {
-            mat.color = Main.fileDeSelectedColor;
+            color = Main.fileDeSelectedColor;
         }
         else
         {
-            mat.color = Main.fileDefaultColor;
+            color = Main.fileDefaultColor;
         }
+        HelixParticleSystemRenderer.UpdateElement(commit.dBCommitStore.sha,fullFilePath,new HelixParticleSystemElement(transform.position, color));
+        matHD.color = color;
+        matMD.color = color;
     }
 
     private void ChangeSize()
@@ -99,12 +155,36 @@ public class FileController : MonoBehaviour
         if (GlobalSettings.folderSearch.Length == 0 || fullFilePath.StartsWith(GlobalSettings.folderSearch))
         {
             bc.enabled = true;
-            mr.enabled = true;
+            mrHD.enabled = true;
+            mrMD.enabled = true;
+            HelixParticleSystemRenderer.UpdateElement(commit.dBCommitStore.sha,fullFilePath,new HelixParticleSystemElement(transform.position, Main.fileDefaultColor));
         }
         else
         {
             bc.enabled = false;
-            mr.enabled = false;
+            mrHD.enabled = false;
+            mrMD.enabled = false;
+            HelixParticleSystemRenderer.RemoveFile(commit.dBCommitStore.sha,fullFilePath);
+        }
+    }
+    
+    private void ChangeVisual(LevelOfDetail.LevelOfDetailType levelOfDetail)
+    {
+        switch (levelOfDetail)
+        {
+            case LevelOfDetail.LevelOfDetailType.High:
+                visualHighDetail.SetActive(true);
+                visualMediumDetail.SetActive(false);
+                break;
+            case LevelOfDetail.LevelOfDetailType.Medium:
+                visualHighDetail.SetActive(false);
+                visualMediumDetail.SetActive(true);
+                break;
+            case LevelOfDetail.LevelOfDetailType.Low:
+            default:
+                visualHighDetail.SetActive(false);
+                visualMediumDetail.SetActive(false);
+                break;
         }
     }
 }
