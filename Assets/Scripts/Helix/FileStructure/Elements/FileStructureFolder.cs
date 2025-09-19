@@ -155,19 +155,18 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 
                         float additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / (Main.helix.maxAdditions + Main.helix.maxDeletions) * 2;
                         float deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / (Main.helix.maxAdditions + Main.helix.maxDeletions) * 2;
-
-                        float changeFactor = (float)((element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions + (element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions) / (Main.helix.maxAdditions + Main.helix.maxDeletions);
-
+                        
                         if (!fileHelixConnectiontreeDictionary.ContainsKey(fullFilePath))
                         {
                             HelixConnectionTree connectionTree = new HelixConnectionTree(fullFilePath + "-Connections", Main.sBranchTreeMaterial, Main.helix.helixObject);
-                            connectionTree.addDualPoint(branchName, fullFilePath, commit, commit.parents, newOffsetPos, additionFactor, deletionFactor, shaCommitsRelation);
+                            connectionTree.AddDualPoint(branchName, fullFilePath, commit, commit.parents, newOffsetPos, additionFactor, deletionFactor, shaCommitsRelation);
                             fileHelixConnectiontreeDictionary.Add(fullFilePath, connectionTree);
                         }
                         else
                         {
-                            fileHelixConnectiontreeDictionary[fullFilePath].addDualPoint(branchName, fullFilePath, commit, commit.parents, newOffsetPos, additionFactor, deletionFactor, shaCommitsRelation);
+                            fileHelixConnectiontreeDictionary[fullFilePath].AddDualPoint(branchName, fullFilePath, commit, commit.parents, newOffsetPos, additionFactor, deletionFactor, shaCommitsRelation);
                         }
+                        HelixParticleSystemRenderer.UpdateElement(commit.dBCommitStore.sha,fullFilePath,new HelixParticleSystemElement(helixElementObject.transform.position, Main.fileDefaultColor));
                     }
                 }
 

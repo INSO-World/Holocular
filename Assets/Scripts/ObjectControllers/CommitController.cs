@@ -5,7 +5,7 @@ public class CommitController : MonoBehaviour
 {
     public Vector3 positionLinear = new Vector3(0, 0, 0);
     public Vector3 positionTime = new Vector3(0, 0, 0);
-
+    public HelixCommit commit;
     private UnityAction updateCommitDistanceListener;
 
 
@@ -28,5 +28,7 @@ public class CommitController : MonoBehaviour
         {
             transform.position = new Vector3(positionLinear.x, positionLinear.y, positionLinear.z * GlobalSettings.commitDistanceMultiplicator);
         }
+        Debug.Log(commit.dBCommitStore.sha);
+        HelixParticleSystemRenderer.UpdateCommitPosition(commit.dBCommitStore.sha,transform.position);
     }
 }

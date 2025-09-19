@@ -22,7 +22,15 @@ public class HelixConnectionTree : MonoBehaviour
         this.material = material;
     }
 
-    public void addPoint(string branchName, string fullFileName, HelixCommit commit, string[] parentShas, Vector3 offset, float uvColorFactor, float lineThickness, Dictionary<string, HelixCommit> commits)
+    public void AddPoint(
+        string branchName,
+        string fullFileName,
+        HelixCommit commit,
+        string[] parentShas,
+        Vector3 offset,
+        float uvColorFactor,
+        float lineThickness,
+        Dictionary<string, HelixCommit> commits)
     {
         if (!branchPositions.ContainsKey(branchName))
         {
@@ -34,7 +42,12 @@ public class HelixConnectionTree : MonoBehaviour
 
             foreach (string parentSha in parentShas)
             {
-                Position position = new Position(commits[parentSha].GetCommitPositionLinear() + offset, commit.GetCommitPositionLinear() + offset, commits[parentSha].GetCommitPositionTime() + offset, commit.GetCommitPositionTime() + offset, lineThickness);
+                Position position = new Position(
+                    commits[parentSha].GetCommitPositionLinear() + offset - new Vector3(0,lineThickness/2,0), 
+                    commit.GetCommitPositionLinear() + offset - new Vector3(0,lineThickness/2,0), 
+                    commits[parentSha].GetCommitPositionTime() + offset - new Vector3(0,lineThickness/2,0), 
+                    commit.GetCommitPositionTime() + offset - new Vector3(0,lineThickness/2,0),
+                    lineThickness);
                 branchPositions[branchName].Add(position);
                 AddVertex(instantiatedMesh, branchName, position, uvColorFactor);
             }
@@ -53,17 +66,32 @@ public class HelixConnectionTree : MonoBehaviour
                 }
                 else
                 {
-                    lastPos = new Position(commits[parentSha].GetCommitPositionLinear() + offset, commits[parentSha].GetCommitPositionTime() + offset);
+                    lastPos = new Position(
+                        commits[parentSha].GetCommitPositionLinear() + offset- new Vector3(0,lineThickness/2,0), 
+                        commits[parentSha].GetCommitPositionTime() + offset - new Vector3(0,lineThickness/2,0));
                 }
 
-                Position position = new Position(lastPos.positionLinear, commit.GetCommitPositionLinear() + offset, lastPos.positionTime, commit.GetCommitPositionTime() + offset, lineThickness);
+                Position position = new Position(
+                    lastPos.positionLinear,
+                    commit.GetCommitPositionLinear() + offset - new Vector3(0,lineThickness/2,0), 
+                    lastPos.positionTime, 
+                    commit.GetCommitPositionTime() + offset - new Vector3(0,lineThickness/2,0),
+                    lineThickness);
                 branchPositions[branchName].Add(position);
                 AddVertex(branchMesh, branchName, position, uvColorFactor);
             }
         }
     }
 
-    public void addDualPoint(string branchName, string fullFileName, HelixCommit commit, string[] parentShas, Vector3 offset, float line1Thickness, float line2Thickness, Dictionary<string, HelixCommit> commits)
+    public void AddDualPoint(
+        string branchName,
+        string fullFileName,
+        HelixCommit commit,
+        string[] parentShas,
+        Vector3 offset,
+        float line1Thickness,
+        float line2Thickness,
+        Dictionary<string, HelixCommit> commits)
     {
         if (!branchPositions.ContainsKey(branchName))
         {
@@ -110,11 +138,11 @@ public class HelixConnectionTree : MonoBehaviour
     {
         foreach (string branch in branchPositions.Keys)
         {
-            updatePositions(branch, branchPositions[branch]);
+            UpdatePositions(branch, branchPositions[branch]);
         }
     }
 
-    private void updatePositions(string branch, List<Position> branchPositions)
+    private void UpdatePositions(string branch, List<Position> branchPositions)
     {
         Mesh branchMesh = branchLines[branch];
         List<Vector3> vertices = new List<Vector3>(branchPositions.Count);
@@ -185,7 +213,8 @@ public class HelixConnectionTree : MonoBehaviour
         mr.localBounds = new Bounds(new Vector3(0, 0, 5000), new Vector3(10000, 10000, 10000));
         Mesh instantiatedMesh = Instantiate(InitMesh());
         mr.sharedMesh = instantiatedMesh;
-
+        mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        mr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
         return instantiatedMesh;
     }
 

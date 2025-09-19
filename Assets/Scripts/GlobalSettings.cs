@@ -9,7 +9,8 @@ public class GlobalSettings : MonoBehaviour
 {
     //Windows
     public static bool debugMode = true;
-    public static bool showSettings = true;
+    public static bool showParameters = true;
+    public static bool showSettings = false;
     public static bool showFileInfo = false;
     public static bool showAuthorPalette = false;
     public static bool showBranchPalette = false;
@@ -135,6 +136,7 @@ public class GlobalSettings : MonoBehaviour
         if (lastFileSize != fileSize)
         {
             EventManager.TriggerEvent("updateFileSize");
+            EventManager.TriggerEvent("updateParticleSystem");
             lastFileSize = fileSize;
         }
 
