@@ -12,14 +12,16 @@ public class HelixConnectionTree : MonoBehaviour
     Dictionary<string, List<Position>> branchPositions = new Dictionary<string, List<Position>>();
 
     GameObject connectionTree;
-
+    
     Material material;
+    Material materialLight;
 
-    public HelixConnectionTree(string name, Material material, GameObject parent)
+    public HelixConnectionTree(string name, Material material, Material materialLight, GameObject parent)
     {
         connectionTree = new GameObject(name);
         connectionTree.transform.parent = parent.transform;
         this.material = material;
+        this.materialLight = materialLight;
     }
 
     public void AddPoint(
@@ -141,6 +143,33 @@ public class HelixConnectionTree : MonoBehaviour
             UpdatePositions(branch, branchPositions[branch]);
         }
     }
+    
+    public void UpdateColors()
+    {
+        for (int i = 0; i < connectionTree.transform.childCount; i++)
+        {
+            GameObject connection = connectionTree.transform.GetChild(i).gameObject;
+            SkinnedMeshRenderer mr = connection.GetComponent<SkinnedMeshRenderer>();
+            if (mr == null)
+            {
+                Debug.LogError("No SkinnedMeshRenderer found!");
+                return;
+            }
+            Material[] mats = mr.materials;
+            Debug.Log("Current materials count: " + mats.Length);
+
+            Material targetMat = Main.darkLightMode ? materialLight : material;
+            if (targetMat == null)
+            {
+                Debug.LogError("Target material is null!");
+                return;
+            }
+
+            mats[0] = targetMat;
+            mr.materials = mats;
+            Debug.Log("Material updated to: " + targetMat.name);
+        }
+    }
 
     private void UpdatePositions(string branch, List<Position> branchPositions)
     {
@@ -208,7 +237,14 @@ public class HelixConnectionTree : MonoBehaviour
         connection.transform.parent = connectionTree.transform;
         connection.transform.localPosition = new Vector3(0, 0, 0);
         SkinnedMeshRenderer mr = connection.AddComponent<SkinnedMeshRenderer>();
-        mr.material = material;
+        if (Main.darkLightMode)
+        {
+            mr.material = materialLight;
+        }
+        else
+        {
+            mr.material = material;
+        }
         mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         mr.localBounds = new Bounds(new Vector3(0, 0, 5000), new Vector3(10000, 10000, 10000));
         Mesh instantiatedMesh = Instantiate(InitMesh());

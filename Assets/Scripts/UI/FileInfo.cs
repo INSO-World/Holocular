@@ -2,7 +2,6 @@
 
 public class FileInfo : MonoBehaviour
 {
-    public GUISkin uiStyle;
 
     Window window;
 
@@ -17,7 +16,7 @@ public class FileInfo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        window = new Window("File Info", uiStyle, windowWidth, windowHeight);
+        window = new Window("File Info", UiSkinManger.sUiStyle, windowWidth, windowHeight);
     }
 
     // Update is called once per frame
@@ -29,7 +28,7 @@ public class FileInfo : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.skin = uiStyle;
+        GUI.skin = UiSkinManger.sUiStyle;
 
         if (GlobalSettings.showFileInfo)
         {
@@ -48,7 +47,7 @@ public class FileInfo : MonoBehaviour
         if (Main.selectedFile == null)
         {
             GUILayout.BeginVertical();
-            GUILayout.Label("No File Selected!", uiStyle.GetStyle("headline"));
+            GUILayout.Label("No File Selected!", UiSkinManger.sUiStyle.GetStyle("headline"));
             GUILayout.Label("Select a file-node in the tree to view file information");
             GUILayout.EndVertical();
         }
@@ -58,7 +57,7 @@ public class FileInfo : MonoBehaviour
             GUILayout.BeginVertical();
             //Main File Info
             GUILayout.BeginVertical();
-            GUILayout.Label(Main.selectedFile.fileName, uiStyle.GetStyle("headline"));
+            GUILayout.Label(Main.selectedFile.fileName, UiSkinManger.sUiStyle.GetStyle("headline"));
             GUILayout.Label("Path:\n" + Main.selectedFile.fullFilePath);
             GUILayout.Label("Owner:\n" + Main.selectedFile.owner);
             GUILayout.Label("(" + Main.selectedFile.linesOwned + " of " + Main.selectedFile.lines + " lines owned)");
@@ -67,7 +66,7 @@ public class FileInfo : MonoBehaviour
 
             //Commit Info
             GUILayout.BeginVertical();
-            GUILayout.Label("Commit", uiStyle.GetStyle("headline"));
+            GUILayout.Label("Commit", UiSkinManger.sUiStyle.GetStyle("headline"));
             GUILayout.Label("SHA:\n" + Main.selectedFile.commit.dBCommitStore.sha);
             GUILayout.Label("Parents:\n" + string.Join(",", Main.selectedFile.commit.parents));
             if (GUILayout.Button("Compare With Parent", GUILayout.Width(windowWidth - 30)))
@@ -75,15 +74,15 @@ public class FileInfo : MonoBehaviour
                 GlobalSettings.showFileCompare = true;
             }
             GUILayout.Label("Author (Click to show all files edited by this Author):");
-            uiStyle.GetStyle("author").normal.textColor = Main.helix.stakeholders[Main.selectedFile.commit.signature].colorStore;
-            if (GUILayout.Button(Main.selectedFile.commit.signature, uiStyle.GetStyle("author"), GUILayout.Width(windowWidth - 30)))
+            UiSkinManger.sUiStyle.GetStyle("author").normal.textColor = Main.helix.stakeholders[Main.selectedFile.commit.signature].colorStore;
+            if (GUILayout.Button(Main.selectedFile.commit.signature, UiSkinManger.sUiStyle.GetStyle("author"), GUILayout.Width(windowWidth - 30)))
             {
                 GlobalSettings.SelectAuthor(Main.selectedFile.commit.signature);
             }
             GUILayout.Label("Date:\n" + Main.selectedFile.commit.dBCommitStore.date);
             GUILayout.Label("Branch:\n" + Main.selectedFile.commit.dBCommitStore.branch);
             GUILayout.Label("Url:");
-            if (GUILayout.Button(Main.selectedFile.commit.dBCommitStore.webUrl, uiStyle.GetStyle("url"), GUILayout.Width(windowWidth - 30)))
+            if (GUILayout.Button(Main.selectedFile.commit.dBCommitStore.webUrl, UiSkinManger.sUiStyle.GetStyle("url"), GUILayout.Width(windowWidth - 30)))
             {
                 Application.OpenURL(Main.selectedFile.commit.dBCommitStore.webUrl);
             }
@@ -92,7 +91,7 @@ public class FileInfo : MonoBehaviour
 
             //Stats
             GUILayout.BeginVertical();
-            GUILayout.Label("Stats", uiStyle.GetStyle("headline"));
+            GUILayout.Label("Stats", UiSkinManger.sUiStyle.GetStyle("headline"));
             GUILayout.Label("Additions:\n" + Main.selectedFile.commitFileRelation.stats.additions);
             GUILayout.Label("Deletions:\n" + Main.selectedFile.commitFileRelation.stats.deletions);
             GUILayout.EndVertical();
@@ -100,15 +99,15 @@ public class FileInfo : MonoBehaviour
 
             //Hunks
             GUILayout.BeginVertical();
-            GUILayout.Label("Hunks", uiStyle.GetStyle("headline"));
+            GUILayout.Label("Hunks", UiSkinManger.sUiStyle.GetStyle("headline"));
             hunksScrollPosition = GUILayout.BeginScrollView(hunksScrollPosition, false, true, GUILayout.Height(200));
 
             for (int i = 0; i < Main.selectedFile.commitFileRelation.hunks.Length; i++)
             {
                 DBHunk hunk = Main.selectedFile.commitFileRelation.hunks[i];
-                GUILayout.BeginVertical(uiStyle.GetStyle("hunk"));
+                GUILayout.BeginVertical(UiSkinManger.sUiStyle.GetStyle("hunk"));
 
-                GUILayout.Label("Hunk " + i, uiStyle.GetStyle("subheadline"));
+                GUILayout.Label("Hunk " + i, UiSkinManger.sUiStyle.GetStyle("subheadline"));
                 GUILayout.Label("Old Start: " + hunk.oldStart);
                 GUILayout.Label("Old Lines: " + hunk.oldLines);
                 GUILayout.Label("New Start: " + hunk.newStart);
@@ -123,12 +122,12 @@ public class FileInfo : MonoBehaviour
 
             //OwnerShip Hunks
             GUILayout.BeginVertical();
-            GUILayout.Label("Ownership", uiStyle.GetStyle("headline"));
+            GUILayout.Label("Ownership", UiSkinManger.sUiStyle.GetStyle("headline"));
             ownershipScrollPosition = GUILayout.BeginScrollView(ownershipScrollPosition, false, true, GUILayout.Height(200));
             for (int i = 0; i < Main.selectedFile.commitFileStakeholderRelationList.Count; i++)
             {
-                GUILayout.BeginVertical(uiStyle.GetStyle("hunk"));
-                GUILayout.Label(Main.selectedFile.commitFileStakeholderRelationList[i].helixStakeholderStore.dBStakeholderStore.gitSignature, uiStyle.GetStyle("subheadline"));
+                GUILayout.BeginVertical(UiSkinManger.sUiStyle.GetStyle("hunk"));
+                GUILayout.Label(Main.selectedFile.commitFileStakeholderRelationList[i].helixStakeholderStore.dBStakeholderStore.gitSignature, UiSkinManger.sUiStyle.GetStyle("subheadline"));
                 GUILayout.Label("OwnedLines: " + Utils.CalculateOwnedLines(Main.selectedFile.commitFileStakeholderRelationList[i].dBCommitsFilesStakeholderStore.hunks));
                 GUILayout.EndVertical();
                 GUILayout.Space(5);

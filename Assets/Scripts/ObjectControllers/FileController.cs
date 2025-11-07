@@ -53,6 +53,8 @@ public class FileController : MonoBehaviour
         EventManager.StartListening("updateFileSize", updateFileSizeListener);
         EventManager.StartListening("updateFolders", updateFolderSearchListener);
         EventManager.StartListening("updateLOD", updateLODListener);
+        EventManager.StartListening("switchDarkLightMode", updateFileColorListener);
+
         Init();
     }
     
@@ -126,7 +128,7 @@ public class FileController : MonoBehaviour
         }
         else if (GlobalSettings.showHotspotColors)
         {
-            color = Color.Lerp(Main.fileDefaultColor, Main.fileHotspotColor, 1f / GlobalSettings.hotspotThreshold * (commitFileRelation.stats.additions + commitFileRelation.stats.deletions));
+            color = Color.Lerp(Main.darkLightMode? Main.fileDarkDefaultColor: Main.fileDefaultColor, Main.fileHotspotColor, 1f / GlobalSettings.hotspotThreshold * (commitFileRelation.stats.additions + commitFileRelation.stats.deletions));
         }
         else if (GlobalSettings.showBranchColors && (GlobalSettings.highlightedBranch == null || GlobalSettings.highlightedBranch == commit.dBCommitStore.branch))
         {
@@ -138,7 +140,7 @@ public class FileController : MonoBehaviour
         }
         else
         {
-            color = Main.fileDefaultColor;
+            color = Main.darkLightMode? Main.fileDarkDefaultColor: Main.fileDefaultColor;
         }
         HelixParticleSystemRenderer.UpdateElement(commit.dBCommitStore.sha,fullFilePath,new HelixParticleSystemElement(transform.position, color));
         matHD.color = color;
@@ -157,7 +159,7 @@ public class FileController : MonoBehaviour
             bc.enabled = true;
             mrHD.enabled = true;
             mrMD.enabled = true;
-            HelixParticleSystemRenderer.UpdateElement(commit.dBCommitStore.sha,fullFilePath,new HelixParticleSystemElement(transform.position, Main.fileDefaultColor));
+            HelixParticleSystemRenderer.UpdateElement(commit.dBCommitStore.sha,fullFilePath,new HelixParticleSystemElement(transform.position, Main.darkLightMode? Main.fileDarkDefaultColor: Main.fileDefaultColor));
         }
         else
         {

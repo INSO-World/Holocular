@@ -54,7 +54,7 @@ public class HelixCommit : MonoBehaviour
             commitController.positionLinear = commitPositionLinear;
             commitController.positionTime = commitPositionTime;
             commitController.commit = this;
-            Instantiate(Main.sCommit, commitObject.transform);
+            commitController.commitVisual = Instantiate(Main.sCommit, commitObject.transform);
             Statistics.commitsDrawn++;
         });
 
@@ -143,7 +143,7 @@ public class HelixCommit : MonoBehaviour
         Debug.Log("Parents: " + parents.Length);
         Main.actionQueue.Enqueue(() =>
         {
-            connectionTree.AddPoint(helixBranchStore.dBBranchStore.branch, "commits", this, parents, new Vector3(0, 0, 0), 0.0f, 0.5f, shaCommitsRelation);
+            connectionTree.AddPoint(helixBranchStore.dBBranchStore.branch, "commits", this, parents, new Vector3(0, 0, 0), 0.0f, Main.commitLineThickness, shaCommitsRelation);
         });
     }
 

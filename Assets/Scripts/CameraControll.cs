@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CameraControll : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class CameraControll : MonoBehaviour
     Quaternion targetRotation;
     Vector3 targetPosition;
 
+    private UnityAction updateBackgroundColorListener;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +24,9 @@ public class CameraControll : MonoBehaviour
         targetPosition = transform.position;
         selectPoint = transform.Find("SelectPoint");
         mainCamera = transform.Find("Main Camera");
+        updateBackgroundColorListener = new UnityAction(UpdateBackgroundColor);
+
+        EventManager.StartListening("switchDarkLightMode", updateBackgroundColorListener);
     }
 
     // Update is called once per frame
@@ -196,5 +202,17 @@ public class CameraControll : MonoBehaviour
 
         transform.rotation = Quaternion.LerpUnclamped(transform.rotation, targetRotation, Time.deltaTime * 10);
         transform.position = Vector3.LerpUnclamped(transform.position, targetPosition, Time.deltaTime * 10);
+    }
+
+    void UpdateBackgroundColor()
+    {
+        if (Main.darkLightMode)
+        {
+            mainCamera.GetComponent<Camera>().backgroundColor = Color.white;
+        }
+        else
+        {
+            mainCamera.GetComponent<Camera>().backgroundColor = Color.black;
+        }
     }
 }

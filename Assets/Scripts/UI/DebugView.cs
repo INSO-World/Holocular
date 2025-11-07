@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class DebugView : MonoBehaviour
 {
-    public GUISkin uiStyle;
-    public GUIStyle debugBackgroud;
     public GUIStyle logOutputStyle;
     int logOutputLines = 10;
 
@@ -29,23 +27,25 @@ public class DebugView : MonoBehaviour
 
     private void OnGUI()
     {
+        GUI.skin = UiSkinManger.sUiStyle;
+
         if (GlobalSettings.debugMode)
         {
-            GUI.BeginGroup(new Rect(Screen.width - debugWindowWidth, 0, debugWindowWidth, Screen.height), debugBackgroud);
+            GUI.BeginGroup(new Rect(Screen.width - debugWindowWidth, 0, debugWindowWidth, Screen.height), UiSkinManger.sUiStyle.GetStyle("debugBackground"));
             GUI.BeginGroup(new Rect(margin, margin, debugWindowWidth - 2 * margin, Screen.height));
             GUILayout.BeginVertical();
-            GUILayout.Label("General:",uiStyle.GetStyle("headline"));
+            GUILayout.Label("General:",UiSkinManger.sUiStyle.GetStyle("headline"));
             GUILayout.Label("Move Speed (Mouse wheel): " + Main.moveSpeed + "m/s");
             GUILayout.Label("Mouse Sensitivity (alt + Mouse wheel): " + Main.mouseSensitivity);
             GUILayout.Label("FPS: " + ((int)(1f / Time.unscaledDeltaTime)));
             GUILayout.Label("View Distance (V + Mouse wheel): " + Main.viewDistance + "m");
 
-            GUILayout.Label("Threads:",uiStyle.GetStyle("headline"));
+            GUILayout.Label("Threads:",UiSkinManger.sUiStyle.GetStyle("headline"));
             GUILayout.Label("Create Structure Thread: " + Main.helix.createStructureThreadState);
             GUILayout.Label("Draw Structure Thread: " + Main.helix.drawStructureThreadState);
             GUILayout.Label("Action Queue Size: " + Main.actionQueue.Count);
 
-            GUILayout.Label("Selections:",uiStyle.GetStyle("headline"));
+            GUILayout.Label("Selections:",UiSkinManger.sUiStyle.GetStyle("headline"));
             GUILayout.Label("Highlighted Author: " + GlobalSettings.highlightedAuthor);
             GUILayout.Label("Highlight Mode: " + (GlobalSettings.showAuthorColors ? "committer" : GlobalSettings.showBranchColors ? "branch" : GlobalSettings.showOwnershipColors ? "ownership" : "none"));
             GUILayout.Label("Last Selected Object: " + (Main.lastSelectedObject == null ? "none" : Main.lastSelectedObject.name));

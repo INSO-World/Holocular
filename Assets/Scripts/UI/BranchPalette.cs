@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class BranchPalette : MonoBehaviour
 {
-    public GUISkin uiStyle;
     Rect branchPaletteWindowRect = new Rect(550, 10, 200, 800);
     public Vector2 branchesScrollPosition = Vector2.zero;
 
@@ -14,7 +13,7 @@ public class BranchPalette : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        window = new Window("Branch Palette", uiStyle, 200, 800);
+        window = new Window("Branch Palette", UiSkinManger.sUiStyle, 200, 800);
     }
 
     // Update is called once per frame
@@ -39,7 +38,7 @@ public class BranchPalette : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.skin = uiStyle;
+        GUI.skin = UiSkinManger.sUiStyle;
 
         if (GlobalSettings.showBranchPalette)
         {
@@ -61,7 +60,7 @@ public class BranchPalette : MonoBehaviour
             {
                 GUI.DrawTexture(new Rect(0, 20 * i, 200, 20), branchBackgroundTextures[branch.Value.dBBranchStore.branch]);
             }
-            if (GUI.Button(new Rect(10, 20 * i, 800, 20), branch.Value.dBBranchStore.branch, uiStyle.label))
+            if (GUI.Button(new Rect(10, 20 * i, 800, 20), branch.Value.dBBranchStore.branch, UiSkinManger.sUiStyle.label))
             {
                 if (GlobalSettings.highlightedBranch == branch.Value.dBBranchStore.branch)
                 {
