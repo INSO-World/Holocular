@@ -105,7 +105,9 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             folderController.ringColor = ringColor;
             folderController.ringColorLight = ringColorLight;
             LineRenderer lr = ring.GetComponent<LineRenderer>();
-
+            
+            lr.widthCurve = new AnimationCurve(new Keyframe(0, Main.folderRingLineThickness), new Keyframe(1,Main.folderRingLineThickness));
+            
             if (Main.darkLightMode)
             {
                 lr.SetColors(ringColorLight, ringColorLight);
@@ -165,9 +167,28 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
                         fileController.commitFileRelation = (element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore;
                         fileController.commitFileStakeholderRelationList = (element as FileStructureFile).helixCommitFileRelation.helixCommitFileStakeholderRelationListStore;
                         fileController.commit = commit;
+                        float additionFactor = 0;
+                        float deletionFactor = 0;
+                        if (Main.logarithmicChangeThickness)
+                        {
+                            additionFactor = Mathf.Log(1f+ (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / (Main.helix.maxAdditions + Main.helix.maxDeletions)) * Main.commitChangesLineThickness;
+                            deletionFactor = Mathf.Log(1f+ (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / (Main.helix.maxAdditions + Main.helix.maxDeletions)) * Main.commitChangesLineThickness;
+                        }
+                        else
+                        {
+                            additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / (Main.helix.maxAdditions + Main.helix.maxDeletions) * 2;
+                            deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / (Main.helix.maxAdditions + Main.helix.maxDeletions) * 2;
+                        }
 
-                        float additionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.additions / (Main.helix.maxAdditions + Main.helix.maxDeletions) * 2;
-                        float deletionFactor = (float)(element as FileStructureFile).helixCommitFileRelation.dBCommitsFilesStore.stats.deletions / (Main.helix.maxAdditions + Main.helix.maxDeletions) * 2;
+                        if (additionFactor > 0)
+                        {
+                            additionFactor += Main.miniumLineThickness;
+                        }
+                        
+                        if (deletionFactor > 0)
+                        {
+                            deletionFactor += Main.miniumLineThickness;
+                        }   
                         
                         if (!fileHelixConnectiontreeDictionary.ContainsKey(fullFilePath))
                         {
