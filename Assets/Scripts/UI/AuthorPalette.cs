@@ -8,7 +8,6 @@ using static UnityEngine.Rendering.DebugUI.MessageBox;
 
 public class AuthorPalette : MonoBehaviour
 {
-    public GUISkin uiStyle;
     Rect authorPaletteWindowRect = new Rect(330, 10, 200, 800);
     public Vector2 authorsScrollPosition = Vector2.zero;
 
@@ -19,7 +18,7 @@ public class AuthorPalette : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        window = new Window("Author Palette", uiStyle, 200, 800);
+        window = new Window("Author Palette", UiSkinManger.sUiStyle, 200, 800);
     }
 
     // Update is called once per frame
@@ -40,7 +39,7 @@ public class AuthorPalette : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.skin = uiStyle;
+        GUI.skin = UiSkinManger.sUiStyle;
 
         if (GlobalSettings.showAuthorPalette)
         {
@@ -62,7 +61,7 @@ public class AuthorPalette : MonoBehaviour
             {
                 GUI.DrawTexture(new Rect(0, 20 * i, 200, 20), authorBackgroundTextures[stakeholder.Key]);
             }
-            if (GUI.Button(new Rect(10, 20 * i, 800, 20), stakeholder.Value.dBStakeholderStore.gitSignature, uiStyle.label))
+            if (GUI.Button(new Rect(10, 20 * i, 800, 20), stakeholder.Value.dBStakeholderStore.gitSignature, UiSkinManger.sUiStyle.label))
             {
                 GlobalSettings.SelectAuthor(stakeholder.Value.dBStakeholderStore.gitSignature);
             }

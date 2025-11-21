@@ -84,7 +84,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.1
+    widthMultiplier: 1
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -176,3 +176,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fullPath: 
+  ringColor: {r: 0, g: 0, b: 0, a: 0}
+  ringColorLight: {r: 0, g: 0, b: 0, a: 0}

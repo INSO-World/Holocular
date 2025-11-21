@@ -58,7 +58,7 @@ public class Helix : MonoBehaviour
         helixObject = helixObjectP;
 
         //Create Connection Tree
-        commitConnectionTree = new HelixConnectionTree("Commits-Connections", Main.sCommitTreeMaterial, helixObject);
+        commitConnectionTree = new HelixConnectionTree("Commits-Connections", Main.sCommitTreeMaterial, Main.sCommitTreeMaterialLight, helixObject);
 
         //Initialize Threads
         createStructureThread = new Thread(CreateStructure);
@@ -292,6 +292,15 @@ public class Helix : MonoBehaviour
         foreach (HelixConnectionTree connectionTree in fileHelixConnectiontreeDictionary.Values)
         {
             connectionTree.UpdateDistances();
+        }
+    }
+    
+    public void UpdateConnectionTreeColor()
+    {
+        commitConnectionTree.UpdateColors();
+        foreach (HelixConnectionTree connectionTree in fileHelixConnectiontreeDictionary.Values)
+        {
+            connectionTree.UpdateColors();
         }
     }
 }

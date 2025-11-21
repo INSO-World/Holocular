@@ -5,8 +5,11 @@ public class FolderController : MonoBehaviour
 {
 
     private UnityAction updateFolderListener;
+    private UnityAction updateFolderColorListener;
     private LineRenderer lr;
     public string fullPath = "";
+    public Color ringColor = Color.clear;
+    public Color ringColorLight = Color.clear;
 
     // Start is called before the first frame update
     void Start()
@@ -14,7 +17,21 @@ public class FolderController : MonoBehaviour
         lr = gameObject.GetComponent<LineRenderer>();
         UpdateFolder();
         updateFolderListener = new UnityAction(UpdateFolder);
+        updateFolderColorListener = new UnityAction(ChangeColor);
         EventManager.StartListening("updateFolders", updateFolderListener);
+        EventManager.StartListening("switchDarkLightMode", updateFolderColorListener);
+    }
+
+    private void ChangeColor()
+    {
+        if (Main.darkLightMode)
+        {
+            lr.SetColors(ringColorLight,ringColorLight);
+        }
+        else
+        {
+            lr.SetColors(ringColor,ringColor);
+        }
     }
 
     private void UpdateFolder()

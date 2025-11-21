@@ -186,7 +186,9 @@ MonoBehaviour:
   changedFile: {fileID: 5090062568418006305, guid: fc5048a3e635941f9ac51902b4eac4c0, type: 3}
   commit: {fileID: 4880512911649112285, guid: 11659f32f5aad463291b24c33595ce92, type: 3}
   branchTreeMaterial: {fileID: 2100000, guid: 0a69b032a11b04a808034239cd08ffe4, type: 2}
+  branchTreeMaterialLight: {fileID: 2100000, guid: 0a69b032a11b04a808034239cd08ffe4, type: 2}
   commitTreeMaterial: {fileID: 2100000, guid: f5b38880f5c5f44cb958a71315d9ff7b, type: 2}
+  commitTreeMaterialLight: {fileID: 2100000, guid: bf9d071186fdc4292a849a397682cbbf, type: 2}
 --- !u!4 &518972451
 Transform:
   m_ObjectHideFlags: 0
@@ -5541,6 +5543,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1862167778}
+  - component: {fileID: 1862167789}
   - component: {fileID: 1862167779}
   - component: {fileID: 1862167780}
   - component: {fileID: 1862167781}
@@ -5585,7 +5588,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdae7d7d590bf4ebd8bc1710ad1e1192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
   commitDistanceMultiplicatorTmp: 
   parametersScrollPosition: {x: 0, y: 0}
 --- !u!114 &1862167780
@@ -5612,74 +5614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29322dd59ac84462096576059201494b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
-  debugBackgroud:
-    m_Name: 
-    m_Normal:
-      m_Background: {fileID: 2800000, guid: 833d85fffadd743b98877b9f5c9464be, type: 3}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_Hover:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_Active:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_Focused:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_OnNormal:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_OnHover:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_OnActive:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_OnFocused:
-      m_Background: {fileID: 0}
-      m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
-    m_Border:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
-    m_Margin:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
-    m_Padding:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
-    m_Overflow:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
-    m_Font: {fileID: 0}
-    m_FontSize: 0
-    m_FontStyle: 0
-    m_Alignment: 0
-    m_WordWrap: 0
-    m_RichText: 1
-    m_TextClipping: 0
-    m_ImagePosition: 0
-    m_ContentOffset: {x: 0, y: 0}
-    m_FixedWidth: 0
-    m_FixedHeight: 0
-    m_StretchWidth: 1
-    m_StretchHeight: 0
   logOutputStyle:
     m_Name: 
     m_Normal:
@@ -5760,7 +5694,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 429baad078a294798bbd22dc24ec52ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
   authorsScrollPosition: {x: 0, y: 0}
 --- !u!114 &1862167783
 MonoBehaviour:
@@ -5774,7 +5707,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 414002dd9d3f148d8adce6ab66c94e6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
   parametersIcon:
     m_Name: 
     m_Normal:
@@ -6256,7 +6188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9baf4bca5dd44a69a4270af6a18064c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
   hunksScrollPosition: {x: 0, y: 0}
   ownershipScrollPosition: {x: 0, y: 0}
   fileInfoScrollPosition: {x: 0, y: 0}
@@ -6272,7 +6203,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c235c8463de094e569d412b6211a490e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
   branchesScrollPosition: {x: 0, y: 0}
 --- !u!114 &1862167786
 MonoBehaviour:
@@ -6286,7 +6216,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4110bb1bd5e654fc89ee36de360df5de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
 --- !u!114 &1862167787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6299,7 +6228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57a739dbeec4548a8b6291f5a773baac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
   hunksScrollPosition: {x: 0, y: 0}
   ownershipScrollPosition: {x: 0, y: 0}
   fileInfoScrollPosition: {x: 0, y: 0}
@@ -6316,8 +6244,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd9003c5f8f0a415fbc53c59f15768ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
   settingsScrollPosition: {x: 0, y: 0}
+--- !u!114 &1862167789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862167777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eaef4640b4e34041a231da04b8a917f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiStyle: {fileID: 11400000, guid: da5b6b3737e6d40c3afe805d27d918d0, type: 2}
+  uiStyleLight: {fileID: 11400000, guid: 39d84bb77037f4de1984618c763d44b2, type: 2}
 --- !u!1 &2012952101 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4046461545330325936, guid: f94bebc4a4c47490098dc60df1d05058, type: 3}

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Parameters : MonoBehaviour
 {
-    public GUISkin uiStyle;
     Rect parametersWindowRect = new Rect(10, 10, 300, Screen.height * 0.8f);
 
     Switch showAuthorsColorsSwitch;
@@ -20,13 +19,13 @@ public class Parameters : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        showAuthorsColorsSwitch = new Switch(new Rect(0, 30, 40, 20), uiStyle.GetStyle("switchBackground"), uiStyle.GetStyle("switchKnob"));
-        showBranchColorsSwitch = new Switch(new Rect(0, 70, 40, 20), uiStyle.GetStyle("switchBackground"), uiStyle.GetStyle("switchKnob"));
-        showOwnershipColorsSwitch = new Switch(new Rect(0, 110, 40, 20), uiStyle.GetStyle("switchBackground"), uiStyle.GetStyle("switchKnob"));
-        showHotspotColorsSwitch = new Switch(new Rect(0, 150, 40, 20), uiStyle.GetStyle("switchBackground"), uiStyle.GetStyle("switchKnob"));
-        commitPlacementModeSwitch = new Switch(new Rect(0, 70, 40, 20), uiStyle.GetStyle("switchBackground"), uiStyle.GetStyle("switchKnob"));
-        showFolderRingsSwitch = new Switch(new Rect(0, 110, 40, 20), uiStyle.GetStyle("switchBackground"), uiStyle.GetStyle("switchKnob"));
-        window = new Window("Parameters", uiStyle, 300, Mathf.RoundToInt(Screen.height * 0.8f));
+        showAuthorsColorsSwitch = new Switch(new Rect(0, 30, 40, 20), UiSkinManger.sUiStyle.GetStyle("switchBackground"), UiSkinManger.sUiStyle.GetStyle("switchKnob"));
+        showBranchColorsSwitch = new Switch(new Rect(0, 70, 40, 20), UiSkinManger.sUiStyle.GetStyle("switchBackground"), UiSkinManger.sUiStyle.GetStyle("switchKnob"));
+        showOwnershipColorsSwitch = new Switch(new Rect(0, 110, 40, 20), UiSkinManger.sUiStyle.GetStyle("switchBackground"), UiSkinManger.sUiStyle.GetStyle("switchKnob"));
+        showHotspotColorsSwitch = new Switch(new Rect(0, 150, 40, 20), UiSkinManger.sUiStyle.GetStyle("switchBackground"), UiSkinManger.sUiStyle.GetStyle("switchKnob"));
+        commitPlacementModeSwitch = new Switch(new Rect(0, 70, 40, 20), UiSkinManger.sUiStyle.GetStyle("switchBackground"), UiSkinManger.sUiStyle.GetStyle("switchKnob"));
+        showFolderRingsSwitch = new Switch(new Rect(0, 110, 40, 20), UiSkinManger.sUiStyle.GetStyle("switchBackground"), UiSkinManger.sUiStyle.GetStyle("switchKnob"));
+        window = new Window("Parameters", UiSkinManger.sUiStyle, 300, Mathf.RoundToInt(Screen.height * 0.8f));
 
         commitDistanceMultiplicatorTmp = "" + GlobalSettings.commitDistanceMultiplicator;
     }
@@ -39,7 +38,7 @@ public class Parameters : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.skin = uiStyle;
+        GUI.skin = UiSkinManger.sUiStyle;
         if (GlobalSettings.showParameters)
         {
             parametersWindowRect = GUI.Window(0, parametersWindowRect, ParametersWindow, "");
@@ -67,7 +66,7 @@ public class Parameters : MonoBehaviour
         }
 
         GUI.BeginGroup(new Rect(10, 120, 300, 300));
-        GUI.Label(new Rect(0, 0, 300, 20), "Stats", uiStyle.GetStyle("headline"));
+        GUI.Label(new Rect(0, 0, 300, 20), "Stats", UiSkinManger.sUiStyle.GetStyle("headline"));
         GUI.Label(new Rect(0, 30, 300, 20), "Commits: " + Statistics.commitsDrawn + "/" + (Main.commits == null ? "0" : Main.commits.commits.Length));
         GUI.Label(new Rect(0, 50, 300, 20), "Branches: " + (Main.branches == null ? "0" : Main.branches.branches.Length));
         GUI.Label(new Rect(0, 70, 300, 20), "Files: " + (Main.files == null ? "0" : Main.files.files.Length));
@@ -79,7 +78,7 @@ public class Parameters : MonoBehaviour
         GUI.EndGroup();
 
         GUI.BeginGroup(new Rect(10, 340, 300, 400));
-        GUI.Label(new Rect(0, 0, 200, 20), "Highlighting", uiStyle.GetStyle("headline"));
+        GUI.Label(new Rect(0, 0, 200, 20), "Highlighting", UiSkinManger.sUiStyle.GetStyle("headline"));
         GlobalSettings.showAuthorColors = showAuthorsColorsSwitch.render(GlobalSettings.showAuthorColors);
         GUI.Label(new Rect(50, 30, 120, 40), "Show Committer\nColors (c)");
 
@@ -93,20 +92,20 @@ public class Parameters : MonoBehaviour
         GUI.Label(new Rect(50, 150, 120, 40), "Show Hotspot\nColors (h)");
 
         GUI.Label(new Rect(0, 190, 300, 40), "Hotspot Threshold [" + GlobalSettings.hotspotThreshold + "/" + Main.helix.maxChanges + "]:\n(alt+h+scroll to fine adjust)");
-        GlobalSettings.hotspotThreshold = Slider.render(new Rect(0, 230, 180, 20), GlobalSettings.hotspotThreshold, 0, Main.helix.maxChanges, uiStyle.GetStyle("sliderEmpty"), uiStyle.GetStyle("sliderFilled"), uiStyle.GetStyle("sliderKnob"));
+        GlobalSettings.hotspotThreshold = Slider.render(new Rect(0, 230, 180, 20), GlobalSettings.hotspotThreshold, 0, Main.helix.maxChanges, UiSkinManger.sUiStyle.GetStyle("sliderEmpty"), UiSkinManger.sUiStyle.GetStyle("sliderFilled"), UiSkinManger.sUiStyle.GetStyle("sliderKnob"));
 
 
         GUI.Label(new Rect(0, 250, 200, 20), "Highlight Path:");
-        GlobalSettings.folderSearch = TextField.render(new Rect(0, 270, 200, 20), GlobalSettings.folderSearch, uiStyle.GetStyle("textFieldText"), uiStyle.GetStyle("textFieldBack"), uiStyle.GetStyle("textFieldBorder"));
+        GlobalSettings.folderSearch = TextField.render(new Rect(0, 270, 200, 20), GlobalSettings.folderSearch, UiSkinManger.sUiStyle.GetStyle("textFieldText"), UiSkinManger.sUiStyle.GetStyle("textFieldBack"), UiSkinManger.sUiStyle.GetStyle("textFieldBorder"));
 
         GUI.EndGroup();
 
 
         GUI.BeginGroup(new Rect(10, 660, 200, 200));
-        GUI.Label(new Rect(0, 0, 200, 20), "Visuals", uiStyle.GetStyle("headline"));
+        GUI.Label(new Rect(0, 0, 200, 20), "Visuals", UiSkinManger.sUiStyle.GetStyle("headline"));
 
         GUI.Label(new Rect(0, 30, 200, 20), "Distance Factor:");
-        GlobalSettings.commitDistanceMultiplicator = Slider.render(new Rect(0, 50, 180, 20), GlobalSettings.commitDistanceMultiplicator, 1f, 9f, uiStyle.GetStyle("sliderEmpty"), uiStyle.GetStyle("sliderFilled"), uiStyle.GetStyle("sliderKnob"));
+        GlobalSettings.commitDistanceMultiplicator = Slider.render(new Rect(0, 50, 180, 20), GlobalSettings.commitDistanceMultiplicator, 1f, 9f, UiSkinManger.sUiStyle.GetStyle("sliderEmpty"), UiSkinManger.sUiStyle.GetStyle("sliderFilled"), UiSkinManger.sUiStyle.GetStyle("sliderKnob"));
 
         GlobalSettings.commitPlacementMode = commitPlacementModeSwitch.render(GlobalSettings.commitPlacementMode);
         GUI.Label(new Rect(50, 70, 160, 40), "Commit Distribution\nLinar/By Date");
@@ -115,7 +114,7 @@ public class Parameters : MonoBehaviour
         GUI.Label(new Rect(50, 110, 120, 40), "Show Folder\nRings (f)");
 
         GUI.Label(new Rect(0, 150, 200, 20), "File Size:");
-        GlobalSettings.fileSize = Slider.render(new Rect(0, 170, 180, 20), GlobalSettings.fileSize, 0.1f, 15f, uiStyle.GetStyle("sliderEmpty"), uiStyle.GetStyle("sliderFilled"), uiStyle.GetStyle("sliderKnob"));
+        GlobalSettings.fileSize = Slider.render(new Rect(0, 170, 180, 20), GlobalSettings.fileSize, 0.1f, 15f, UiSkinManger.sUiStyle.GetStyle("sliderEmpty"), UiSkinManger.sUiStyle.GetStyle("sliderFilled"), UiSkinManger.sUiStyle.GetStyle("sliderKnob"));
 
 
         GUI.EndGroup();

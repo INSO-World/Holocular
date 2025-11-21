@@ -4,7 +4,6 @@ using UnityEngine.Networking;
 
 public class FileCompare : MonoBehaviour
 {
-    public GUISkin uiStyle;
 
     Window window;
 
@@ -30,7 +29,7 @@ public class FileCompare : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        window = new Window("File Compare", uiStyle, windowWidth, windowHeight);
+        window = new Window("File Compare", UiSkinManger.sUiStyle, windowWidth, windowHeight);
         hunkTexture = new Texture2D(0, 0);
     }
 
@@ -57,7 +56,7 @@ public class FileCompare : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.skin = uiStyle;
+        GUI.skin = UiSkinManger.sUiStyle;
 
         if (GlobalSettings.showFileCompare)
         {
@@ -68,15 +67,15 @@ public class FileCompare : MonoBehaviour
     void FileInfoWindow(int windowID)
     {
         window.render();
-        GUI.Label(new Rect(new Rect(0, 30, windowWidth / 2 - 20, 20)), selectedSha, uiStyle.GetStyle("headline"));
-        GUI.Label(new Rect(new Rect(windowWidth / 2, 30, windowWidth / 2 - 20, 20)), Main.selectedFile.commit.parents[0], uiStyle.GetStyle("headline"));
+        GUI.Label(new Rect(new Rect(0, 30, windowWidth / 2 - 20, 20)), selectedSha, UiSkinManger.sUiStyle.GetStyle("headline"));
+        GUI.Label(new Rect(new Rect(windowWidth / 2, 30, windowWidth / 2 - 20, 20)), Main.selectedFile.commit.parents[0], UiSkinManger.sUiStyle.GetStyle("headline"));
         contentScrollPosition = GUI.BeginScrollView(new Rect(0, 50, windowWidth, windowHeight - 50), contentScrollPosition, new Rect(0, 0, windowWidth - 20, 20 * maxLines));
 
 
 
         if (Main.selectedFile.commit.parents.Length > 1)
         {
-            GUI.Label(new Rect(0, 0, windowWidth / 2, 20), "Merge Commit", uiStyle.GetStyle("headline"));
+            GUI.Label(new Rect(0, 0, windowWidth / 2, 20), "Merge Commit", UiSkinManger.sUiStyle.GetStyle("headline"));
             GUI.Label(new Rect(0, 20, windowWidth / 2, 20), "No Comparision Possible");
         }
         else
@@ -98,7 +97,7 @@ public class FileCompare : MonoBehaviour
     {
         for (int i = 0; i < lines.Length; i++)
         {
-            GUI.Label(new Rect(0, i * 20, 1000, 20), "", i % 2 == 0 ? uiStyle.GetStyle("fileCompareEvenLine") : uiStyle.GetStyle("fileCompareOddLine"));
+            GUI.Label(new Rect(0, i * 20, 1000, 20), "", i % 2 == 0 ? UiSkinManger.sUiStyle.GetStyle("fileCompareEvenLine") : UiSkinManger.sUiStyle.GetStyle("fileCompareOddLine"));
         }
 
         foreach (DBHunk hunk in hunks)
@@ -107,15 +106,15 @@ public class FileCompare : MonoBehaviour
 
             if (hunk.newLines > hunk.oldLines)  //Additions
             {
-                changeType = uiStyle.GetStyle("fileCompareAddition");
+                changeType = UiSkinManger.sUiStyle.GetStyle("fileCompareAddition");
             }
             else if (hunk.newLines < hunk.oldLines) //Deletions
             {
-                changeType = uiStyle.GetStyle("fileCompareDeletion");
+                changeType = UiSkinManger.sUiStyle.GetStyle("fileCompareDeletion");
             }
             else    //Changes
             {
-                changeType = uiStyle.GetStyle("fileCompareChange");
+                changeType = UiSkinManger.sUiStyle.GetStyle("fileCompareChange");
             }
             if (mode)
             {
