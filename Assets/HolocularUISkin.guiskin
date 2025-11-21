@@ -2216,7 +2216,7 @@ MonoBehaviour:
     m_Normal:
       m_Background: {fileID: 2800000, guid: 29c5e9870bb314102a119f8a2eddc3ed, type: 3}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 1, g: 0, b: 0, a: 1}
+      m_TextColor: {r: 0, g: 1, b: 0.17241383, a: 1}
     m_Hover:
       m_Background: {fileID: 2800000, guid: 287b8a18742294e239983cbc6819d414, type: 3}
       m_ScaledBackgrounds: []
@@ -2412,7 +2412,7 @@ MonoBehaviour:
     m_StretchHeight: 0
   - m_Name: hint
     m_Normal:
-      m_Background: {fileID: 2800000, guid: 936bfde8b0f6f4687a2fb7bf552f9b26, type: 3}
+      m_Background: {fileID: 2800000, guid: 42a341970ade54215863d8256beac40d, type: 3}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
