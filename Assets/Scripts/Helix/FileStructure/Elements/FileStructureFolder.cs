@@ -77,10 +77,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 
     public Transform Draw(Transform parent,
         float r,
-        Color ringColor,
-        Color ringColorLight,
-        Color ringEndColor,
-        Color ringEndColorLight,
+        float currentRingColorFactor,
         float colorShiftFactor,
         string branchName,
         HelixCommit commit,
@@ -102,20 +99,10 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
             ring.name = name;
             FolderController folderController = ring.GetComponent<FolderController>();
             folderController.fullPath = path;
-            folderController.ringColor = ringColor;
-            folderController.ringColorLight = ringColorLight;
+            folderController.ringColorFactor = currentRingColorFactor;
             LineRenderer lr = ring.GetComponent<LineRenderer>();
             
             lr.widthCurve = new AnimationCurve(new Keyframe(0, Main.folderRingLineThickness), new Keyframe(1,Main.folderRingLineThickness));
-            
-            if (Main.darkLightMode)
-            {
-                lr.SetColors(ringColorLight, ringColorLight);
-            }
-            else
-            {
-                lr.SetColors(ringColor, ringColor);
-            }
 
             lr.positionCount = elementsInFolder;
 
@@ -138,10 +125,7 @@ public class FileStructureFolder : MonoBehaviour, IFileStructureElement
 
                         (element as FileStructureFolder).Draw(helixElementObject.transform,
                             r / 2,
-                            Color.Lerp(ringColor, ringEndColor, colorShiftFactor),
-                            Color.Lerp(ringColorLight, ringEndColorLight, colorShiftFactor),
-                            ringEndColor,
-                            ringEndColorLight,
+                            currentRingColorFactor * colorShiftFactor,
                             colorShiftFactor,
                             branchName,
                             commit,

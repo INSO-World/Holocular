@@ -101,7 +101,7 @@ public class Parameters : MonoBehaviour
         GUI.EndGroup();
 
 
-        GUI.BeginGroup(new Rect(10, 660, 200, 200));
+        GUI.BeginGroup(new Rect(10, 660, 200, 260));
         GUI.Label(new Rect(0, 0, 200, 20), "Visuals", UiSkinManger.sUiStyle.GetStyle("headline"));
 
         GUI.Label(new Rect(0, 30, 200, 20), "Distance Factor:");
@@ -112,9 +112,12 @@ public class Parameters : MonoBehaviour
 
         GlobalSettings.showFolderRings = showFolderRingsSwitch.render(GlobalSettings.showFolderRings);
         GUI.Label(new Rect(50, 110, 120, 40), "Show Folder\nRings (f)");
+        
+        GUI.Label(new Rect(0, 150, 200, 25), "Ring Opacity:");
+        GlobalSettings.ringOpacity = Slider.render(new Rect(0, 170, 180, 20), GlobalSettings.ringOpacity, 0f, 1f, UiSkinManger.sUiStyle.GetStyle("sliderEmpty"), UiSkinManger.sUiStyle.GetStyle("sliderFilled"), UiSkinManger.sUiStyle.GetStyle("sliderKnob"));
 
-        GUI.Label(new Rect(0, 150, 200, 20), "File Size:");
-        GlobalSettings.fileSize = Slider.render(new Rect(0, 170, 180, 20), GlobalSettings.fileSize, 0.1f, 15f, UiSkinManger.sUiStyle.GetStyle("sliderEmpty"), UiSkinManger.sUiStyle.GetStyle("sliderFilled"), UiSkinManger.sUiStyle.GetStyle("sliderKnob"));
+        GUI.Label(new Rect(0, 200, 200, 20), "File Size:");
+        GlobalSettings.fileSize = Slider.render(new Rect(0, 220, 180, 20), GlobalSettings.fileSize, 0.1f, 15f, UiSkinManger.sUiStyle.GetStyle("sliderEmpty"), UiSkinManger.sUiStyle.GetStyle("sliderFilled"), UiSkinManger.sUiStyle.GetStyle("sliderKnob"));
 
 
         GUI.EndGroup();

@@ -33,11 +33,8 @@ public class FileStructure : MonoBehaviour
     {
         Transform rootFolderObject = (root as FileStructureFolder).Draw(commit.commitObject.transform,
             maxDepht * Main.helixReferenceRadius * Main.helixeRadiusSpread,
-            Main.ringColorDefault,
-            Main.ringColorLight,
-            Main.ringColorDefaultEnd,
-            Main.ringColorLightEnd,
-            0.85f,
+            1f,
+            0.5f,
             branchName,
             commit,
             new Vector3(0, 0, 0),
