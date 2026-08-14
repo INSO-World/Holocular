@@ -23,6 +23,7 @@ public class GlobalSettings : MonoBehaviour
     public static bool showHotspotColors = false;
     public static bool commitPlacementMode = false; //linear(false)/timeBased(true)
     public static bool showFolderRings = true;
+    public static float ringOpacity = 1f;
 
     public static bool fileIsSelected = false;
 
@@ -46,6 +47,7 @@ public class GlobalSettings : MonoBehaviour
     float lastFileSize = fileSize;
     float lastHotspotThreshold = hotspotThreshold;
     bool lastShowFolderRings = showFolderRings;
+    private float lastRingOpactiy = ringOpacity;
     string lastFolderSearch = folderSearch;
     bool lastFileIsSelected = fileIsSelected;
 
@@ -144,6 +146,17 @@ public class GlobalSettings : MonoBehaviour
         {
             EventManager.TriggerEvent("updateFolders");
             lastShowFolderRings = showFolderRings;
+        }
+
+        if (lastRingOpactiy != ringOpacity)
+        {
+    
+            Main.ringColorDefault.a =  ringOpacity * 0.5f;
+            Main.ringColorLight.a = ringOpacity * .8f;
+            Main.ringColorDefaultEnd.a = ringOpacity * 0.25f;
+            Main.ringColorLightEnd.a = ringOpacity * .4f;
+            EventManager.TriggerEvent("updateFolderOpacity");
+            lastRingOpactiy = ringOpacity;
         }
 
         if (lastFolderSearch != folderSearch)
